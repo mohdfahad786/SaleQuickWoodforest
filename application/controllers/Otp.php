@@ -9,14 +9,16 @@ class Otp extends CI_Controller
         $this->load->helper('url');
         $this->load->helper('form');
         $this->load->helper('html');
+        $this->load->library('session');
+        $this->load->database();
         $this->load->library('form_validation');
         $this->load->model('reset_model');
         $this->load->model('login_model');
         $this->load->model('Home_model');
         $this->load->library('email');
         date_default_timezone_set("America/Chicago");
-        ini_set('display_errors', 1);
-        error_reporting(E_ALL);
+       // ini_set('display_errors', 1);
+        //error_reporting(E_ALL);
      }
 
     function my_encrypt( $string, $action = 'e' ) {
@@ -128,8 +130,6 @@ public function otp()
          );
                     //print_r($sessiondata);die;
             $this->session->set_userdata($sessiondata);
-           //print_r($this->session->userdata); 
-            //die();
 
             $data = Array("ip" => $this->input->post("ip"),  "user_type" => 'wf', 'user_id' => $usr_result['id'],  'status' => 'true'  );
      
