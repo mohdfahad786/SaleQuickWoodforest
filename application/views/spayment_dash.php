@@ -1204,25 +1204,7 @@
                                 <div class="row">
                                     <!--<div class="col-sm-6 col-md-6 col-lg-8"></div>-->
                                     <div class="col-sm-12 col-md-12 col-lg-12">
- <?php
-
-// if($bct_id2==413 || $bct_id2==865 || $bct_id2==867 ){
-
-                        $getMerchant = $this->db->query("SELECT payroc from merchant where id = ".$bct_id2." ");
-                              $getMerchantData = $getMerchant->result_array();
-
-                          $payroc = $getMerchantData[0]['payroc'];
-                                            if($payroc==1){ ?>
-
-                          <form action="<?php echo base_url('payment_card_payment');?>" method="post">
-                      <?php  }
-                            else
-                            { ?>
-               <form action="<?php echo base_url('card_payment');?>" method="post">
-                               
-
-                               <?php     }  ?>
-
+                                        <form action="<?php echo base_url('card_payment');?>" method="post">
 
                                                               <input type="hidden" class="form-control" name="bct_id" value="<?php echo (isset($bct_id) && !empty($bct_id)) ? $bct_id : set_value('bct_id');?>" readonly required>
 
@@ -1394,7 +1376,7 @@
                                   <?php //echo $this->session->flashdata('pmsg');
                                         echo '<span class="amtttl">$ '.$Tamount.'</span>'; ?>
 
-                                  <h4 class="success">Payment Successful</h4>
+                                  <h4 class="success">Your Payment is Successful</h4>
 
                             <?php }else{ ?>
 

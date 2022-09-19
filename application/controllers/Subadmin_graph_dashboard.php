@@ -1,4 +1,6 @@
-<?php if (!defined('BASEPATH')) {
+<?php 
+ini_set('MAX_EXECUTION_TIME', '-1');
+if (!defined('BASEPATH')) {
 	exit('No direct script access allowed');
 }
 
@@ -15,8 +17,9 @@ class Subadmin_graph_dashboard extends CI_Controller {
 		//if (!$this->session_checker_model->chk_session()) {
 			//redirect('admin');
 		//}
-       
 		date_default_timezone_set("America/Chicago");
+    // ini_set('display_errors', 1);
+    // error_reporting(E_ALL);
     }
     
     public function index()
@@ -37,18 +40,21 @@ class Subadmin_graph_dashboard extends CI_Controller {
             { 
                 $Allmerchant=$this->session->userdata('subadmin_assign_merchant'); 
                 $Allmerchant = rtrim($Allmerchant, ',');
-                $getQuery=$this->db->query("SELECT id,merchant_id,invoice_no ,sum(amount) as amount,sum(tax) as tax,sum(fee) as fee,name,date_c from ( SELECT id,merchant_id,invoice_no,amount,tax,fee,name,date_c from customer_payment_request where  date_c >='$date_c' and date_c <= '$date_cc' and status='confirm' and merchant_id IN ($Allmerchant)  union all SELECT id,merchant_id,invoice_no,amount,tax,fee,name,date_c from recurring_payment where date_c >='$date_c' and date_c <='$date_cc' and status='confirm' and merchant_id IN ($Allmerchant)   union all SELECT id,merchant_id,invoice_no,amount,tax,fee,name,date_c from pos where  date_c >='$date_c' and date_c <='$date_cc' and status='confirm' and merchant_id IN ($Allmerchant)  ) x group by date_c");
+                $getQuery=$this->db->query("SELECT sum(amount) as amount,sum(tax) as tax,avg(amount) as fee,date_c from ( SELECT amount,tax,date_c from pos where  date_c >='$date_c' and date_c <= '$date_cc' and status='confirm' and merchant_id IN ($Allmerchant)     ) x group by date_c");
             }else
             {
-                $getQuery=$this->db->query("SELECT id,merchant_id,invoice_no ,sum(amount) as amount,sum(tax) as tax,sum(fee) as fee,name,date_c from ( SELECT id,merchant_id,invoice_no,amount,tax,fee,name,date_c from customer_payment_request where  date_c >='$date_c' and date_c <= '$date_cc' and status='confirm'  union all SELECT id,merchant_id,invoice_no,amount,tax,fee,name,date_c from recurring_payment where date_c >='$date_c' and date_c <='$date_cc' and status='confirm'    union all SELECT id,merchant_id,invoice_no,amount,tax,fee,name,date_c from pos where  date_c >='$date_c' and date_c <='$date_cc' and status='confirm' ) x group by date_c");
+                $getQuery=$this->db->query("SELECT sum(amount) as amount,sum(revenue) as tax,avg(amount) as fee,name,date_c from ( SELECT amount,revenue,date_c from infinicept_transaction where  date_c >='$date_c' and date_c <= '$date_cc' and status='confirm'      ) x group by date_c");
             }
          }
        elseif($_GET['employee']=='merchent') {
-          $getQuery=$this->db->query("SELECT id,merchant_id,invoice_no ,sum(amount) as amount,sum(tax) as tax,sum(fee) as fee,name,date_c from ( SELECT id,merchant_id,invoice_no,amount,tax,fee,name,date_c from customer_payment_request where  date_c >='$date_c' and date_c <='$date_cc' and status='confirm' and merchant_id IN ($employee)  union all SELECT id,merchant_id,invoice_no,amount,tax,fee,name,date_c from recurring_payment where  date_c >='$date_c' and date_c <='$date_cc' and status='confirm' and merchant_id IN ($employee)  union all SELECT id,merchant_id,invoice_no,amount,tax,fee,name,date_c from pos where  date_c >='$date_c' and date_c <='$date_cc' and status='confirm' and merchant_id IN ($employee)  ) x group by date_c"); 
+          $getQuery=$this->db->query("SELECT sum(amount) as amount,sum(revenue) as tax,avg(amount) as fee,date_c from ( SELECT amount,revenue,fee,date_c from infinicept_transaction where  date_c >='$date_c' and date_c <='$date_cc' and status='confirm' and merchant_id IN ($employee)   ) x group by date_c"); 
         }
        else
        {
-           $getQuery=$this->db->query("SELECT id,merchant_id,invoice_no ,sum(amount) as amount,sum(tax) as tax,sum(fee) as fee,name,date_c from ( SELECT id,merchant_id,invoice_no,amount,tax,fee,name,date_c from customer_payment_request where  date_c >='$date_c' and date_c <='$date_cc' and status='confirm' and merchant_id IN ($employee)  union all SELECT id,merchant_id,invoice_no,amount,tax,fee,name,date_c from recurring_payment where  date_c >='$date_c' and date_c <='$date_cc' and status='confirm' and merchant_id  IN ($employee)  union all SELECT id,merchant_id,invoice_no,amount,tax,fee,name,date_c from pos where  date_c >='$date_c' and date_c <='$date_cc' and status='confirm' and merchant_id IN($employee)  ) x group by date_c"); 
+        // echo 'sss'; die();
+        //    $getQuery=$this->db->query("SELECT sum(amount) as amount,sum(revenue) as tax,avg(amount) as fee,date_c from ( SELECT amount,revenue,fee,date_c from infinicept_transaction where  date_c >='$date_c' and date_c <='$date_cc' and status='confirm' and merchant_id IN ($employee)     ) x group by date_c");
+
+            $getQuery=$this->db->query("SELECT sum(amount) as amount,sum(tax) as tax,avg(amount) as fee,date_c from ( SELECT amount,tax,date_c from pos where  date_c >='$date_c' and date_c <= '$date_cc' and status='confirm' and merchant_id='".$employee."'    ) x group by date_c"); 
        }
       
        $resultdata=$getQuery->result(); 

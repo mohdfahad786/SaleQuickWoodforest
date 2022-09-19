@@ -14,14 +14,6 @@ class Admin_model extends CI_Model {
 		return $query->result_array();
 	}
 
-	public function s_fee_merchant($table, $condition) {
-		$this->db->select('text_email,point_sale,f_swap_Text');
-		$this->db->from($table);
-		$this->db->where('id', $condition);
-		$query = $this->db->get();
-		return $query->result_array();
-	}
-
 	//  count the pos item Here //
 	public function check_pos_optimized_inv($table,$transaction_id) {   
 		$query = $this->db->query("SELECT * FROM $table WHERE transaction_id='$transaction_id'  ");
@@ -71,29 +63,11 @@ class Admin_model extends CI_Model {
 	
 	public function get_search_refund_data($table, $merchant_id, $start, $end, $status) {
 		$date = date('Y-m-d', strtotime('-30 days'));
-		$is_for_vts='false';
 		$this->db->select('mt.*,r.add_date as refund_dt,r.amount as refund_amount,r.id as refund_row_id, r.transaction_id as refund_transaction');
 		$this->db->from("refund r");
 		$this->db->where('r.date_c >=', $start);
 		$this->db->where('r.date_c <=', $end);
 		$this->db->where('mt.status', $status);
-		$this->db->where('mt.is_for_vts', $is_for_vts);
-		$this->db->where('r.merchant_id', $merchant_id);
-		$this->db->join($table . ' mt', 'mt.invoice_no = r.invoice_no');
-		$this->db->order_by("r.id", "desc");
-		$query = $this->db->get();
-		return $query->result();
-
-	}
-	public function get_search_refund_data_vts($table, $merchant_id, $start, $end, $status) {
-		$date = date('Y-m-d', strtotime('-30 days'));
-		$is_for_vts='true';
-		$this->db->select('mt.*,r.add_date as refund_dt,r.amount as refund_amount,r.id as refund_row_id, r.transaction_id as refund_transaction');
-		$this->db->from("refund r");
-		$this->db->where('r.date_c >=', $start);
-		$this->db->where('r.date_c <=', $end);
-		$this->db->where('mt.status', $status);
-		$this->db->where('mt.is_for_vts', $is_for_vts);
 		$this->db->where('r.merchant_id', $merchant_id);
 		$this->db->join($table . ' mt', 'mt.invoice_no = r.invoice_no');
 		$this->db->order_by("r.id", "desc");
@@ -132,19 +106,7 @@ class Admin_model extends CI_Model {
 	}
 	public function data_get_where_1($table, $condition) {
 		$this->db->order_by("id", "desc");
-		$wf_merchants=$this->session->userdata('wf_merchants');
-        $x=explode(",",$wf_merchants);
-        $len=sizeof($x);
-        for ($i=0; $i <$len ; $i++) { 
-            if($i==0){
-               $this->db->where('id', $x[$i]);
-            }else{
-                $this->db->or_where('id', $x[$i]);
-            }
-        
-        } 
 		$q = $this->db->get_where($table, $condition);
-		
 		return $q->result_array();
 	}
 	
@@ -489,7 +451,6 @@ class Admin_model extends CI_Model {
 		$this->db->update($table, $data);
 		return true;
 	}
-
 
 	public function insert_data($table, $data) {
 		$this->db->insert($table, $data);
@@ -968,10 +929,6 @@ class Admin_model extends CI_Model {
 
 		}
 
-		$this->db->where('name!=', '');
-		$this->db->where('email!=', '');
-		$this->db->where('phone!=', '');
-
 		$query = $this->db->get('d_online');
 
 		return $query->result();
@@ -1075,16 +1032,6 @@ class Admin_model extends CI_Model {
 	   $query=$this->db->get($table);
 	  
 	   return $query->row();  
-
-	}
-
-	function select_request_id_api($table,$id)
-	{
-		
-	   $this->db->where('id',$id);
-	   $query=$this->db->get($table);
-	  
-	   return $query->result_array();  
 
 	}
 
@@ -1332,95 +1279,6 @@ class Admin_model extends CI_Model {
 	  return $mem;  
 
 	}
-
-	function get_package_details_customer_admin_api($status,$merchant_id,$start_limit,$limit) {
-		
-        $curentDate=date('Y-m-d'); 
-		//$merchant_id = $this->session->userdata('merchant_id');
-		$query = $this->db->query("SELECT * FROM `customer_payment_request` WHERE payment_type='recurring' AND no_of_invoice='1' AND merchant_id='$merchant_id'  GROUP BY invoice_no ORDER BY id DESC limit $start_limit,$limit ");
-		$mem=array();
-		$a=1; 
-		foreach ($query->result() as $row) {
-			$invoice_id=$row->invoice_no;
-			$merchant_id=$row->merchant_id;
-			$row_id=$row->id;
-			if($row->recurring_count  > 0){ $row->recurring_count =$row->recurring_count; }elseif($row->recurring_count < 0){ $row->recurring_count=1; }else{ $row->recurring_count=1; }
-		    $this->db->where('id', $row_id);
-			$table='customer_payment_request'; 
-			$this->db->get($table)->row();
-
-			if ($status != '') {
-				switch($status){
-
-					 case "confirm":
-					    $GetAllpaidRecord=$this->db->query("SELECT * FROM customer_payment_request WHERE  merchant_id='$merchant_id' AND  invoice_no='$invoice_id' AND ( `status`='Chargeback_Confirm' OR  `status`='confirm')  ORDER BY id DESC "); 
-						$DGetAllpaidRecord=$GetAllpaidRecord->result();
-						$AllPaidRequest=count($DGetAllpaidRecord);
-
-						$GetAllUnpaidRecord=$this->db->query("SELECT * FROM customer_payment_request WHERE  merchant_id='$merchant_id' AND  invoice_no='$invoice_id' AND `status`!='Chargeback_Confirm' AND  `status`!='confirm'  ORDER BY id DESC "); 
-						$DGetAllUnpaidRecord=$GetAllUnpaidRecord->result();
-						$AllUnPaidRequest=count($DGetAllUnpaidRecord);
-
-
-						$GetPrevResult=$this->db->query("SELECT * FROM customer_payment_request WHERE merchant_id='$merchant_id' AND  invoice_no='$invoice_id' AND ( `status`='pending' OR `status`='block' ) AND `recurring_pay_start_date` < '$curentDate' ORDER BY id DESC"); 
-						$df=$GetPrevResult->result_array(); 
-						$is_prev_paid=count($df); 
-
-					 if( $row->recurring_count == $AllPaidRequest && $AllUnPaidRequest =='0'  && ( $row->recurring_payment=='stop' ||  $row->recurring_payment=='complete')   && $is_prev_paid <='0') { 
-					     array_push($mem, $row); 
-					   } else {  $each=array();  }
-					 break;
-
-				 	case "pending":
-						$GetAllpaidRecord=$this->db->query("SELECT * FROM customer_payment_request WHERE  merchant_id='$merchant_id' AND  invoice_no='$invoice_id' AND ( `status`='Chargeback_Confirm' OR  `status`='confirm')  ORDER BY id DESC "); 
-						$DGetAllpaidRecord=$GetAllpaidRecord->result();
-						$AllPaidRequest=count($DGetAllpaidRecord);
-			
-						$GetAllUnpaidRecord=$this->db->query("SELECT * FROM customer_payment_request WHERE  merchant_id='$merchant_id' AND  invoice_no='$invoice_id' AND `status`!='Chargeback_Confirm' AND  `status`!='confirm'  ORDER BY id DESC "); 
-						$DGetAllUnpaidRecord=$GetAllUnpaidRecord->result();
-						$AllUnPaidRequest=count($DGetAllUnpaidRecord);
-			
-			
-						$GetPrevResult=$this->db->query("SELECT * FROM customer_payment_request WHERE merchant_id='$merchant_id' AND  invoice_no='$invoice_id' AND ( `status`='pending' OR `status`='block' ) AND `recurring_pay_start_date` < '$curentDate' ORDER BY id DESC"); 
-						$df=$GetPrevResult->result_array(); 
-						$is_prev_paid=count($df);  
-
-					   if( $is_prev_paid <='0' &&  $AllUnPaidRequest >='0' && $row->recurring_payment=='start'  && $row->recurring_count > $AllPaidRequest  ){ 
-						     array_push($mem, $row); 
-					   } else {  $each=array();  }
-				 	break; 
-				 	
-				 	case "late":
-						$GetAllpaidRecord=$this->db->query("SELECT * FROM customer_payment_request WHERE  merchant_id='$merchant_id' AND  invoice_no='$invoice_id' AND ( `status`='Chargeback_Confirm' OR  `status`='confirm')  ORDER BY id DESC "); 
-						$DGetAllpaidRecord=$GetAllpaidRecord->result();
-						$AllPaidRequest=count($DGetAllpaidRecord);
-			
-						$GetAllUnpaidRecord=$this->db->query("SELECT * FROM customer_payment_request WHERE  merchant_id='$merchant_id' AND  invoice_no='$invoice_id' AND `status`!='Chargeback_Confirm' AND  `status`!='confirm'  ORDER BY id DESC "); 
-						$DGetAllUnpaidRecord=$GetAllUnpaidRecord->result();
-						$AllUnPaidRequest=count($DGetAllUnpaidRecord);
-			
-			
-						$GetPrevResult=$this->db->query("SELECT * FROM customer_payment_request WHERE merchant_id='$merchant_id' AND  invoice_no='$invoice_id' AND ( `status`='pending' OR `status`='block' ) AND `recurring_pay_start_date` < '$curentDate' ORDER BY id DESC"); 
-						$df=$GetPrevResult->result_array(); 
-						$is_prev_paid=count($df);  
-
-				 	if($AllUnPaidRequest > '0' &&  $is_prev_paid >'0'  ){
-					  array_push($mem, $row); 
-				  	} else {  $each=array();  }
-				 	break; 
-				 	
-				 	default :
-				   		$each=array(); array_push($mem, $row); 
-				 		break; 
-				}
-		   }
-		   else{
-			   array_push($mem, $row); 
-		   }
-	     }
-	  return $mem;  
-
-	}
 	public function get_subadmin_package_details($id = "") {
   
 		if ($id != "") {
@@ -1448,21 +1306,9 @@ class Admin_model extends CI_Model {
 		$query = $this->db->get('merchant');
 		return $query->result();
 	}
-
-	public function get_package_details_active_merchant($id = "") {
-		if ($id != "") {
-			$id = intval($id);
-			$this->db->where('id', $id); 
-		}
-		$this->db->where('user_type', 'merchant');
-		$this->db->where('status', 'active');
-		$this->db->order_by("id", "desc");
-		// $this->db->limit(1);
-		$query = $this->db->get('merchant');
-		return $query->result();
-	}
-
 	public function get_package_details_sub($id = "") {
+
+		
 		if ($id != "") {
 			$id = intval($id);
 			$this->db->where('id', $id);
@@ -1513,10 +1359,6 @@ class Admin_model extends CI_Model {
 			$this->db->where('id', $id);
 
 		}
-		$this->db->where('name!=', '');
-		$this->db->where('email!=', '');
-		$this->db->where('phone!=', '');
-
 		$this->db->order_by("id", "desc");
 		$query = $this->db->get('d_online');
 
@@ -1987,7 +1829,6 @@ class Admin_model extends CI_Model {
 	public function getallDistinct_Invoice($table)
     {
       $this->db->where('payment_type', 'recurring');
-      $this->db->where('recurring_payment', 'start');
       $this->db->distinct();
       $this->db->select('invoice_no');
       $this->db->order_by("recurring_pay_start_date", "desc");
@@ -2008,7 +1849,6 @@ class Admin_model extends CI_Model {
 	public function getallDistinct_Invoice_for_autopayment($table)
     {
       $this->db->where('payment_type', 'recurring');
-      $this->db->where('recurring_payment', 'start');
       $this->db->where('recurring_pay_type', '1');
 	  
       $this->db->distinct();
@@ -2028,35 +1868,6 @@ class Admin_model extends CI_Model {
           }
          return $mem;
 	}
-
-	public function getallDistinct_Invoice_for_autopayment_new($table)
-    {
-      $this->db->where('payment_type', 'recurring');
-      $this->db->where('recurring_payment', 'start');
-      $this->db->where('recurring_pay_type', '1');
-      $this->db->where('token', '1');
-	  
-      $this->db->distinct();
-      $this->db->select('invoice_no');
-      //$this->db->limit(9,1);
-      //$this->db->limit(10, 0);
-      //$this->db->limit(limit, start);
-      $this->db->order_by("recurring_pay_start_date", "desc");
-      $query = $this->db->get($table);
-      // echo $this->db->last_query();die;
-         //return $query->result();
-          $mem=array();
-          foreach ($query->result() as $row) {
-              $invoice_No=$row->invoice_no;
-              $this->db->where('payment_type', 'recurring');
-              $this->db->where('invoice_no', $invoice_No);
-              $this->db->order_by("id", "desc");
-              $each = $this->db->get($table)->row();
-              array_push($mem, $each); 
-          }
-         return $mem;
-	}
-
 	public function getlast_request($table,$invoice_No,$merchant_id)
 	{
 		 $GetlastRecord=$this->db->query("SELECT * FROM $table WHERE merchant_id='$merchant_id' AND  invoice_no='$invoice_No'  ORDER BY id DESC  LIMIT 0,1 "); 
@@ -2325,29 +2136,6 @@ class Admin_model extends CI_Model {
 		public function get_merchant_data_new() {
 		$this->db->select('*');
 		$this->db->where('user_type', 'merchant');
-		$this->db->where('status', 'active');
-		//$this->db->limit(1, 0);
-		$this->db->from('merchant');
-		$query = $this->db->get();
-		$res = $query->result();
-		return $res;
-	}
-
-	public function get_merchant_data_new_admin() {
-		$this->db->select('*');
-		$this->db->where('user_type', 'merchant');
-		$this->db->where('status', 'active');
-		//$this->db->limit(0,50);
-		$this->db->from('merchant');
-		$query = $this->db->get();
-		$res = $query->result();
-		return $res;
-	}
-
-	public function get_merchant_data_new_particular() {
-		$this->db->select('*');
-		$this->db->where('user_type', 'merchant');
-		$this->db->where('id', '272');
 		$this->db->from('merchant');
 		$query = $this->db->get();
 		$res = $query->result();
@@ -2458,97 +2246,6 @@ public function get_refund_data_admin($end_date, $start_date, $merchant_id) {
 		 $this->db->where('merchant_id',$merchant_id); 
 		 $query = $this->db->get('refund');
 		 return $query->row(); 
-	}
-
-	public function get_sales_summary_report($table, $end_date, $start_date,$merchant_id) {
-		$this->db->select('amount,tax,tip_amount,type,date_c,reference,tip_amount,name');
-		$this->db->from($table);
-		$this->db->where('date_c >=', $start_date);
-		$this->db->where('date_c <=', $end_date);
-		$wf_merchants=$this->session->userdata('wf_merchants');
-        $x=explode(",",$wf_merchants);
-        $len=sizeof($x);
-        
-		if($merchant_id != 'all') {
-			$this->db->where('merchant_id',$merchant_id);
-		}
-		else{
-			for ($i=0; $i <$len ; $i++) { 
-            if($i==0){
-               $this->db->where('merchant_id', $x[$i]);
-            }else{
-                $this->db->or_where('merchant_id', $x[$i]);
-            }
-        
-        }
-		}
-		$this->db->where('status', 'confirm');
-		$this->db->order_by("id", "desc");
-		$query = $this->db->get();
-		// echo $this->db->last_query();die;
-		//return $query->result_array();
-		return $query->result();
-	}
-
-	public function get_sales_summary_report_refund($end_date, $start_date, $merchant_id) {
-		$this->db->select('mt.amount, mt.tax, mt.tip_amount, mt.card_type, mt.type, mt.date_c, mt.reference, mt.name, mt.status, r.add_date as refund_dt, r.amount as refund_amount');
-		$this->db->from("refund r");
-
-		$this->db->where('r.date_c >=', $start_date);
-		$this->db->where('r.date_c <=', $end_date);
-		$this->db->where('mt.status!=', 'pending');
-		$this->db->where('mt.status!=', 'block');
-		$this->db->where('mt.status!=', 'declined');
-
-		if($merchant_id!="" && $merchant_id!='all') {
-		 $this->db->where_in('r.merchant_id', $merchant_id); 
-		} 
-		if($merchant_id=='all'){
-			$wf_merchants=$this->session->userdata('wf_merchants');
-        	$x=explode(",",$wf_merchants);
-        	$len=sizeof($x);
-        	for ($i=0; $i <$len ; $i++) { 
-            	if($i==0){
-               		$this->db->where('mt.merchant_id', $x[$i]);
-            	}else{
-                	$this->db->or_where('mt.merchant_id', $x[$i]);
-            	}
-        
-        	}
-		}
-		$this->db->join('pos mt', 'mt.invoice_no = r.invoice_no');
-
-		$query1 = $this->db->get_compiled_select();
-		
-		$this->db->select('mt.amount,mt.tax,"0" as tip_amount, mt.card_type, mt.type, mt.date_c, mt.reference, mt.name, mt.status, r.add_date as refund_dt, r.amount as refund_amount');
-		$this->db->from("refund r");
-		$this->db->where('r.date_c >=', $start_date);
-		$this->db->where('r.date_c <=', $end_date);
-		$this->db->where('mt.status!=', 'pending');
-		$this->db->where('mt.status!=', 'block');
-		$this->db->where('mt.status!=', 'declined');
-		if($merchant_id!="" && $merchant_id!='all') {
-		 $this->db->where_in('r.merchant_id', $merchant_id); 
-		}
-		if($merchant_id=='all'){
-			$wf_merchants=$this->session->userdata('wf_merchants');
-        	$x=explode(",",$wf_merchants);
-        	$len=sizeof($x);
-        	for ($i=0; $i <$len ; $i++) { 
-            	if($i==0){
-               		$this->db->where('mt.merchant_id', $x[$i]);
-            	}else{
-                	$this->db->or_where('mt.merchant_id', $x[$i]);
-            	}
-        
-        	}
-		} 
-		$this->db->join('customer_payment_request mt', 'mt.invoice_no = r.invoice_no');
-		$query2 = $this->db->get_compiled_select();
-		
-		$query = $this->db->query($query1 . " UNION ALL " . $query2);
-		
-		return $query->result();
 	}
 
 }

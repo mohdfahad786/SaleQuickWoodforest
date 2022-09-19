@@ -33,16 +33,6 @@ class Login_model extends CI_Model
         $query = $this->db->get();
         return $query->row_array();
      }
-     function get_user_id($id)
-     {
-        
-        $this->db->select('*');
-        $this->db->from('admin');
-        $this->db->where('id', $id);
-        $this->db->where('status', 'active');
-        $query = $this->db->get();
-        return $query->row_array();
-     }
 
      function get_subadmin($usr, $pwd)
      {

@@ -322,19 +322,7 @@
                         <h2 style="color: red !important;"><?= !empty($paymentdata) ? 'Payment Declined!' : $response_msg; ?></h2>
                         <!-- <button style="color: #B9B9B9 !important" onclick="goBack()"><h3>Back to Payment</h3></button> -->
                         <?php if($paymentdata) { ?>
-                             <?php
-
-                        $getMerchant = $this->db->query("SELECT payroc from merchant where id = ".$paymentdata['merchant_id']." ");
-                        $getMerchantData = $getMerchant->result_array();
-                      
-                          $payroc = $getMerchantData[0]['payroc'];
-                                            if($payroc==1){ ?>
-
-                          <form action="<?php echo base_url('payment_card_payment');?>" method="post">
-                      <?php  }  else { ?>
-               <form action="<?php echo base_url('card_payment');?>" method="post">
-                               
-                        <?php     } ?>
+                            <form action="<?php echo base_url('card_payment');?>" method="post">
                                 <input type="hidden" class="form-control" name="bct_id" value="<?php echo (isset($paymentdata) ) ? $paymentdata['id'] : set_value('bct_id');?>" readonly required>
                                 <input type="hidden" class="form-control" name="bct_id1" value="<?php echo (isset($paymentdata) ) ? $paymentdata['payment_id'] : set_value('bct_id1');?>" readonly required>
                                 <input type="hidden" class="form-control" name="bct_id2"  value="<?php echo (isset($paymentdata) ) ? $paymentdata['merchant_id'] : set_value('bct_id2');?>" readonly required>
@@ -347,25 +335,7 @@
 
                         <?php echo $this->session->flashdata('cmsg'); ?>
                         <?php if($paymentdata) { ?>
-
-
-                             <?php
-
-                        $getMerchant = $this->db->query("SELECT payroc from merchant where id = ".$paymentdata['merchant_id']." ");
-                        $getMerchantData = $getMerchant->result_array();
-                      
-                          $payroc = $getMerchantData[0]['payroc'];
-                                            if($payroc==1){ ?>
-
-                          <form action="<?php echo base_url('payment_card_payment');?>" method="post">
-                      <?php  }  else { ?>
-               <form action="<?php echo base_url('card_payment');?>" method="post">
-                               
-                        <?php     } ?>
-                              
-
-                           
-
+                            <form action="<?php echo base_url('card_payment');?>" method="post">
                                 <input type="hidden" class="form-control" name="bct_id" value="<?php echo (isset($paymentdata) ) ? $paymentdata['id'] : set_value('bct_id');?>" readonly required>
                                 <input type="hidden" class="form-control" name="bct_id1" value="<?php echo (isset($paymentdata) ) ? $paymentdata['payment_id'] : set_value('bct_id1');?>" readonly required>
                                 <input type="hidden" class="form-control" name="bct_id2"  value="<?php echo (isset($paymentdata) ) ? $paymentdata['merchant_id'] : set_value('bct_id2');?>" readonly required>

@@ -1,0 +1,4 @@
+[15-Dec-2018 10:48:50 UTC] PHP Warning:  require_once(_DIR_/vendor/autoload.php): failed to open stream: No such file or directory in /home/milstead/public_html/cnp-sdk/cnp/sdk/mytest.php on line 2
+[15-Dec-2018 10:48:50 UTC] PHP Fatal error:  require_once(): Failed opening required '_DIR_/vendor/autoload.php' (include_path='.:/usr/lib/php:/usr/local/lib/php') in /home/milstead/public_html/cnp-sdk/cnp/sdk/mytest.php on line 2
+[28-Dec-2018 09:22:17 UTC] PHP Warning:  require_once(_DIR_/vendor/autoload.php): failed to open stream: No such file or directory in /home/milstead/public_html/cnp-sdk/cnp/sdk/mytest.php on line 2
+[28-Dec-2018 09:22:17 UTC] PHP Fatal error:  require_once(): Failed opening required '_DIR_/vendor/autoload.php' (include_path='.:/usr/lib/php:/usr/local/lib/php') in /home/milstead/public_html/cnp-sdk/cnp/sdk/mytest.php on line 2

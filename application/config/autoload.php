@@ -103,7 +103,7 @@ $autoload['helper'] = array('url', 'file', 'form', 'html', 'jwt', "authorization
 | config files.  Otherwise, leave it blank.
 |
 */
-$autoload['config'] = array('jwt');
+$autoload['config'] = array('jwt','memcached');
 
 /*
 | -------------------------------------------------------------------

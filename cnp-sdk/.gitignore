@@ -1,0 +1,13 @@
+*.tar
+.project
+
+.DS_Store
+/.buildpath
+reports/
+/vendor
+composer.lock
+/lib
+/cnp_SDK_config.ini
+composer.phar
+.idea/
+cnp/sdk/batchRequest/

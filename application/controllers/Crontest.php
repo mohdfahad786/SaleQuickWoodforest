@@ -83,7 +83,7 @@ public function mail_test() {
 				$this->email->initialize($config);
 				$MailSubject = 'Salequick Registration Confirmation ';
 				$this->email->from('info@salequick.com', 'Confirm Email');
-				$this->email->to('sq.dev007@gmail.com');
+				$this->email->to('vaibhav.angad@gmail.com');
 				$this->email->subject('Mail Test');
 				$this->email->message($htmlContent);
 				$this->email->send();

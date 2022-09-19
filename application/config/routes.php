@@ -49,7 +49,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
  */
-$route['default_controller'] = 'admin';
+$route['default_controller'] = 'about/agent';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 $route['confirm/(:any)'] = 'signup/confirm/$1 ';
@@ -57,13 +57,6 @@ $route['payment/(:any)/(:any)'] = 'signup/payment/$1//$2 ';
 $route['payment_cnp/(:any)/(:any)'] = 'signup/payment_cnp/$1//$2 ';
 $route['payment_cnp_invoicing/(:any)/(:any)'] = 'signup/payment_cnp_invoicing/$1//$2 ';
 $route['card_payment'] = 'signup/card_payment';
-
-$route['pay_now/(:any)/(:any)'] = 'pay_now/index/$1/$2 ';
-$route['pay_now_test/(:any)/(:any)'] = 'pay_now_test/index/$1/$2 ';
-
-
-$route['payment_payroc_invoicing/(:any)/(:any)'] = 'payroc_invoice/payment_cnp_invoicing/$1//$2 ';
-$route['payment_card_payment'] = 'payroc_invoice/card_payment';
 
 $route['rpayment/(:any)/(:any)'] = 'signup/payment/$1//$2 ';
 $route['spayment/(:any)/(:any)'] = 'signup/spayment/$1//$2 ';
@@ -86,7 +79,6 @@ $route['rec_payment/(:any)/(:any)'] = 'signup/rec_payment/$1//$2 ';
 
 
 $route['payment_error'] = 'signup/payment_error';
-$route['link_pay_error/(:any)/(:any)/(:any)'] = 'pay_now/payment_error/$1/$2/$3';
 $route['payment_error/(:any)'] = 'signup/payment_error/$1 ';
 $route['payment_error/(:any)/(:any)'] = 'signup/payment_error/$1/$2';
 
@@ -102,7 +94,6 @@ $route['pricing1'] = 'about/pricing1';
 $route['pricing'] = 'about/pricing';
 $route['support'] = 'about/support';
 $route['company'] = 'about/company';
-$route['vts_demo'] = 'about/vts_demo';
 $route['login'] = 'about/login';
 $route['admin'] = 'about/admin';
 $route['subadmin'] = 'about/subadmin';
@@ -116,24 +107,10 @@ $route['eight_important_questions_all_businesses_should_ask_their_payment_provid
 $route['innovation_of_pay_by_text'] = 'about/blog_more3';
 $route['how_credit_card_processing_works'] = 'about/blog_more4';
 $route['api_new'] = 'about/api_new';
-$route['banking'] = 'about/banking';
-
-$route['credit-and-debit-card-processing'] = 'about/credit_and_debit_card_processing';
-$route['gateway-virtual-terminal'] = 'about/gateway_virtual_terminal';
-$route['invoicing'] = 'about/invoicing';
-$route['mobile-payment-processing'] = 'about/mobile_payment_processing';
-$route['pax-a920'] = 'about/pax_a920';
-$route['recurring-payments'] = 'about/recurring_payments';
-$route['text-to-pay'] = 'about/text_to_pay';
-$route['website-api'] = 'about/website_api';
-$route['merchant-services-agreement'] = 'about/merchant_services_agreement';
 
 $route['dailyreport/(:any)/(:any)'] = 'Report/allreportpdf//$1//$2 ';
-$route['dailyreport_new/(:any)/(:any)'] = 'Report_new/allreportpdf//$1//$2 ';
 // $route['monthlyreport/(:any)/(:any)'] = 'Report/allreportpdf//$1//$2 ';
 $route['monthlyreport/(:any)/(:any)/(:any)'] = 'Report/allreportpdf/$1/$2/$3';
-$route['batchreport/(:any)/(:any)/(:any)'] = 'Batch_report/allreportpdf/$1/$2/$3';
-
 
 $route['hitsql'] = 'welcome/hitsqlquery';
 
@@ -150,17 +127,10 @@ $route['webservices/v3.2/pos_reciept_json/(:any)/(:any)'] = 'App/ReceiptApi/pos_
 $route['webservices/v3.2.3/pos_reciept_json/(:any)/(:any)/(:any)'] = 'App/ReceiptApi/pos_reciept_json_v3_2_3/$1/$2/$3 ';
 $route['webservices/v3.3/pos_reciept_json/(:any)/(:any)'] = 'App/ReceiptApi/pos_reciept_json_v3_3/$1/$2 ';
 $route['webservices/v3.4/pos_reciept_json/(:any)/(:any)'] = 'App/ReceiptApi/pos_reciept_json_v3_4/$1/$2 ';
-$route['webservices/v3.5/pos_reciept_json/(:any)/(:any)'] = 'App/ReceiptApi/pos_reciept_json_v3_5/$1/$2 ';
-
-$route['merchant_year_graph/(:any)/(:any)'] = 'merchant_year_graph/index/$1/$2 ';
-$route['merchant_week_graph/(:any)/(:any)'] = 'merchant_week_graph/index/$1/$2 ';
-$route['add_card/(:any)/(:any)/(:any)'] = 'add_card/index/$1/$2/$3';
 
 $route['webservices/v3.4/hello'] = 'Webservice/Merchant_api/hello';
 
 
 
 
-$route['how-it-works'] = 'about/how_it_works';
-$route['products-and-solutions'] = 'about/products_and_solutions';
-$route['contact'] = 'about/contact';
+

@@ -66,7 +66,7 @@
               // redirect("signup");
             } else {
               $today2 = date("Y-m-d");
-        $today1 = date("ymdhisu");
+        $today1 = date("Ymdhisu");
         $unique = "SAL" .$today1 ;
                 $data = Array(
 						"name" => $this->input->post('f_name'),

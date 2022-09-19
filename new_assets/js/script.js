@@ -1,3 +1,4 @@
+
 //GLOBAL VARIALES
 	var aHtml='<div  id="aa" data-dimension="121" data-fontsize="21" data-fgcolor="#2273dc" data-bgcolor="#e8e8e8" data-width="8" data-bordersize="8" data-animationstep="5" data-strokeLinecap="round"></div>',
 			bHtml='<div  id="bb" data-dimension="121" data-fontsize="21" data-fgcolor="#2273dc" data-bgcolor="#e8e8e8" data-width="8" data-bordersize="8" data-animationstep="5" data-strokeLinecap="round"></div>',
@@ -81,34 +82,7 @@
 		$wraper.html(newTable);
 		$wraper.find('table').DataTable(dtConfigHiddenTable);
 	}
-//sign up leaveFirstGoNextStp 
-	function leaveFirstGoNextStp(){
-		$('.steps-wrapper .row').removeClass('active');
-		$('.steps-wrapper .row.second-step').addClass('active');
-		$('.sign-up-form .form-steps').slideDown(300);
-		$('.sign-up-form .form-steps .step').removeClass('active');
-		$('.sign-up-form .form-steps .step[data-fStep="2"]').addClass('active');
-		$('.sign-up-form .form-steps .step[data-fStep="1"] span').html('').addClass('fa fa-check');
-		$('.sign-up-form .form-steps .step[data-fStep="1"]').addClass('completed');
-	}
-	function leave2ndGoNextStp(){
-		$('.steps-wrapper .row').removeClass('active');
-		$('.steps-wrapper .row.third-step').addClass('active');
-		// $('.sign-up-form .form-steps').slideDown(300);
-		$('.sign-up-form .form-steps .step').removeClass('active')
-		$('.sign-up-form .form-steps .step[data-fStep="3"]').addClass('active')
-		$('.sign-up-form .form-steps .step[data-fStep="2"] span').html('').addClass('fa fa-check');
-		$('.sign-up-form .form-steps .step[data-fStep="2"]').addClass('completed')
-	}
-	function leave3rdGoNextStp(){
-		$('.steps-wrapper .row').removeClass('active');
-		$('.steps-wrapper .row.fourth-step').addClass('active');
-		// $('.sign-up-form .form-steps').slideDown(300);
-		$('.sign-up-form .form-steps .step').removeClass('active');
-		$('.sign-up-form .form-steps .step[data-fStep="4"]').addClass('active');
-		$('.sign-up-form .form-steps .step[data-fStep="3"] span').html('').addClass('fa fa-check');
-		$('.sign-up-form .form-steps .step[data-fStep="3"]').addClass('completed');
-	}
+
 //imggraph-update sale-renge-graph
 	// function saleChartFn(a, b,hgt) {
 	// 		// console.log(a) for graph id
@@ -328,44 +302,44 @@
 	}
 //page load
 	function ensureActiveLinkAfterPageLoad(){
-		// $("#sidebar-menu a").each(function() {
-		// 		//remove hash from url
-		// 				var locP=window.location.href;
-		// 				var locPL=locP.length;
-		// 				var hashI=parseInt(locP.lastIndexOf('#')) + 1;
-		// 				if(locPL == hashI){
-		// 						locP=locP.replace(/.$/, "");
-		// 				}
-		// 		//check to add class
-		// 		if (this.href == locP) {
-		// 				$(this).addClass("active");
-		// 				$(this).parent().addClass("active"); // add active to li of the current link
-		// 				$(this).parent().parent().prev().addClass("active"); // add active class to an anchor
-		// 				$(this).parent().parent().parent().parent().prev().click();
-		// 				$(this).parent().parent().prev().click(); // click the item to make it drop
-		// 		}
-		// });
+		$("#sidebar-menu a").each(function() {
+				//remove hash from url
+						var locP=window.location.href;
+						var locPL=locP.length;
+						var hashI=parseInt(locP.lastIndexOf('#')) + 1;
+						if(locPL == hashI){
+								locP=locP.replace(/.$/, "");
+						}
+				//check to add class
+				if (this.href == locP) {
+						$(this).addClass("active");
+						$(this).parent().addClass("active"); // add active to li of the current link
+						$(this).parent().parent().prev().addClass("active"); // add active class to an anchor
+						$(this).parent().parent().parent().parent().prev().click();
+						$(this).parent().parent().prev().click(); // click the item to make it drop
+				}
+		});
 	}
 //side menu
-	// function toggleSideMenus($this){
-	// 	if (!$this.hasClass("subdrop")) {
-	// 			// hide any open menus and remove all other classes
-	// 			$("ul", $this.parents("ul:first")).stop().slideUp(350);
-	// 			$("a", $this.parents("ul:first")).removeClass("subdrop");
-	// 			$("#sidebar-menu .pull-right i").removeClass("md-remove").addClass("md-add");
+	function toggleSideMenus($this){
+		if (!$this.hasClass("subdrop")) {
+				// hide any open menus and remove all other classes
+				$("ul", $this.parents("ul:first")).stop().slideUp(350);
+				$("a", $this.parents("ul:first")).removeClass("subdrop");
+				$("#sidebar-menu .pull-right i").removeClass("md-remove").addClass("md-add");
 
-	// 			// open our new menu and add the open class
-	// 			$this.next("ul").stop().slideDown(350);
-	// 			$this.addClass("subdrop");
-	// 			// $(".pull-right i", $this.parents(".has_sub:last")).removeClass("md-add").addClass("md-remove");
-	// 			// $(".pull-right i", $this.siblings("ul")).removeClass("md-remove").addClass("md-add");
-	// 	} else if ($this.hasClass("subdrop")) {
-	// 			$this.removeClass("subdrop");
-	// 			$this.next("ul").stop().slideUp(350);
-	// 			// $(".pull-right i", $this.parent()).removeClass("md-remove").addClass("md-add");
-	// 	}
+				// open our new menu and add the open class
+				$this.next("ul").stop().slideDown(350);
+				$this.addClass("subdrop");
+				// $(".pull-right i", $this.parents(".has_sub:last")).removeClass("md-add").addClass("md-remove");
+				// $(".pull-right i", $this.siblings("ul")).removeClass("md-remove").addClass("md-add");
+		} else if ($this.hasClass("subdrop")) {
+				$this.removeClass("subdrop");
+				$this.next("ul").stop().slideUp(350);
+				// $(".pull-right i", $this.parent()).removeClass("md-remove").addClass("md-add");
+		}
 
-	// }
+	}
 //login register make v-center
 	function vCenterRequired($elem){
 		var winH=$(window).height() - 30 ;
@@ -467,209 +441,11 @@
 	 }
 	}
 
-	//stepper form check validation
-	function signUpStepFirst($wrapper) {
-		var phone = /[0-9]/;// Email address
-		var trueFalse = 1;
-		$wrapper.find('.form-control[required]').each(function() {
-			var txtVal=$(this).val();
-			// console.log(txtVal)
-			//check empty
-			if(!txtVal.length) {
-				// console.log('run')
-				$(this).closest('.form-group').addClass('mandatory');
-				$(this).focus();
-				trueFalse=0;
-				return false;
-			}
-			//check if email
-			if($(this).hasClass('email')) {
-				if(!emailRegx.test(txtVal)) {
-					$(this).closest('.form-group').addClass('incorrect');
-					$(this).focus();
-					trueFalse=0;
-					return false;
-				}
-			}
-			//check if email
-			if($(this).hasClass('phone')) {
-				if(!phone.test(txtVal)) {
-					$(this).closest('.form-group').addClass('incorrect');
-					$(this).focus();
-					trueFalse=0;
-					return false;
-				}
-			}
-			//check if password
-			if($(this).hasClass('p2')) {
-				var p1=$wrapper.find('.password.p1').val();
-				var p2=$wrapper.find('.password.p2').val();
-				if(p1 != p2) {
-					$(this).focus();
-					$(this).closest('.form-group').addClass('not-match');
-					console.log('false');
-					trueFalse=0;
-					return false;
-				} else {
-					console.log('matched')
-					$(this).closest('.form-group').removeClass('not-match');
-				}
-			}
-		})
-		return trueFalse;
-	}
 
-	function signUpStepSecond($wrapper){
-		var trueFalse= 1;
-		$wrapper.find('.form-control[required]').each(function(){
-				var txtVal=$(this).val();
-				//check empty
-					if(!txtVal.length)
-					{
-						// console.log('run')
-						$(this).closest('.form-group').addClass('mandatory');
-						$(this).focus();
-						trueFalse=0;
-						return false;
-					}
-				//check if email
-					if($(this).hasClass('email'))
-					{
-						if(!emailRegx.test(txtVal))
-						{
-							$(this).closest('.form-group').addClass('incorrect');
-							$(this).focus();
-							trueFalse=0;
-							return false;
-						}
-					}
-				//check if email
-					if($(this).hasClass('us-routing-c'))
-					{
-						if(txtVal != $('.us-routing').val().trim())
-						{
-							$(this).closest('.form-group').addClass('not-match');
-							$(this).focus();
-							trueFalse=0;
-							return false;
-						}
-					}
-				//check if email
-					if($(this).hasClass('us-acc-no-c'))
-					{
-						if(txtVal != $('.us-acc-no').val().trim())
-						{
-							$(this).closest('.form-group').addClass('not-match');
-							$(this).focus();
-							trueFalse=0;
-							return false;
-						}
-					}
-		})
-		return trueFalse;
-	}
-	function signUpStepThird($wrapper){
-		var trueFalse= 1;
-		$wrapper.find('.form-control[required]').each(function(){
-			// console.log($(this));
-			var txtVal=$(this).val();
-			//check empty
-			if(!txtVal.length)
-			{
-				// console.log('run')
-				$(this).closest('.form-group').addClass('mandatory');
-				$(this).focus();
-				trueFalse=0;
-				return false;
-			}
-			//check if email
-			if($(this).hasClass('email'))
-			{
-				if(!emailRegx.test(txtVal))
-				{
-					$(this).closest('.form-group').addClass('incorrect');
-					$(this).focus();
-					trueFalse=0;
-					return false;
-				}
-			}
-		})
-		return trueFalse;
-	}
-	function signUpStepFourth($wrapper){
-		var trueFalse= 1;
-		$wrapper.find('.form-control[required]').each(function(){
-				var txtVal=$(this).val();
-				//check empty
-					if(!txtVal.length)
-					{
-						// console.log('run')
-						$(this).closest('.form-group').addClass('mandatory');
-						$(this).focus();
-						trueFalse=0;
-						return false;
-					}
-					//check if email
-						if($(this).hasClass('email'))
-						{
-							if(!emailRegx.test(txtVal))
-							{
-								$(this).closest('.form-group').addClass('incorrect');
-								$(this).focus();
-								trueFalse=0;
-								return false;
-							}
-						}
-					if($(this).hasClass('acc2'))
-					{
-						var p1=$wrapper.find('.form-control.acc1').val();
-						var p2=$wrapper.find('.form-control.acc2').val();
-						if(p1 != p2)
-						{
-							$(this).focus();
-							$(this).closest('.form-group').addClass('not-match');
-							console.log('false');
-							trueFalse=0;
-							return false;
-						}
-						else{
-							console.log('matched')
-							$(this).closest('.form-group').removeClass('not-match');
-						}
-					}
-				//check if routing
-					if($(this).hasClass('us-routing-c'))
-					{
-						if(txtVal != $('.us-routing').val().trim())
-						{
-							$(this).closest('.form-group').addClass('not-match');
-							$(this).focus();
-							trueFalse=0;
-							return false;
-						}
-					}
-				//check if acc-no
-					if($(this).hasClass('us-acc-no-c'))
-					{
-						if(txtVal != $('.us-acc-no').val().trim())
-						{
-							$(this).closest('.form-group').addClass('not-match');
-							$(this).focus();
-							trueFalse=0;
-							return false;
-						}
-					}
-		})
-		return trueFalse;
-	}
 //invoicing recurring calculation
 	function calculateTaxAmount($this){
 		var $wrapper=$this.closest('.all_items_wrapper');
 		var taxAmt=0,ttlAmtTax=0;
-		
-		var other_charges_type = $("#other_charges_type").val();
-    var other_charges_value = parseFloat($("#other_charges_value").val());
-    
 		var ttlTaxWtTax=$wrapper.find('.item_tax[name="Tax_Amount[]"]').map(function(){
 									 var newVal=this.value;
 											 newVal=isNaN(newVal)? 0: (newVal != ''? newVal : 0);
@@ -682,110 +458,33 @@
 											 ttlAmtTax+=parseFloat(newVal);
 									 return newVal;
 								}).get();
-								
-								if(other_charges_type=='$'){
-           var otherCharges = parseFloat(other_charges_value);
-                }
-                else if(other_charges_type=='%'){
-                    var subTotal = (ttlAmtTax - taxAmt).toFixed(2);
-                     var otherCharges = parseFloat(subTotal * (other_charges_value / 100));
-                     
-           
-                }
-// 		$('#sub_amount').val((ttlAmtTax - taxAmt).toFixed(2));
-// 		$('#total_tax').val(taxAmt.toFixed(2));
-// 		$('#amount').val(ttlAmtTax.toFixed(2));
-		
 		$('#sub_amount').val((ttlAmtTax - taxAmt).toFixed(2));
-	if(other_charges_value > 0){	
-     $('#other_charges').val(otherCharges.toFixed(2));
-     $('#amount').val((ttlAmtTax + otherCharges).toFixed(2));
-	}
-	else
-	{
-	 $('#other_charges').val(0);
-    // $('#amount').val(ttlAmtTax);
-     $("#amount").val(ttlAmtTax.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
-	}
-     
-    $('#total_tax').val(taxAmt.toFixed(2));
-    
-    
+		$('#total_tax').val(taxAmt.toFixed(2));
+		$('#amount').val(ttlAmtTax.toFixed(2));
 		// console.log('calculateTaxAmount');
 	}
 	function calcTaxAmt($this){
-		var $row=$this.closest('.custom-form');
-		var tax = $row.find('.sel_item_tax option:selected').attr('rel');
-		var qty =  $row.find('.item_qty').val();
-		var amount =  $row.find('.item_price').val();
-		tax=isNaN(tax)? 0: (tax != ''? tax : 0);
-		qty=isNaN(qty)? 1: (qty != ''? qty : 1);
-		amount=isNaN(amount)? 0: (amount != ''? amount : 0);
+			var $row=$this.closest('.custom-form');
+			var tax = $row.find('.sel_item_tax option:selected').attr('rel');
+			var qty =  $row.find('.item_qty').val();
+			var amount =  $row.find('.item_price').val();
+					tax=isNaN(tax)? 0: (tax != ''? tax : 0);
+					qty=isNaN(qty)? 1: (qty != ''? qty : 1);
+					amount=isNaN(amount)? 0: (amount != ''? amount : 0);
 
-		var totalAmt = (qty*amount);
+			var totalAmt = (qty*amount);
 
-		var taxAmt = (tax*totalAmt)/100;
-		taxAmt=isNaN(taxAmt)? 0: (taxAmt != ''? taxAmt : 0);
+			var taxAmt = (tax*totalAmt)/100;
+					taxAmt=isNaN(taxAmt)? 0: (taxAmt != ''? taxAmt : 0);
 
-		var totalWtTx =  parseFloat(taxAmt) + parseFloat(totalAmt);
-		$row.find('.sub_total').val(totalWtTx.toFixed(2));
-		$row.find('.item_tax').val(taxAmt);
-		$row.find('.hide_tax').val(tax);
-		calculateTaxAmount($this)
+			var totalWtTx =  parseFloat(taxAmt) + parseFloat(totalAmt);
+			$row.find('.sub_total').val(totalWtTx.toFixed(2));
+			$row.find('.item_tax').val(taxAmt);
+			$row.find('.hide_tax').val(tax);
+			calculateTaxAmount($this)
 	}
-
-	//pos tax calculation
-    function calc_tax() {
-        var tax_value = ($("#tax_value").val()) ? $("#tax_value").val() : 0;
-        var amount = ($("#amount").val()) ? $("#amount").val() : 0;
-        var main_amount = ($("#main_amount").val()) ? $("#main_amount").val() : 0;
-        
-        var subTotal = parseFloat(main_amount) ;
-        var calc_tax_val = parseFloat(subTotal * (tax_value / 100));
-        calc_tax_val = parseFloat(calc_tax_val.toFixed(2));
-        // console.log(calc_tax_val);
-        if(calc_tax_val == 0) {
-            $('.tax_section').addClass('d-none');
-        } else {
-            $('.tax_section').removeClass('d-none');
-        }
-    }
-    
-    //pos ocharges calculation
-    function calc_ocharges() {
-        var other_charges_type = ($("#other_charges_type").val()) ? $("#other_charges_type").val() : 0;
-        var other_charges_value = ($("#other_charges_value").val()) ? $("#other_charges_value").val() : 0;
-        var amount = ($("#amount").val()) ? $("#amount").val() : 0;
-        var orignal_amount = ($("#orignal_amount").val()) ? $("#orignal_amount").val() : 0;
-        if(orignal_amount!='') {
-            amount = orignal_amount;   
-        } else {
-            amount = amount;
-        }
-        
-        if(other_charges_type=='$'){
-            var otherCharges = parseFloat(other_charges_value);
-        } else if(other_charges_type=='%'){
-            var subTotal = parseFloat(amount) ;
-            var otherCharges = parseFloat(subTotal * (other_charges_value / 100));
-        }
-        calc_otherCharges = parseFloat(otherCharges.toFixed(2));
-        console.log(calc_otherCharges);
-        if(calc_otherCharges == 0) {
-            $('.ocharges_section').addClass('d-none');
-        } else {
-            $('.ocharges_section').removeClass('d-none');
-        }
-    }
-
-	//pos calculation
+//pos calculation
 	function posCalcFn(btn){
-		$("#carrent_othercharges").prop("checked", false);
-      	$("#carrent_sales_tax_new").prop("checked", false);
-       	$('.charges_view').addClass('d-none');
-       	$('.tax_view').addClass('d-none');
-       	$("#other_charges").val('');
-        $("#totaltax").val('');
 		// console.log($(btn).data())
 		var x = $(btn).data().val;
 		var y = $(btn).data().val;
@@ -793,21 +492,13 @@
 		doc+=x;
 		posInputValue+=x
 		posInput=posInputValue;
-		//document.getElementById("t_amount").value = formatNumberg(posInputValue);
 		document.getElementById("t_amount").value = formatNumberg(posInputValue);
-		$('#t_amount').number(true, 2 );
 			
-		//	var z = document.getElementById("sub_amount");
-		//	z.value = formatNumberg(posInputValue);
-        document.getElementById("amount").value = formatNumberg(posInputValue);
-        document.getElementById("orignal_amount").value = formatNumberg(posInputValue);
-        document.getElementById("main_amount").value = formatNumberg(posInputValue);
-
-        calc_tax();
-        calc_ocharges();
+		var z = document.getElementById("sub_amount");
+		z.value = formatNumberg(posInputValue);
 	}
  
-	//json to csv converter
+//json to csv converter
 	function JSONToCSVConvertor(JSONData, ReportTitle, ShowLabel) {
 		//If JSONData is not an object then JSON.parse will parse the JSON string in an Object
 		var arrData = typeof JSONData != 'object' ? JSON.parse(JSONData) : JSONData;
@@ -1005,7 +696,7 @@
 				chart: {
 					type: 'spline',
 					spacingBottom: 30,
-					height: 201
+					height: 400
 
 				},
 				title: {
@@ -1073,36 +764,36 @@
 			});
 	}
 // dashboard sale order chart updation fn
-	// function updateSaleOrderChart(a,b,c){
+	function updateSaleOrderChart(a,b,c){
 
-	// 	var ab=$('#circularOrderCharts >div:nth-child(1) .order-chart-text');
-	// 	var bb=$('#circularOrderCharts >div:nth-child(2) .order-chart-text');
-	// 	var cb=$('#circularOrderCharts >div:nth-child(3) .order-chart-text');
-	// 	$('#aa').remove();
-	// 	$('#bb').remove();
-	// 	$('#cc').remove();
-	// 	var t1=isNaN(parseFloat(a)) ? 0: (isNaN(parseFloat(a)) == null ? 0: parseFloat(a));
-	// 	var t2=isNaN(parseFloat(b)) ? 0: (isNaN(parseFloat(b)) == null ? 0: parseFloat(b));
-	// 	var t3=isNaN(parseFloat(c)) ? 0: (isNaN(parseFloat(c)) == null ? 0: parseFloat(c));
+		var ab=$('#circularOrderCharts >div:nth-child(1) .order-chart-text');
+		var bb=$('#circularOrderCharts >div:nth-child(2) .order-chart-text');
+		var cb=$('#circularOrderCharts >div:nth-child(3) .order-chart-text');
+		$('#aa').remove();
+		$('#bb').remove();
+		$('#cc').remove();
+		var t1=isNaN(parseFloat(a)) ? 0: (isNaN(parseFloat(a)) == null ? 0: parseFloat(a));
+		var t2=isNaN(parseFloat(b)) ? 0: (isNaN(parseFloat(b)) == null ? 0: parseFloat(b));
+		var t3=isNaN(parseFloat(c)) ? 0: (isNaN(parseFloat(c)) == null ? 0: parseFloat(c));
 
-	// 	var total_amount =  parseFloat(t1 + t2 + t3) ;
+		var total_amount =  parseFloat(t1 + t2 + t3) ;
 
-	// 	ab.find('.oc-no').html(t1);
-	// 	bb.find('.oc-no').html(t2);
-	// 	cb.find('.oc-no').html(t3);
+		ab.find('.oc-no').html(t1);
+		bb.find('.oc-no').html(t2);
+		cb.find('.oc-no').html(t3);
 
-	// 	var p1=(t1==0)?0:parseFloat((t1 / total_amount)*100);
-	// 	var p2=(t2==0)?0:parseFloat((t2 / total_amount)*100);
-	// 	var p3=(t3==0)?0:parseFloat((t3 / total_amount)*100);
-	// 	// console.log(p1)
-	// 	// console.log(p2)
-	// 	// console.log(p3)
-	// 	// console.log(total_amount)
-	// 	ab.before($(aHtml).circliful({ percent: p1 }));
-	// 	bb.before($(bHtml).circliful({ percent: p2 }));
-	// 	cb.before($(cHtml).circliful({ percent: p3 }));
+		var p1=(t1==0)?0:parseFloat((t1 / total_amount)*100);
+		var p2=(t2==0)?0:parseFloat((t2 / total_amount)*100);
+		var p3=(t3==0)?0:parseFloat((t3 / total_amount)*100);
+		// console.log(p1)
+		// console.log(p2)
+		// console.log(p3)
+		// console.log(total_amount)
+		ab.before($(aHtml).circliful({ percent: p1 }));
+		bb.before($(bHtml).circliful({ percent: p2 }));
+		cb.before($(cHtml).circliful({ percent: p3 }));
 
-	// }
+	}
 //draw sales summery chart
 	var dataSummeryVals=[
 									{y: 10000,tax: 0,avg: 1000}, 
@@ -1209,135 +900,79 @@
 	//     {y: 5000,tax: 0,avg: 500}
 	//   ]
 	function salesTimeDayChart(dataTimeDayVals){
-		// if($(window).width() >= 3000) {
-		// 	var chart_width = 3687;
-		// } else if ($(window).width() <= 2999 && $(window).width() >= 2500) {
-  //           // var chart_width = 1663;
-  //           var chart_width = 2338;
-  //     	} else if ($(window).width() <= 2499 && $(window).width() >= 2000) {
-  //     	// if ($(window).width() >= 2000) {
-  //           var chart_width = 1663;
-  //       } else if ($(window).width() <= 1999 && $(window).width() >= 1700) {
-  //           var chart_width = 1438;
-  //       } else if ($(window).width() <= 1699 && $(window).width() >= 1550) {
-  //           var chart_width = 1326;
-  //       } else if ($(window).width() <= 1549 && $(window).width() >= 1401) {
-  //           var chart_width = 1138;
-  //       } else if ($(window).width() <= 1400 && $(window).width() >= 1341) {
-  //           var chart_width = 1009;
-  //       } else if ($(window).width() <= 1340 && $(window).width() >= 1150) {
-  //           var chart_width = 886;
-  //       } else if ($(window).width() <= 1149 && $(window).width() >= 950) {
-  //           var chart_width = 739;
-  //       } else if ($(window).width() <= 949 && $(window).width() >= 850) {
-  //           var chart_width = 838;
-  //       } else if ($(window).width() <= 849 && $(window).width() >= 750) {
-  //           var chart_width = 708;
-  //       } else if ($(window).width() <= 749 && $(window).width() >= 600) {
-  //           var chart_width = 611;
-  //       } else if ($(window).width() <= 599 && $(window).width() >= 460) {
-  //           var chart_width = 474;
-  //       } else if ($(window).width() <= 459) {
-  //           var chart_width = 413;
-  //       }
-      // console.log(dataTimeDayVals);
-      Highcharts.chart('sales_time_of_day', {
-        chart: {
-          type: 'areaspline',
-          spacingBottom: 30
-          // width: chart_width
 
-        },
-        title: {
-          text: null
-        },
-        xAxis: {
-          categories: ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00', '12:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00'],
+			Highcharts.chart('sales_time_of_day', {
+				chart: {
+					type: 'spline',
+					spacingBottom: 30,
+					height: 201
 
-          labels: {
-            style: {
-              color: '#9b9b9b'
-            }
-          },
-          min: 0
-        },
-        yAxis: {
-          gridLineColor: '#eaeaea',
-          title: {
-            text: false
-          },
-          labels: {
-            style: {
-              color: '#9b9b9b'
-            }
-          },
+				},
+				title: {
+					text: null
+				},
+				xAxis: {
+					categories: ['12:00 AM','01:00 AM','02:00 AM','03:00 AM','04:00 AM','05:00 AM','06:00 AM','07:00 AM','08:00 AM','09:00 AM','10:00 AM','11:00 AM', '12:00 PM','01:00 PM','02:00 PM','03:00 PM','04:00 PM','05:00 PM','06:00 PM','07:00 PM','08:00 PM','09:00 PM','10:00 PM','11:00 PM'],
 
-          tickInterval: 5000,
-          min: 0,
-          labels: {
-            formatter: function() {
-              return ((this.value/1000) >= 1 ? ((this.value/1000) + 'k') : (this.value));
-            }
-          },
-          //min: 5000
-        },
-        exporting: {
-          enabled: false
-        },
-        responsive: {
-            rules: [{
-                condition: {
-                    maxWidth: 4000
-                },
-                chartOptions: {
-                    yAxis: {
-                        labels: {
-                            align: 'center'
-                        }
-                    }
-                }
-            }]
-        },
-        tooltip: {
-          backgroundColor: '#fff',
-          borderRadius: 10,
-          formatter: function() {
-            return '<b>' + this.x + '</b><br/>' + '<span style="color: #868e96">Amount' + ':</span> <span style="color:#FDAC42;font-weight:600;">$' + this.y.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + ' </span><br/> <span style="color: #868e96">' + 'Avg Transaction:</span> <span style="color:#AC5DD9;font-weight:600;">$' + this.point.avg.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + '</span><br/><span style="color: #868e96">Tax:</span> <span style="color:#D0021B;font-weight:600;">$' + this.point.tax.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")+'</span>';
-          }
-        },
-        credits: {
-          enabled: false
-        },
+					labels: {
+						style: {
+							color: '#9b9b9b'
+						}
+					},
+					min: 0
+				},
+				yAxis: {
+					gridLineColor: '#eaeaea',
+					title: {
+						text: false
+					},
+					labels: {
+						style: {
+							color: '#9b9b9b'
+						}
+					},
 
-        plotOptions: {
-          // series: {
-          //   lineWidth: 4,
-          //   marker: {
-          //     lineWidth: 3,
-          //     lineColor: '#ffffff',
-          //     symbol: 'circle'
-          //   }
-          // }
-          areaspline: {
-            fillOpacity: 0.1,
-            marker: {
-              fillColor: "#fff",
-              lineWidth: 2,
-              lineColor: null,
-              // lineWidth: 3,
-              symbol: 'circle'
-            },
-          }
-        },
-            series: [{
-              // name: 'Time of Day',
-              type: "areaspline",
-              // color: '#00a6ff',
-              showInLegend: false,
-              data: dataTimeDayVals
-            }]
-      });
-  }
+					tickInterval: 5000,
+					min: 0,
+					labels: {
+						formatter: function() {
+							return ((this.value/1000) >= 1 ? ((this.value/1000) + 'k') : (this.value));
+						}
+					},
+					//min: 5000
+				},
+				exporting: {
+					enabled: false
+				},
+				tooltip: {
+					formatter: function() {
+						return '<b>'  + '"' + this.x + '" </b><br/>' + '<span style="color: #08c08c;">Amount' + ': $' + this.y.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + ' </span><br/> <span style="color: #C14242">' + 'Avg Transaction: $' + this.point.avg.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + '</span><br/><span style="color: #390390">' + 'Tax: $' + this.point.tax.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")+'</span>';
+					}
+				},
+				credits: {
+					enabled: false
+				},
+
+			plotOptions: {
+					series: {
+									lineWidth: 4,
+						marker: {
+									lineWidth: 3,
+									lineColor: '#ffffff',
+									symbol: 'circle'
+								}
+							}
+						},
+						series: [{
+
+							name: 'Time of Day',
+							type: "spline",
+							color: '#00a6ff',
+							showInLegend: false,
+							data: dataTimeDayVals
+						}]
+			});
+	}
 //draw daily Gross Sale chart
 	// var dailyGrossSaleVals1=
 	//   [
@@ -1371,85 +1006,85 @@
 	//     {y: 8000,tax: 0,avg: 400},
 	//     {y: 10000,tax: 0,avg: 500}
 	//   ]
-	// function dailyGrossSaleChart(val1,val2){
+	function dailyGrossSaleChart(val1,val2){
 
-	// 		Highcharts.chart('dailyGrossSale', {
-	// 			chart: {
-	// 				type: 'spline',
-	// 				spacingBottom: 30,
-	// 				height: 201
+			Highcharts.chart('dailyGrossSale', {
+				chart: {
+					type: 'spline',
+					spacingBottom: 30,
+					height: 201
 
-	// 			},
-	// 			title: {
-	// 				text: null
-	// 			},
-	// 			xAxis: {
-	// 				categories: ['12:00 AM','01:00 AM','02:00 AM','03:00 AM','04:00 AM','05:00 AM','06:00 AM','07:00 AM','08:00 AM','09:00 AM','10:00 AM','11:00 AM', '12:00 PM','01:00 PM','02:00 PM','03:00 PM','04:00 PM','05:00 PM','06:00 PM','07:00 PM','08:00 PM','09:00 PM','10:00 PM','11:00 PM'],
+				},
+				title: {
+					text: null
+				},
+				xAxis: {
+					categories: ['12:00 AM','01:00 AM','02:00 AM','03:00 AM','04:00 AM','05:00 AM','06:00 AM','07:00 AM','08:00 AM','09:00 AM','10:00 AM','11:00 AM', '12:00 PM','01:00 PM','02:00 PM','03:00 PM','04:00 PM','05:00 PM','06:00 PM','07:00 PM','08:00 PM','09:00 PM','10:00 PM','11:00 PM'],
 
-	// 				labels: {
-	// 					style: {
-	// 						color: '#9b9b9b'
-	// 					}
-	// 				},
-	// 				min: 0
-	// 			},
-	// 			yAxis: {
-	// 				gridLineColor: '#eaeaea',
-	// 				title: {
-	// 					text: false
-	// 				},
-	// 				labels: {
-	// 					style: {
-	// 						color: '#9b9b9b'
-	// 					}
-	// 				},
+					labels: {
+						style: {
+							color: '#9b9b9b'
+						}
+					},
+					min: 0
+				},
+				yAxis: {
+					gridLineColor: '#eaeaea',
+					title: {
+						text: false
+					},
+					labels: {
+						style: {
+							color: '#9b9b9b'
+						}
+					},
 
-	// 				// tickInterval: 5000,
-	// 				min: 0,
-	// 				labels: {
-	// 					formatter: function() {
-	// 						return ((this.value/1000) >= 1 ? ((this.value/1000) + 'k') : (this.value));
-	// 					}
-	// 				},
-	// 				//min: 5000
-	// 			},
-	// 			exporting: {
-	// 				enabled: false
-	// 			},
-	// 			tooltip: {
-	// 				formatter: function() {
-	// 					return '<b>' + this.series.name + ': "' + this.x + '" </b><br/>' + '<span style="color: #08c08c;">Amount' + ': $' + this.y.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + ' </span><br/> <span style="color: #C14242">' + 'Avg Transaction: $' + this.point.avg.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + '</span><br/><span style="color: #390390">' + 'Tax: $' + this.point.tax.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")+'</span>';
-	// 				}
-	// 			},
-	// 			credits: {
-	// 				enabled: false
-	// 			},
+					// tickInterval: 5000,
+					min: 0,
+					labels: {
+						formatter: function() {
+							return ((this.value/1000) >= 1 ? ((this.value/1000) + 'k') : (this.value));
+						}
+					},
+					//min: 5000
+				},
+				exporting: {
+					enabled: false
+				},
+				tooltip: {
+					formatter: function() {
+						return '<b>' + this.series.name + ': "' + this.x + '" </b><br/>' + '<span style="color: #08c08c;">Amount' + ': $' + this.y.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + ' </span><br/> <span style="color: #C14242">' + 'Avg Transaction: $' + this.point.avg.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + '</span><br/><span style="color: #390390">' + 'Tax: $' + this.point.tax.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")+'</span>';
+					}
+				},
+				credits: {
+					enabled: false
+				},
 
-	// 		plotOptions: {
-	// 				series: {
-	// 								lineWidth: 4,
-	// 					marker: {
-	// 								lineWidth: 3,
-	// 								lineColor: '#ffffff',
-	// 								symbol: 'circle'
-	// 							}
-	// 						}
-	// 					},
-	// 					series: [{
-	// 						name: 'Gross Sales- Today',
-	// 						type: "spline",
-	// 						color: '#00a6ff',
-	// 						// showInLegend: false,
-	// 						data: val1
-	// 					},{
-	// 						name: 'Gross Sales- Yesterday',
-	// 						type: "spline",
-	// 						color: '#1956a6',
-	// 						// showInLegend: false,
-	// 						data: val2
-	// 					}]
-	// 		});
-	// }
+			plotOptions: {
+					series: {
+									lineWidth: 4,
+						marker: {
+									lineWidth: 3,
+									lineColor: '#ffffff',
+									symbol: 'circle'
+								}
+							}
+						},
+						series: [{
+							name: 'Gross Sales- Today',
+							type: "spline",
+							color: '#00a6ff',
+							// showInLegend: false,
+							data: val1
+						},{
+							name: 'Gross Sales- Yesterday',
+							type: "spline",
+							color: '#1956a6',
+							// showInLegend: false,
+							data: val2
+						}]
+			});
+	}
 //draw weekly Gross Sale chart
 	// var weeklyGrossSaleVals1=
 	//   [
@@ -1471,85 +1106,85 @@
 	//     {y: 4000,tax: 0,avg: 500},
 	//     {y: 8000,tax: 0,avg: 1000}
 	//   ];
-	// function weeklyGrossSaleChart(val1,val2){
+	function weeklyGrossSaleChart(val1,val2){
 
-	// 	Highcharts.chart('weeklyGrossSale', {
-	// 			chart: {
-	// 				type: 'spline',
-	// 				spacingBottom: 30,
-	// 				height: 201
+		Highcharts.chart('weeklyGrossSale', {
+				chart: {
+					type: 'spline',
+					spacingBottom: 30,
+					height: 201
 
-	// 			},
-	// 			title: {
-	// 				text: null
-	// 			},
-	// 			xAxis: {
-	// 				categories: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
+				},
+				title: {
+					text: null
+				},
+				xAxis: {
+					categories: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
 
-	// 				labels: {
-	// 					style: {
-	// 						color: '#9b9b9b'
-	// 					}
-	// 				},
-	// 				min: 0
-	// 			},
-	// 			yAxis: {
-	// 				gridLineColor: '#eaeaea',
-	// 				title: {
-	// 					text: false
-	// 				},
-	// 				labels: {
-	// 					style: {
-	// 						color: '#9b9b9b'
-	// 					}
-	// 				},
+					labels: {
+						style: {
+							color: '#9b9b9b'
+						}
+					},
+					min: 0
+				},
+				yAxis: {
+					gridLineColor: '#eaeaea',
+					title: {
+						text: false
+					},
+					labels: {
+						style: {
+							color: '#9b9b9b'
+						}
+					},
 
-	// 				// tickInterval: 5000,
-	// 				min: 0,
-	// 				labels: {
-	// 					formatter: function() {
-	// 						return ((this.value/1000) >= 1 ? ((this.value/1000) + 'k') : (this.value));
-	// 					}
-	// 				},
-	// 				//min: 5000
-	// 			},
-	// 			exporting: {
-	// 				enabled: false
-	// 			},
-	// 			tooltip: {
-	// 				formatter: function() {
-	// 					return '<b>' + this.series.name + ': "' + this.x + '" </b><br/>' + '<span style="color: #08c08c;">Amount' + ': $' + this.y.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + ' </span><br/> <span style="color: #C14242">' + 'Avg Transaction: $' + this.point.avg.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + '</span><br/><span style="color: #390390">' + 'Tax: $' + this.point.tax.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")+'</span>';
-	// 				}
-	// 			},
-	// 			credits: {
-	// 				enabled: false
-	// 			},
+					// tickInterval: 5000,
+					min: 0,
+					labels: {
+						formatter: function() {
+							return ((this.value/1000) >= 1 ? ((this.value/1000) + 'k') : (this.value));
+						}
+					},
+					//min: 5000
+				},
+				exporting: {
+					enabled: false
+				},
+				tooltip: {
+					formatter: function() {
+						return '<b>' + this.series.name + ': "' + this.x + '" </b><br/>' + '<span style="color: #08c08c;">Amount' + ': $' + this.y.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + ' </span><br/> <span style="color: #C14242">' + 'Avg Transaction: $' + this.point.avg.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + '</span><br/><span style="color: #390390">' + 'Tax: $' + this.point.tax.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")+'</span>';
+					}
+				},
+				credits: {
+					enabled: false
+				},
 
-	// 		plotOptions: {
-	// 				series: {
-	// 								lineWidth: 4,
-	// 					marker: {
-	// 								lineWidth: 3,
-	// 								lineColor: '#ffffff',
-	// 								symbol: 'circle'
-	// 							}
-	// 						}
-	// 					},
-	// 					series: [{
-	// 						name: 'Current Week',
-	// 						type: "spline",
-	// 						color: '#00a6ff',
-	// 						// showInLegend: false,
-	// 						data: val1
-	// 					},{
-	// 						name: 'Last Week',
-	// 						type: "spline",
-	// 						color: '#1956a6',
-	// 						// showInLegend: false,
-	// 						data: val2
-	// 					}]
-	// 		});
-	// }
+			plotOptions: {
+					series: {
+									lineWidth: 4,
+						marker: {
+									lineWidth: 3,
+									lineColor: '#ffffff',
+									symbol: 'circle'
+								}
+							}
+						},
+						series: [{
+							name: 'Current Week',
+							type: "spline",
+							color: '#00a6ff',
+							// showInLegend: false,
+							data: val1
+						},{
+							name: 'Last Week',
+							type: "spline",
+							color: '#1956a6',
+							// showInLegend: false,
+							data: val2
+						}]
+			});
+	}
 //draw yearly Gross Sale chart 
 	// var yearlyGrossSaleVals1=[
 	//             {y: 502.33,tax: 0,avg: 1000}, 
@@ -1579,103 +1214,103 @@
 	//             {y: 30000,tax: 0,avg: 0}, 
 	//             {y: 0,tax: 0,avg: 0}
 	//         ]
-	// function yearlyGrossSaleChart(val1,val2)
-	// {
+	function yearlyGrossSaleChart(val1,val2)
+	{
 
 
-	// 		Highcharts.chart('yearlyGrossSale', {
-	// 			chart: {
-	// 				type: 'line',
-	// 				spacingBottom: 30,
-	// 				height: 300
+			Highcharts.chart('yearlyGrossSale', {
+				chart: {
+					type: 'line',
+					spacingBottom: 30,
+					height: 300
 
-	// 			},
-	// 			title: {
-	// 				text: null
-	// 			},
-	// 			xAxis: {
-	// 				categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+				},
+				title: {
+					text: null
+				},
+				xAxis: {
+					categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
 
-	// 				labels: {
-	// 					style: {
-	// 						color: '#9b9b9b'
-	// 					}
-	// 				},
-	// 				min: 0
-	// 			},
-	// 			yAxis: {
-	// 				gridLineColor: '#eaeaea',
-	// 				title: {
-	// 					text: false
-	// 				},
-	// 				labels: {
-	// 					style: {
-	// 						color: '#9b9b9b'
-	// 					}
-	// 				},
+					labels: {
+						style: {
+							color: '#9b9b9b'
+						}
+					},
+					min: 0
+				},
+				yAxis: {
+					gridLineColor: '#eaeaea',
+					title: {
+						text: false
+					},
+					labels: {
+						style: {
+							color: '#9b9b9b'
+						}
+					},
 
-	// 				// tickInterval: 30000,
-	// 				labels: {
-	// 					formatter: function() {
-	// 						return ((this.value/1000) >= 1 ? ((this.value/1000) + 'k') : (this.value));
-	// 					}
-	// 				},
-	// 			},
-	// 			exporting: {
-	// 				enabled: false
-	// 			},
-	// 			tooltip: {
-	// 				 /*  shared: true, */
-	// 					// useHTML: true,
-	// 					// headerFormat: '<b>{point.key}</b><table>',
-	// 					// pointFormat: '<tr><td style="color: #08c08c;"><b>Amount</b></td><td> : $ '+('+{point.y}+').toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")+'</td></tr> '+
-	// 					//               '<tr><td style="color: #C14242;"><b>Avg Transaction</b></td><td> : $ {point.avg}</td></tr> '+
-	// 					//               '<tr><td style="color: #390390;"><b>Tax</b></td><td> : $ {point.tax}</td></tr> ',
-	// 					//               // '<tr><td style="color: #C14242;"><b>Avg Transaction</b></td><td>$ {point.avg.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")}</td></tr>'+
-	// 					//               // '<tr><td style="color: #390390;"><b>Tax</b></td><td>$ {point.tax.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")}</td></tr>',
-	// 					// footerFormat: '</table>',
-	// 					// valueDecimals: 2
-	// 				/*
-	// 				'<span style="color: #08c08c;line-height: 3" ">Amount' + ': $' + this.y.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + ' </span><br/> 
-	// 				<span style="color: #C14242;line-height: 3">' + 'Avg Transaction: $' + this.point.avg.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + 
-	// 				'</span>
-	// 				<br/>
-	// 				<span style="color: #390390;line-height: 3">' + 'Tax: $' + this.point.tax.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")+'</span>';
-	// 				*/
-	// 				formatter: function() {
-	// 					return '<b>' + this.series.name + ': "' + this.x + '" </b><br/>' + '<span style="color: #08c08c;line-height: 3" ">Amount' + ': $' + this.y.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + ' </span><br/> <span style="color: #C14242;line-height: 3">' + 'Avg Transaction: $' + this.point.avg.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + '</span><br/><span style="color: #390390;line-height: 3">' + 'Tax: $' + this.point.tax.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")+'</span>';
-	// 				}
-	// 			},
-	// 			credits: {
-	// 				enabled: false
-	// 			},
+					// tickInterval: 30000,
+					labels: {
+						formatter: function() {
+							return ((this.value/1000) >= 1 ? ((this.value/1000) + 'k') : (this.value));
+						}
+					},
+				},
+				exporting: {
+					enabled: false
+				},
+				tooltip: {
+					 /*  shared: true, */
+						// useHTML: true,
+						// headerFormat: '<b>{point.key}</b><table>',
+						// pointFormat: '<tr><td style="color: #08c08c;"><b>Amount</b></td><td> : $ '+('+{point.y}+').toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")+'</td></tr> '+
+						//               '<tr><td style="color: #C14242;"><b>Avg Transaction</b></td><td> : $ {point.avg}</td></tr> '+
+						//               '<tr><td style="color: #390390;"><b>Tax</b></td><td> : $ {point.tax}</td></tr> ',
+						//               // '<tr><td style="color: #C14242;"><b>Avg Transaction</b></td><td>$ {point.avg.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")}</td></tr>'+
+						//               // '<tr><td style="color: #390390;"><b>Tax</b></td><td>$ {point.tax.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")}</td></tr>',
+						// footerFormat: '</table>',
+						// valueDecimals: 2
+					/*
+					'<span style="color: #08c08c;line-height: 3" ">Amount' + ': $' + this.y.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + ' </span><br/> 
+					<span style="color: #C14242;line-height: 3">' + 'Avg Transaction: $' + this.point.avg.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + 
+					'</span>
+					<br/>
+					<span style="color: #390390;line-height: 3">' + 'Tax: $' + this.point.tax.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")+'</span>';
+					*/
+					formatter: function() {
+						return '<b>' + this.series.name + ': "' + this.x + '" </b><br/>' + '<span style="color: #08c08c;line-height: 3" ">Amount' + ': $' + this.y.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + ' </span><br/> <span style="color: #C14242;line-height: 3">' + 'Avg Transaction: $' + this.point.avg.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + '</span><br/><span style="color: #390390;line-height: 3">' + 'Tax: $' + this.point.tax.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")+'</span>';
+					}
+				},
+				credits: {
+					enabled: false
+				},
 
-	// 		plotOptions: {
-	// 				series: {
-	// 					marker: {
-	// 								lineWidth: 3,
-	// 								lineColor: '#ffffff',
-	// 								symbol: 'circle'
-	// 							}
-	// 						}
-	// 					},
-	// 					series: [{
-	// 						lineWidth: 4,
-	// 						name: 'Yearly Gross Sales-'+ currentYear,
-	// 						type: "line",
-	// 						color: '#00a6ff',
-	// 						// showInLegend: false,
-	// 						data: val1
-	// 					},{
-	// 						lineWidth: 4,
-	// 						name: 'Yearly Gross Sales-'+ lastYear,
-	// 						type: "line",
-	// 						color: '#1956a6',
-	// 						// showInLegend: false,
-	// 						data: val2
-	// 					}]
-	// 		});
-	// }
+			plotOptions: {
+					series: {
+						marker: {
+									lineWidth: 3,
+									lineColor: '#ffffff',
+									symbol: 'circle'
+								}
+							}
+						},
+						series: [{
+							lineWidth: 4,
+							name: 'Yearly Gross Sales-'+ currentYear,
+							type: "line",
+							color: '#00a6ff',
+							// showInLegend: false,
+							data: val1
+						},{
+							lineWidth: 4,
+							name: 'Yearly Gross Sales-'+ lastYear,
+							type: "line",
+							color: '#1956a6',
+							// showInLegend: false,
+							data: val2
+						}]
+			});
+	}
 //image uploader
 	function readURL(input) {
 		if (input.files && input.files[0]) {
@@ -1773,7 +1408,6 @@
 					"pagingType": "full_numbers",
 					"pageLength": 25,
 					"dom": 'lBfrtip', 
-					 "order": [],
 					"destroy": true,
 					responsive: true,
 					language: {
@@ -1925,8 +1559,8 @@
 			if($('#dt_pos_sale_list_e').length)
             $('#dt_pos_sale_list_e').DataTable(dtConfigOrderSort_Report_e);
 
-// 			if($('#dt_inv_pos_sale_list').length)
-// 			$('#dt_inv_pos_sale_list').DataTable(dtConfigOrderSort2);
+			if($('#dt_inv_pos_sale_list').length)
+			$('#dt_inv_pos_sale_list').DataTable(dtConfigOrderSort2);
 
 			if($('#transaction_recurring_dt').length)
 			$('#transaction_recurring_dt').DataTable(dtConfigOrderSort);
@@ -2003,20 +1637,6 @@
 				{
 					$("#phone").mask("(999) 999-9999");
 					$("#phone").on("blur", function() {
-							var last = $(this).val().substr( $(this).val().indexOf("-") + 1 );
-							if( last.length == 5 ) {
-									var move = $(this).val().substr( $(this).val().indexOf("-") + 1, 1 );
-									var lastfour = last.substr(1,4);
-									var first = $(this).val().substr( 0, 9 );
-									$(this).val( first + move + '-' + lastfour );
-							}
-					});
-				}
-				
-					if($("#s_phone").length)
-				{
-					$("#s_phone").mask("(999) 999-9999");
-					$("#s_phone").on("blur", function() {
 							var last = $(this).val().substr( $(this).val().indexOf("-") + 1 );
 							if( last.length == 5 ) {
 									var move = $(this).val().substr( $(this).val().indexOf("-") + 1, 1 );
@@ -2232,10 +1852,10 @@
 		.on('click','.profile-updater .upload-btn',function(e){
 			$('#saleQuickPfIcon').trigger('click');
 		})
-		.on('change','.card-detail .sel_item_tax',function(e){
+		.on('change','.inv-recur-adder-form .sel_item_tax',function(e){
 			calcTaxAmt($(this))
 		})
-		.on('keyup blur','.card-detail .item_qty,.card-detail .item_price',function(e){
+		.on('keyup blur','.inv-recur-adder-form .item_qty,.inv-recur-adder-form .item_price',function(e){
 			calcTaxAmt($(this))
 		})
 		.on('click','.new-item-adder button',function(e){
@@ -2247,8 +1867,8 @@
 			newElem.find('.col').each(function(){
 				$(this).find('.form-group:first-child').remove();
 			})
-			newElem.find('.item_row:last-child').append('<span class="remove-invoice-item" title="Remove This Row"> <img src="https://salequick.com/new_assets/img/delete.png" alt="del"> </span>');
-			newElem.find('.item_name').attr('id','item_name_'+$itemLength).val('');
+			newElem.find('.col:last-child .form-group').append('<span class="remove-invoice-item"> <img src="https://salequick.com/new_assets/img/delete.png" alt="del"> </span>');
+			newElem.find('.item_name').val('');
 			newElem.find('.item_qty').attr('id','quantity_'+$itemLength).val(1);
 			newElem.find('.item_price').attr('id','price_'+$itemLength).val(0);;
 			newElem.find('.sel_item_tax').attr('id','tax_'+$itemLength).prop('selectedIndex',0);
@@ -2293,87 +1913,59 @@
 			posInputValue = posInputValue.slice(0,posInputValue.length-1); //remove last digit
 			posInput=posInputValue;
 
-			$("#carrent_othercharges").prop("checked", false);
-            $("#carrent_sales_tax_new").prop("checked", false);
-            $('.charges_view').addClass('d-none');
-            $('.tax_view').addClass('d-none');
-            $("#other_charges").val('');
-            $("#totaltax").val('');
-
 			var str = $('#t_amount').val();
 			$('#t_amount').val(formatNumberg(posInputValue));
 			$('#sub_amount').val(formatNumberg(posInputValue));
-
-			$('#amount').val(formatNumberg(posInputValue));
-			$('#orignal_amount').val(formatNumberg(posInputValue));
-			$('#main_amount').val(formatNumberg(posInputValue));
-
-			calc_tax();
-            calc_ocharges();
 		})     
-		// .on('click',"#pos-add-btn",function () {
-		// 	var primaryincome1 = document.getElementById("t_amount").value;
-		// 	var otherincome = ($("#amount").val()) ? $("#amount").val() : 0;
-		// 	var totaltax1 = ($("#totaltax").val()) ? $("#totaltax").val() : 0;
+		.on('click',"#pos-add-btn",function () {
+			var primaryincome1 = document.getElementById("t_amount").value;
+			var otherincome = ($("#amount").val()) ? $("#amount").val() : 0;
+			var totaltax1 = ($("#totaltax").val()) ? $("#totaltax").val() : 0;
 
-		// 	var tax1 = ($("#carrent_sales_tax").is(':checked')) ? parseFloat($("#carrent_sales_tax").data('tax')) : 0;
-		// 	if(primaryincome1!='')
-		// 	{
-		// 		primaryincome = primaryincome1;
-		// 	}
-		// 	else
-		// 	{
-		// 		primaryincome = '0';
-		// 	}
-		// 	// ---------------------------------------------------
-		// 	//checking for addition of amount
-		// 	if(parseFloat($('#t_amount').val()) > 0)
-		// 	{
-		// 		var all_amt = $('.all_item_amounts').text();
-		//         // console.log(aa.trim());
-		//         if(all_amt.trim() == '0') {
-		//           $('.all_item_amounts').text($("#t_amount").val());
-		//         } else {
-		//           var amountFieldText = $('.all_item_amounts').text();
-		//           var addedAmount = $("#t_amount").val();
-		          
-		//           if(amountFieldText.trim() == '') {
-		//             $('.all_item_amounts').text(addedAmount);
-		//           } else {
-		//             $('.all_item_amounts').text(amountFieldText+' + '+addedAmount);
-		//           }
-		//         }
-		// 		// if(!$('#added-amounts .form-group').length)
-		// 		// {
-		// 		// 	var addAmtField=$("<div class='form-group added-amt-label'><label class='col-md-12 col-form-label'>Added Amount</label></div> <div class='form-group'><div class='col-md-12'><div class='input-group'>  <span class='input-group-addon'><i class='fa fa-usd'></i></span> <input type='text' class='sub_amount form-control' readonly placeholder='0.00'  > </div>  </div></div>");
-		// 		// 			addAmtField.find('input').val($("#t_amount").val());
-		// 		// 			$("#added-amounts").prepend(addAmtField);
-		// 		// }
-		// 		// else
-		// 		// {
-		// 		// 	var addAmtField=$("<div class='form-group'><div class='col-md-12'><div class='input-group'>  <span class='input-group-addon'><i class='fa fa-usd'></i></span> <input type='text' class='sub_amount form-control' readonly placeholder='0.00'  > </div>  </div></div>");
-		// 		// 			addAmtField.find('input').val($("#t_amount").val());
-		// 		// 			$("#added-amounts .added-amt-label").after(addAmtField);
-		// 		// }
-		// 		$("#t_amount").val('');
-		// 		$('#sub_amount').val('');
-		// 		$('#added-amounts').scrollTop(0);
-		// 		//caluslae tax
-		// 		var tax =  parseFloat(tax1) * parseFloat(primaryincome) /100;
-		// 		// console.log(tax)
-		// 		var total = parseFloat(primaryincome) + parseFloat(tax);
+			var tax1 = ($("#carrent_sales_tax").is(':checked')) ? parseFloat($("#carrent_sales_tax").data('tax')) : 0;
+			if(primaryincome1!='')
+			{
+				primaryincome = primaryincome1;
+			}
+			else
+			{
+				primaryincome = '0';
+			}
+			// ---------------------------------------------------
+			//checking for addition of amount
+			if(parseFloat($('#t_amount').val()) > 0)
+			{
+				if(!$('#added-amounts .form-group').length)
+				{
+					var addAmtField=$("<div class='form-group added-amt-label'><label class='col-md-12 col-form-label'>Added Amount</label></div> <div class='form-group'><div class='col-md-12'><div class='input-group'>  <span class='input-group-addon'><i class='fa fa-usd'></i></span> <input type='text' class='sub_amount form-control' readonly placeholder='0.00'  > </div>  </div></div>");
+							addAmtField.find('input').val($("#t_amount").val());
+							$("#added-amounts").prepend(addAmtField);
+				}
+				else
+				{
+					var addAmtField=$("<div class='form-group'><div class='col-md-12'><div class='input-group'>  <span class='input-group-addon'><i class='fa fa-usd'></i></span> <input type='text' class='sub_amount form-control' readonly placeholder='0.00'  > </div>  </div></div>");
+							addAmtField.find('input').val($("#t_amount").val());
+							$("#added-amounts .added-amt-label").after(addAmtField);
+				}
+				$("#t_amount").val('');
+				$('#sub_amount').val('');
+				$('#added-amounts').scrollTop(0);
+				//caluslae tax
+				var tax =  parseFloat(tax1) * parseFloat(primaryincome) /100;
+				// console.log(tax)
+				var total = parseFloat(primaryincome) + parseFloat(tax);
 
-		// 		var totalincome = parseFloat(total) + parseFloat(otherincome);
-		// 		var totaltaxVals = parseFloat(tax) + parseFloat(totaltax1);
-		// 		// console.log(totaltaxVals)
-		// 		$("#amount").val(totalincome.toFixed(2));
-		// 		$("#totaltax").val(totaltaxVals.toFixed(2));
+				var totalincome = parseFloat(total) + parseFloat(otherincome);
+				var totaltaxVals = parseFloat(tax) + parseFloat(totaltax1);
+				// console.log(totaltaxVals)
+				$("#amount").val(totalincome.toFixed(2));
+				$("#totaltax").val(totaltaxVals.toFixed(2));
 
-		// 		posInputValue='';
-		// 		posInput='';
-		// 	}
-		// 	//-----------------------------------------------------
-		// })
+				posInputValue='';
+				posInput='';
+			}
+			//-----------------------------------------------------
+		})
 	//pos data table events
 		.on('click','.pos-list-dtable .pos_vw_recept',function(e){
 			e.preventDefault();
@@ -2421,275 +2013,9 @@
 				}
 			}
 		})
-		//stepper form function
 		
-.on('click','.custom-stepper-form .first-step .stepper-submit',function(e){
-			var $wrapper=$(this).closest('.first-step');
-			// console.log(signUpStepFirst($wrapper));
-			if(signUpStepFirst($wrapper)) {
-				// console.log('1');return false;
-				//call ajax &  submit step first
-				var mSignupStepF={};
-				// mSignupStepF.f_name=$wrapper.find('.form-control[name="mbname"]').val();
-				mSignupStepF.email=$wrapper.find('.form-control[name="memail"]').val();
-				// mSignupStepF.mobile=$wrapper.find('.form-control[name="mphone"]').val();
-				
-				// mSignupStepF.password=$wrapper.find('.form-control[name="secret11"]').val();
-				// mSignupStepF.mconfpass=$wrapper.find('.form-control[name="secret22"]').val();
-				mSignupStepF.password=$wrapper.find('#secret11').val();
-				mSignupStepF.mconfpass=$wrapper.find('#secret22').val();
-
-				// console.log(mSignupStepF)
-				// var dataString = 'name='+ name + '&email=' + email + '&phone=' + phone;
-				//alert (dataString);return false;
-				$(this).find('span').addClass('fa fa-spinner fa-spin');
-				mSignupStep1Fn(mSignupStepF);
-
-			} else {
-				//stay at first
-			}
-			//completed first step
-		})
-
-		.on('click','.custom-stepper-form .second-step .next-step',function(e){
-			var $wrapper=$(this).closest('.second-step');
-			// console.log(signUpStepSecond($wrapper));
-			if(signUpStepSecond($wrapper))
-			{
-				//call ajax &  submit step first
-				//go to third step
-				var mSignupStepS={};
-				$('.custom-stepper-form .second-step input,.custom-stepper-form .second-step select').each(function(){
-				var newval=$(this).val();
-				if($(this).hasClass('us-phone-no')){
-				newval=newval.replace(/[\(\)-\s]/g,'');
-				}
-				mSignupStepS[$(this).attr('name')]= newval;
-				})
-				$(this).find('span').addClass('fa fa-spinner fa-spin');
-				mSignupStep2Fn(mSignupStepS);
-				// leave2ndGoNextStp();
-			}
-			else{
-				//stay at first
-			}
-			//completed first step
-		})
-		// .on('click','.custom-stepper-form .third-step .next-step',function(e){
-		// 	var $wrapper=$(this).closest('.third-step');
-		// 	// console.log(signUpStepthird($wrapper));
-		// 	if(signUpStepThird($wrapper))
-		// 	{
-		// 		//call ajax &  submit step first
-		// 		// console.log()
-		// 		//go to fourth step
-		// 		var mSignupStepTh={};
-		// 		$('.custom-stepper-form .third-step input,.custom-stepper-form .third-step select').each(function(){
-		// 			var newval=$(this).val();
-		// 					if($(this).hasClass('us-phone-no')){
-		// 						newval=newval.replace(/[\(\)-\s]/g,'');
-		// 					}
-		// 					else if($(this).hasClass('us-ssn-no-enc')){
-		// 						newval=$(this).data('val');
-		// 					}
-		// 			mSignupStepTh[$(this).attr('name')]= newval;
-		// 		})
-		// 		$(this).find('span').addClass('fa fa-spinner fa-spin');
-
-		// 		mSignupStep3Fn(mSignupStepTh);
-		// 		// leave3rdGoNextStp();
-		// 	}
-		// 	else{
-		// 		//stay at first
-		// 	}
-		// 	//completed first step
-		// })
-		.on('click','.custom-stepper-form .third-step .next-step',function(e){
-			// var $wrapper=$(this).closest('.third-step');
-			var $wrapper=$(this).closest('.third-step').children('.busi_owner_inputs').children('.pointer');
-			// console.log($wrapper);return false;
-			// var mSignupStepTh = [];
-			 // console.log(signUpStepthird($wrapper));
-			if(signUpStepThird($wrapper)) {
-				// alert('hello1');
-				//call ajax &  submit step first
-				// console.log()
-				//go to fourth step
-				var mSignupStepTh={};
-				var ownerArr = [];
-				var checkIndexCount = 0;
-				$('.custom-stepper-form .third-step .first_busi_owner_section').each(function() {
-					// console.log($(this).length);
-					if( checkIndexCount == 0 ) {
-						$(this).find('input, select').each(function(){
-							var newval=$(this).val();
-							if($(this).hasClass('us-phone-no')){
-								newval=newval.replace(/[\(\)-\s]/g,'');
-
-							} else if($(this).hasClass('us-ssn-no-enc')){
-								newval=$(this).data('val');
-							}
-							mSignupStepTh[$(this).attr('name')]= newval;
-						})
-						checkIndexCount++;
-
-					} else {
-						var singleOwner = {};
-						// console.log($(this));
-						$(this).find('input, select').each(function() {
-							var newval=$(this).val();
-							// console.log($(this).attr('name'), newval);
-							if($(this).attr('name') == 'fo_phone_arr'){
-								newval=newval.replace(/[\(\)-\s]/g,'');
-								// console.log(newval);
-
-							} else if($(this).attr('name') == 'fossn_arr'){
-								newval=$(this).data('val');
-							}
-							singleOwner[$(this).attr('name')] = newval;
-						})
-						// console.log(singleOwner);
-						ownerArr.push(singleOwner);
-					}
-				})
-				// return false;
-				$(this).find('span').addClass('fa fa-spinner fa-spin');
-				mSignupStepTh['ownerArr'] = ownerArr;
-				// console.log(mSignupStepTh);return false;
-				mSignupStep3FnNew(mSignupStepTh);
-
-			} else {
-				//stay at first
-			}
-			//completed first step
-		})
-		.on('click','.custom-stepper-form .fourth-step .submit-step',function(e){
-			var $wrapper=$(this).closest('.fourth-step');
-			// console.log(signUpStepFourth($wrapper));
-			if(signUpStepFourth($wrapper))
-			{
-				//call ajax &  submit step first
-				var mSignupStepFth={};
-					$('.custom-stepper-form .fourth-step input,.custom-stepper-form .fourth-step select').each(function(){
-						var newval=$(this).val();
-								if($(this).hasClass('us-phone-no')){
-									newval=newval.replace(/[\(\)-\s]/g,'');
-								}
-						mSignupStepFth[$(this).attr('name')]= newval;
-					})
-					$(this).find('span').addClass('fa fa-spinner fa-spin');
-
-					mSignupStep4Fn(mSignupStepFth);
-				//go to fourth step
-				// console.log('false-run');
-			}
-			else{
-				//stay at first
-			}
-			//completed first step
-		})
-		.on('click','.custom-stepper-form .third-step .back-step',function(e){
-			var $wrapper=$(this).closest('.third-step');
-			if(signUpStepThird($wrapper))
-			{
-				$('.sign-up-form .form-steps .step[data-fStep="2"]').addClass('active');
-				$('.sign-up-form .form-steps .step[data-fStep="3"]').removeClass('active').addClass('completed')
-			}
-			else{
-				$('.sign-up-form .form-steps .step[data-fStep="3"]').removeClass('active completed');
-			}
-				$('.sign-up-form .steps-wrapper  >.row').removeClass('active');
-				$('.sign-up-form .steps-wrapper  >.row[data-fStep="2"]').addClass('active');
-		})
-		.on('click','.custom-stepper-form .fourth-step .back-step',function(e){
-			var $wrapper=$(this).closest('.fourth-step');
-			if(signUpStepFourth($wrapper))
-			{
-				$('.sign-up-form .form-steps .step[data-fStep="3"]').addClass('active');
-				$('.sign-up-form .form-steps .step[data-fStep="4"] span').html('').addClass('fa fa-check');
-				$('.sign-up-form .form-steps .step[data-fStep="4"]').removeClass('active').addClass('completed');
-			}
-			else{
-				$('.sign-up-form .form-steps .step[data-fStep="4"]').removeClass('active completed');
-			}
-			$('.sign-up-form .steps-wrapper >.row').removeClass('active');
-			$('.sign-up-form .steps-wrapper >.row[data-fStep="3"]').addClass('active');
-		})
-		.on('focus','input.encrypted-field',function(){
-			$(this).val($(this).data('val'));
-		})
-		.on('blur','input.encrypted-field',function(){
-			var inpVal=$(this).val(),encPlaceh='';
-			if(inpVal.length)
-			{
-				$(this).data('val',$(this).val().trim());
-				var ttlL=$(this).val().trim().length;
-				// console.log(ttlL)
-				for (var i = 0; i < ttlL; i++) 
-				{
-					if(!$(this).hasClass('no-dash')){
-						if(i != 3 && i != 6)
-						encPlaceh+='x';
-						else
-						encPlaceh+='-';
-					}
-					else{
-						encPlaceh+='x';
-					}
-				}
-				// console.log(encPlaceh)
-				$(this).val(encPlaceh);
-			}
-			else{
-				$(this).data('val','');
-			}
-		})
-		.on('keydown click','.sign-up-form .steps-wrapper .form-group .form-control',function(){
-			$('.sign-up-form .steps-wrapper .form-group').removeClass('not-match mandatory incorrect');
-		})
 	//sidebar menu toggle
 		.on('click','#sidebar-menu li a',function(e){
 			var $this=$(this),$thisLink=$(this);
 			toggleSideMenus($this);
-		})
-		.on('focus','input.us-ssn-no-enc',function(){
-			$(this).attr('maxlength',9);
-			$(this).val($(this).data('val'));
-		})
-		.ready(function(){
-			$('input.us-ssn-no-enc').each(function(){
-				if($(this).val()){
-					$(this).trigger('blur');
-				}
-			})
-		})
-		.on('blur','input.us-ssn-no-enc',function(){
-			$(this).attr('maxlength',11);
-			var inpVal=$(this).val(),encPlaceh='';
-			if(inpVal.length)
-			{
-				$(this).data('val',$(this).val().trim());
-				var ttlL=$(this).val().trim().length;
-				// console.log(ttlL)
-				for (var i = 0; i < ttlL; i++) 
-				{
-					if(i == 3 || i == 6)
-					{
-						encPlaceh+='-';
-					}
-					else if(i<= 5)
-					{
-						encPlaceh+='x';
-					}
-					else{
-						i = ttlL;
-						encPlaceh+=inpVal.substr(5, ttlL-1);
-					}
-				}
-				// console.log(encPlaceh)
-				$(this).val(encPlaceh);
-			}
-			else{
-				$(this).data('val','');
-			}
 		})

@@ -15,10 +15,10 @@ class Inventory_model extends CI_Model {
 			
 			
 			 $query=$this->db->query("SELECT `cart`.`item_id` as `item_id` ,`item`.`item_id` as `main_item_id`,`posmain`.`name` as `mname`,item.sku, `item`.`name` as `item_name`, `item`.`title` as
-            `item_title`,`cart`.`bill_tax` as `bill_tax`,`cart`.`bill_discount` as `bill_discount`, SUM(`cart`.`quantity`) as `quantity`,round(tax_value,2) as `tax_value`,  round(`item`.`tax`,2) as `tax_value1`, 
+            `item_title`,`cart`.`bill_tax` as `bill_tax`,`cart`.`bill_discount` as `bill_discount`, SUM(`item`.`price`) as `base_price`,SUM(`cart`.`quantity`) as `quantity`,SUM(round(tax_value,2)) as `tax_value`, 
             sum(`cart`.`discount_amount`) 
              as `discount`, SUM(`cart`.`price`) as `sold_price`, `item`.`item_image` as `item_image`, `cat`.`name` as `cat_name`,
-            `cart`.`created_at`,`cart`.`updated_at` as `updated_at` FROM `adv_pos_cart_item` `cart` 
+            `cart`.`created_at`,`cart`.`updated_at` as `updated_at`,`cart`.`status` as `status` FROM `adv_pos_cart_item` `cart` 
             JOIN `adv_pos_item` `item` ON `item`.`id` = `cart`.`item_id` JOIN `adv_pos_category` `cat` ON `cat`.`id` = `item`.`category_id` 
             JOIN `adv_pos_item_main` `posmain` ON `posmain`.`id` = `item`.`item_id` 
             WHERE  
@@ -29,76 +29,12 @@ class Inventory_model extends CI_Model {
 		{
 			
 		    $query=$this->db->query("SELECT `cart`.`item_id` as `item_id` ,`item`.`item_id` as `main_item_id`,`posmain`.`name` as `mname`,item.sku,
-			`item`.`name` as `item_name`, `item`.`title` as `item_title`,`cart`.`bill_tax` as `bill_tax`,`cart`.`bill_discount` as `bill_discount`, SUM(`cart`.`quantity`) as `quantity`,SUM(round(tax_value,2)) as `tax_value` ,  round(`item`.`tax`,2) as `tax_value1`, 
+			`item`.`name` as `item_name`, `item`.`title` as `item_title`,`cart`.`bill_tax` as `bill_tax`,`cart`.`bill_discount` as `bill_discount`, SUM(`item`.`price`) as `base_price`,SUM(`cart`.`quantity`) as `quantity`,SUM(round(tax_value,2)) as `tax_value`, 
 			sum(`cart`.`discount_amount`)  as `discount`,SUM(`cart`.`price`)  
 			as `sold_price`, `item`.`item_image` as `item_image`, `cat`.`name` as `cat_name`,`cart`.`created_at`,`cart`.`updated_at` 
-			as `updated_at` FROM `adv_pos_cart_item` `cart` JOIN `adv_pos_item` `item` ON `item`.`id` = `cart`.`item_id` 
-			JOIN `adv_pos_category` `cat` ON `cat`.`id` = `item`.`category_id` JOIN `adv_pos_item_main` `posmain` ON `posmain`.`id` = `item`.`item_id` WHERE `cart`.`updated_at` >='$start_date' AND `cart`.`updated_at` <= '$end_date' 
+			as `updated_at`,`cart`.`status` as `status` FROM `adv_pos_cart_item` `cart` JOIN `adv_pos_item` `item` ON `item`.`id` = `cart`.`item_id` 
+			JOIN `adv_pos_category` `cat` ON `cat`.`id` = `item`.`category_id` JOIN `adv_pos_item_main` `posmain` ON `posmain`.`id` = `item`.`item_id` WHERE DATE(`cart`.`updated_at`) >='$start_date' AND DATE(`cart`.`updated_at`) <= '$end_date' 
 			AND  `cart`.`merchant_id` = '$merchant_id' AND `item`.`merchant_id` = '$merchant_id' AND `item`.`mode`='1' GROUP BY `main_item_id` ORDER BY `item`.`item_id` DESC"); 
-		}return $query->result();
-	}
-
-
-public function get_full_inventory_spreportdata_array($start_date, $end_date,$main_items,$merchant_id)
-	{
-		if($main_items!="")
-		{
-
-			
-			
-			 $query=$this->db->query("SELECT `cart`.`item_id` as `item_id` ,`item`.`item_id` as `main_item_id`,`posmain`.`name` as `mname`,item.sku, `item`.`name` as `item_name`, `item`.`title` as
-            `item_title`,`cart`.`bill_tax` as `bill_tax`,`cart`.`bill_discount` as `bill_discount`, SUM(`cart`.`quantity`) as `quantity`,round(tax_value,2) as `tax_value`,  round(`item`.`tax`,2) as `tax_value1`, 
-            sum(`cart`.`discount_amount`) 
-             as `discount`, SUM(`cart`.`price`) as `sold_price`, 
-            `cart`.`created_at`,`cart`.`updated_at` as `updated_at` FROM `adv_pos_cart_item` `cart` 
-            JOIN `adv_pos_item` `item` ON `item`.`id` = `cart`.`item_id` 
-            JOIN `adv_pos_item_main` `posmain` ON `posmain`.`id` = `item`.`item_id` 
-            WHERE  
-            `cart`.`merchant_id` = '$merchant_id' AND `item`.`merchant_id` = '$merchant_id' AND `item`.`category_id`='$main_items' AND `item`.`mode`='1'  
-            GROUP BY `main_item_id` ORDER BY `item`.`item_id` DESC"); 
-		}
-		else
-		{
-			
-		    $query=$this->db->query("SELECT `cart`.`item_id` as `item_id` ,`item`.`item_id` as `main_item_id`,`posmain`.`name` as `mname`,item.sku,
-			`item`.`name` as `item_name`, `item`.`title` as `item_title`,`cart`.`bill_tax` as `bill_tax`,`cart`.`bill_discount` as `bill_discount`,SUM(`cart`.`quantity`) as `quantity`,SUM(round(tax_value,2)) as `tax_value` ,  round(`item`.`tax`,2) as `tax_value1`, 
-			sum(`cart`.`discount_amount`)  as `discount`,SUM(`cart`.`price`)  
-			as `sold_price`,  `cart`.`created_at`,`cart`.`updated_at` 
-			as `updated_at` FROM `adv_pos_cart_item` `cart` JOIN `adv_pos_item` `item` ON `item`.`id` = `cart`.`item_id` 
-			 JOIN `adv_pos_item_main` `posmain` ON `posmain`.`id` = `item`.`item_id` WHERE `cart`.`updated_at` >='$start_date' AND `cart`.`updated_at` <= '$end_date' 
-			AND  `cart`.`merchant_id` = '$merchant_id' AND `item`.`merchant_id` = '$merchant_id' AND `item`.`mode`='1' GROUP BY `main_item_id` ORDER BY `item`.`item_id` DESC"); 
-		}return $query->result_array();
-	}
-
-
-	public function get_full_inventory_spreportdata_limit($start_date, $end_date,$main_items,$merchant_id,$start,$limit)
-	{
-		if($main_items!="")
-		{
-
-			
-			
-			 $query=$this->db->query("SELECT `cart`.`item_id` as `item_id` ,`item`.`item_id` as `main_item_id`,`posmain`.`name` as `mname`,item.sku, `item`.`name` as `item_name`, `item`.`title` as
-            `item_title`,`cart`.`bill_tax` as `bill_tax`,`cart`.`bill_discount` as `bill_discount`, SUM(`cart`.`quantity`) as `quantity`,round(tax_value,2) as `tax_value`,  round(`item`.`tax`,2) as `tax_value1`, 
-            sum(`cart`.`discount_amount`) 
-             as `discount`, SUM(`cart`.`price`) as `sold_price`, `item`.`item_image` as `item_image`, `cat`.`name` as `cat_name`,
-            `cart`.`created_at`,`cart`.`updated_at` as `updated_at`` FROM `adv_pos_cart_item` `cart` 
-            JOIN `adv_pos_item` `item` ON `item`.`id` = `cart`.`item_id` JOIN `adv_pos_category` `cat` ON `cat`.`id` = `item`.`category_id` 
-            JOIN `adv_pos_item_main` `posmain` ON `posmain`.`id` = `item`.`item_id` 
-            WHERE  
-            `cart`.`merchant_id` = '$merchant_id' AND `item`.`merchant_id` = '$merchant_id' AND `item`.`category_id`='$main_items' AND `item`.`mode`='1'  
-            GROUP BY `main_item_id` ORDER BY `item`.`item_id` DESC  limit ".$start.",".$limit." "); 
-		}
-		else
-		{
-			
-		    $query=$this->db->query("SELECT `cart`.`item_id` as `item_id` ,`item`.`item_id` as `main_item_id`,`posmain`.`name` as `mname`,item.sku,
-			`item`.`name` as `item_name`, `item`.`title` as `item_title`,`cart`.`bill_tax` as `bill_tax`,`cart`.`bill_discount` as `bill_discount`, SUM(`cart`.`quantity`) as `quantity`,SUM(round(tax_value,2)) as `tax_value` ,  round(`item`.`tax`,2) as `tax_value1`, 
-			sum(`cart`.`discount_amount`)  as `discount`,SUM(`cart`.`price`)  
-			as `sold_price`, `item`.`item_image` as `item_image`, `cat`.`name` as `cat_name`,`cart`.`created_at`,`cart`.`updated_at` 
-			as `updated_at` FROM `adv_pos_cart_item` `cart` JOIN `adv_pos_item` `item` ON `item`.`id` = `cart`.`item_id` 
-			JOIN `adv_pos_category` `cat` ON `cat`.`id` = `item`.`category_id` JOIN `adv_pos_item_main` `posmain` ON `posmain`.`id` = `item`.`item_id` WHERE `cart`.`updated_at` >='$start_date' AND `cart`.`updated_at` <= '$end_date' 
-			AND  `cart`.`merchant_id` = '$merchant_id' AND `item`.`merchant_id` = '$merchant_id' AND `item`.`mode`='1' GROUP BY `main_item_id` ORDER BY `item`.`item_id` DESC limit ".$start.",".$limit." "); 
 		}return $query->result();
 	}
 	
@@ -123,7 +59,7 @@ public function get_full_inventory_spreportdata_array($start_date, $end_date,$ma
 		{
 		    $query=$this->db->query("SELECT `cart`.`transaction_id` as `transaction_id`,`po`.`invoice_no` as `order_id`  FROM `adv_pos_cart_item` `cart` 
 			JOIN `adv_pos_item` `item` ON `item`.`id` = `cart`.`item_id` JOIN `pos` `po` ON `po`.`invoice_no` = `cart`.`transaction_id` JOIN `adv_pos_category` `cat` ON `cat`.`id` = `item`.`category_id` 
-			WHERE `cart`.`updated_at` >='$start_date' AND `cart`.`updated_at` <= '$end_date' AND  
+			WHERE DATE(`cart`.`updated_at`) >='$start_date' AND DATE(`cart`.`updated_at`) <= '$end_date' AND  
 			`cart`.`merchant_id` = '$merchant_id' AND `item`.`merchant_id` = '$merchant_id' AND `item`.`category_id`='$main_items'  
 			GROUP BY `cart`.`transaction_id` ORDER BY `item`.`item_id` DESC"); 
 		}
@@ -131,7 +67,7 @@ public function get_full_inventory_spreportdata_array($start_date, $end_date,$ma
 		{
 			 $query=$this->db->query("SELECT `cart`.`transaction_id` as `transaction_id`,`po`.`invoice_no` as `order_id`  FROM `adv_pos_cart_item` `cart` 
 			JOIN `adv_pos_item` `item` ON `item`.`id` = `cart`.`item_id` JOIN `pos` `po` ON `po`.`invoice_no` = `cart`.`transaction_id` JOIN `adv_pos_category` `cat` ON `cat`.`id` = `item`.`category_id` 
-			WHERE `cart`.`updated_at` >='$start_date' AND `cart`.`updated_at` <= '$end_date' AND  
+			WHERE DATE(`cart`.`updated_at`) >='$start_date' AND DATE(`cart`.`updated_at`) <= '$end_date' AND  
 			`cart`.`merchant_id` = '$merchant_id' AND `item`.`merchant_id` = '$merchant_id' GROUP BY `cart`.`transaction_id` ORDER BY `item`.`item_id` DESC");  
 			
 		    
@@ -147,7 +83,7 @@ public function get_full_inventory_spreportdata_array($start_date, $end_date,$ma
 		{
 		    $query=$this->db->query("SELECT `cart`.`transaction_id` as `transaction_id`,`po`.`invoice_no` as `order_id`  FROM `adv_pos_cart_item` `cart` 
 			JOIN `adv_pos_item` `item` ON `item`.`id` = `cart`.`item_id` JOIN `pos` `po` ON `po`.`transaction_id` = `cart`.`transaction_id` JOIN `adv_pos_category` `cat` ON `cat`.`id` = `item`.`category_id` 
-			WHERE `cart`.`updated_at` >='$start_date' AND `cart`.`updated_at` <= '$end_date' AND  
+			WHERE DATE(`cart`.`updated_at`) >='$start_date' AND DATE(`cart`.`updated_at`) <= '$end_date' AND  
 			`cart`.`merchant_id` = '$merchant_id' AND `item`.`merchant_id` = '$merchant_id' AND `item`.`category_id`='$main_items'  
 			GROUP BY `cart`.`transaction_id` ORDER BY `item`.`item_id` DESC"); 
 		}
@@ -155,14 +91,11 @@ public function get_full_inventory_spreportdata_array($start_date, $end_date,$ma
 		{
 			 $query=$this->db->query("SELECT `cart`.`transaction_id` as `transaction_id`,`po`.`invoice_no` as `order_id`  FROM `adv_pos_cart_item` `cart` 
 			JOIN `adv_pos_item` `item` ON `item`.`id` = `cart`.`item_id` JOIN `pos` `po` ON `po`.`transaction_id` = `cart`.`transaction_id` JOIN `adv_pos_category` `cat` ON `cat`.`id` = `item`.`category_id` 
-			WHERE `cart`.`updated_at` >='$start_date' AND `cart`.`updated_at` <= '$end_date' AND  
+			WHERE DATE(`cart`.`updated_at`) >='$start_date' AND DATE(`cart`.`updated_at`) <= '$end_date' AND  
 			`cart`.`merchant_id` = '$merchant_id' AND `item`.`merchant_id` = '$merchant_id' GROUP BY `cart`.`transaction_id` ORDER BY `item`.`item_id` DESC");  
 			
 		    
-		}
-//get_full_inventory_reportdata_main_no_main_item;
-// echo $this->db->last_query(); die("");   
-		return $query->result();
+		}return $query->result();
 
 
 	}
@@ -191,97 +124,6 @@ public function get_full_inventory_spreportdata_array($start_date, $end_date,$ma
 		$this->db->where('status', $status);
 		if($merchant_id!=""){ $this->db->where('merchant_id', $merchant_id); }
 		$query = $this->db->get($table);
-
-		return $query->result_array();
-	}
-
-	function get_search_merchant_pos_total_tax_discount($start_date, $end_date, $status, $merchant_id,$table) {
-
-		 $this->db->select('count(id) as id,SUM(amount) as amount,SUM(discount) as discount,SUM(tax) as tax');
-		if ($start_date != '') {
-			$this->db->where('date_c >=', $start_date);
-			$this->db->where('date_c <=', $end_date);
-		}
-		else if ($start_date==$end_date)
-		{
-			$this->db->where('date_c', $end_date);
-		}
-		else {
-			$date = date('Y-m-d', strtotime('-30 days'));
-			$this->db->where('date_c >=', $date);
-			$this->db->where('date_c <=', date('Y-m-d'));
-		}
-		$where = '(status="Chargeback_Confirm" OR status = "confirm")';
-        $this->db->where($where);
-        $where = '(transaction_type="split" OR pos_type= "1")';
-        $this->db->where($where);
-		//$this->db->where('pos_type',1);
-
-		//$this->db->where('status', $status);
-		if($merchant_id!=""){ $this->db->where('merchant_id', $merchant_id); }
-		$query = $this->db->get($table);
-		//echo $this->db->last_query(); die(""); 
-
-		return $query->result_array();
-	}
-
-	function get_search_merchant_pos_total_tax_discount_split_refund($start_date, $end_date, $merchant_id,$table) {
-
-		 $this->db->select('SUM(p_ref_amount) as amount');
-		if ($start_date != '') {
-			$this->db->where('date_c >=', $start_date);
-			$this->db->where('date_c <=', $end_date);
-		}
-		else if ($start_date==$end_date)
-		{
-			$this->db->where('date_c', $end_date);
-		}
-		else {
-			$date = date('Y-m-d', strtotime('-30 days'));
-			$this->db->where('date_c >=', $date);
-			$this->db->where('date_c <=', date('Y-m-d'));
-		}
-		$where = '(status="Chargeback_Confirm" and partial_refund = "1")';
-        $this->db->where($where);
-        $where = '(transaction_type="split" OR pos_type= "1")';
-        $this->db->where($where);
-		//$this->db->where('pos_type',1);
-		
-		//$this->db->where('status', $status);
-		if($merchant_id!=""){ $this->db->where('merchant_id', $merchant_id); }
-		$query = $this->db->get($table);
-		//echo $this->db->last_query(); die(""); 
-
-		return $query->result_array();
-	}
-
-	function get_search_merchant_pos_total_tax_discount_full_refund($start_date, $end_date, $merchant_id,$table) {
-
-		 $this->db->select('SUM(amount) as amount');
-		if ($start_date != '') {
-			$this->db->where('date_c >=', $start_date);
-			$this->db->where('date_c <=', $end_date);
-		}
-		else if ($start_date==$end_date)
-		{
-			$this->db->where('date_c', $end_date);
-		}
-		else {
-			$date = date('Y-m-d', strtotime('-30 days'));
-			$this->db->where('date_c >=', $date);
-			$this->db->where('date_c <=', date('Y-m-d'));
-		}
-		$where = '(status="Chargeback_Confirm" and partial_refund = "0")';
-        $this->db->where($where);
-        $where = '(transaction_type="split" OR pos_type= "1")';
-        $this->db->where($where);
-		//$this->db->where('pos_type',1);
-		
-		//$this->db->where('status', $status);
-		if($merchant_id!=""){ $this->db->where('merchant_id', $merchant_id); }
-		$query = $this->db->get($table);
-		//echo $this->db->last_query(); die(""); 
-
 		return $query->result_array();
 	}
 
@@ -289,13 +131,13 @@ public function get_full_inventory_spreportdata_array($start_date, $end_date,$ma
 
 	public function get_full_inventory_reportdata_main($start_date, $end_date,$merchant_id) { 
 	    $this->db->select(" `cart`.`item_id` as `item_id`,`item`.`item_id` as `main_item_id`,`item`.`item_id` as `cat_item_id`,`posmain.name` as `mname`,`item`.`name` as `item_name`,
-		`item`.`title` as `item_title`,SUM(round(tax_value,2)) as `tax_value`,  round(`item`.`tax`,2) as `tax_value1` ,item.sku,SUM(`cart`.`quantity`) as `quantity`,
+		`item`.`title` as `item_title`,SUM(round(tax_value,2)) as `tax_value`,item.sku,SUM(`item`.`price`) as `base_price`,SUM(`cart`.`quantity`) as `quantity`,
 		SUM(`cart`.`new_price`) as `new_price`, SUM(`cart`.`price`) as `price`, (`cart`.`quantity`*`cart`.`new_price`) as `quantity*new_price`,
 		CASE WHEN (`cart`.`new_price`=`item`.`price` AND cart.quantity * `cart`.`new_price`>`cart`.`price`) THEN sum(cart.quantity *`cart`.`new_price`-`cart`.`price`) 
 		WHEN ( cart.quantity *`cart`.`new_price`>`cart`.`price`) THEN sum(cart.quantity *`cart`.`new_price`-`cart`.`price`) ELSE 
 			sum(`cart`.`quantity`*`cart`.`new_price`-`cart`.`price`) END as `discount`, SUM(`cart`.`quantity`*`item`.`price`)  
-		as `sold_price`,`item`.`item_image` as `item_image`, `cart`.`created_at`,`cart`.`updated_at` 
-		as `updated_at` ");
+		as `sold_price`,`item`.`item_image` as `item_image`, `cat`.`name` as `cat_name`,`cart`.`created_at`,`cart`.`updated_at` 
+		as `updated_at`,`cart`.`status` as `status` ");
 	   //  Second Query //   $this->db->select(" `cart`.`item_id` as `item_id`,`item`.`name` as `item_name`,`item`.`title` as `item_title`,SUM(`item`.`price`) as `base_price`,SUM(`cart`.`price` * `item`.`tax` /100) as `tax`, SUM(`cart`.`quantity`) as `quantity`,SUM(`cart`.`new_price`) as `new_price`, SUM(`cart`.`price`) as `price`, (`cart`.`quantity`*`cart`.`new_price`) as `quantity*new_price`,CASE WHEN `cart`.`price`=(`cart`.`quantity`*`cart`.`new_price`) THEN '' ELSE sum(`cart`.`quantity`*`cart`.`new_price`)-`cart`.`price` END as `discount`, CASE WHEN `cart`.`price`=(`cart`.`quantity`*`cart`.`new_price`) THEN SUM(`cart`.`new_price`) ELSE SUM((`item`.`price`)-(`cart`.`new_price`-`cart`.`price`)) END as `sold_price`,`item`.`item_image` as `item_image`, `cat`.`name` as `cat_name`,`cart`.`created_at`,`cart`.`updated_at` as `updated_at`,`cart`.`status` as `status` ");
 		//$this->db->select('cart.*,item.name as item_name,item.tax as tax,item.price as base_price,item.item_image as item_image,item.title as item_title,cat.name as cat_name');
 		$this->db->from("adv_pos_cart_item cart");
@@ -310,7 +152,7 @@ public function get_full_inventory_spreportdata_array($start_date, $end_date,$ma
 		$this->db->where('item.merchant_id', $merchant_id);
 		$this->db->order_by("item.item_id", "desc");
 		$this->db->join('adv_pos_item item', 'item.id = cart.item_id');
-		//$this->db->join('adv_pos_category cat', 'cat.id = item.category_id');
+		$this->db->join('adv_pos_category cat', 'cat.id = item.category_id');
 		$this->db->join('adv_pos_item_main posmain', 'posmain.id = item.item_id');
 		$query = $this->db->get(); 
 		// echo $this->db->last_query(); die("ol");    
@@ -319,16 +161,17 @@ public function get_full_inventory_spreportdata_array($start_date, $end_date,$ma
 	
 	public function get_full_inventory_reportdata_main_no_main_item($start_date, $end_date,$merchant_id,$main_items) { 
 	    $this->db->select(" `cart`.`item_id` as `item_id`,`item`.`item_id` as `main_item_id`,`item`.`item_id` as `cat_item_id`,`item.name` as `mname`,`item`.`name` as `item_name`,
-		`item`.`title` as `item_title`,`cart`.`bill_tax` as `bill_tax`,`cart`.`bill_discount` as `bill_discount`,SUM(round(tax_value,2)) as `tax_value`,  round(`item`.`tax`,2) as `tax_value1` ,item.sku,SUM(`cart`.`quantity`) as `quantity`,sum(`cart`.`discount_amount`)  as `discount`, SUM(`cart`.`price`)  
-		as `sold_price`,`item`.`item_image` as `item_image`, `cart`.`created_at`,`cart`.`updated_at` 
-		as `updated_at` ");
+		`item`.`title` as `item_title`,`cart`.`bill_tax` as `bill_tax`,`cart`.`bill_discount` as `bill_discount`,SUM(round(tax_value,2)) as `tax_value`,item.sku,SUM(`item`.`price`) as `base_price`,SUM(`cart`.`quantity`) as `quantity`,
+		
+		 
+			sum(`cart`.`discount_amount`)  as `discount`, SUM(`cart`.`price`)  
+		as `sold_price`,`item`.`item_image` as `item_image`, `cat`.`name` as `cat_name`,`cart`.`created_at`,`cart`.`updated_at` 
+		as `updated_at`,`cart`.`status` as `status` ");
 	  
 		$this->db->from("adv_pos_cart_item cart");
 		$date = date('Y-m-d', strtotime('-30 days'));
-		// $this->db->where('DATE(cart.updated_at) >=', $start_date);
-	 //    $this->db->where('DATE(cart.updated_at) <=', $end_date);
-	    $this->db->where('cart.updated_at >=', $start_date);
-	    $this->db->where('cart.updated_at <=', $end_date);
+		$this->db->where('DATE(cart.updated_at) >=', $start_date);
+	    $this->db->where('DATE(cart.updated_at) <=', $end_date);
 		$this->db->where('cart.merchant_id', $merchant_id);
 		$this->db->where('cart.status', 2);
 		$this->db->where('item.mode', 0);
@@ -340,23 +183,22 @@ public function get_full_inventory_spreportdata_array($start_date, $end_date,$ma
 		$this->db->group_by("item_id");
 		$this->db->order_by("item.id", "desc");
 		$this->db->join('adv_pos_item item', 'item.id = cart.item_id');
-		//$this->db->join('adv_pos_category cat', 'cat.id = item.category_id');
+		$this->db->join('adv_pos_category cat', 'cat.id = item.category_id');
 		$query = $this->db->get(); 
 		return $query->result_array();
 	}
 
 	public function get_full_inventory_reportdata_mis_item($start_date, $end_date,$merchant_id,$main_items) { 
 	    $this->db->select(" `cart`.`item_id` as `item_id`,`item`.`item_id` as `main_item_id`,`item`.`item_id` as `cat_item_id`,`item.name` as `mname`,`item`.`name` as `item_name`,
-		`item`.`title` as `item_title`,`cart`.`bill_tax` as `bill_tax`,`cart`.`bill_discount` as `bill_discount`,SUM(round(tax_value,2)) as `tax_value` ,  round(`item`.`tax`,2) as `tax_value1` ,item.sku,SUM(`cart`.`quantity`) as `quantity`,sum(`cart`.`discount_amount`)  as `discount`, SUM(`cart`.`price`)  
-		as `sold_price`,`item`.`item_image` as `item_image`,`cart`.`created_at`,`cart`.`updated_at` 
-		as `updated_at` ");
+		`item`.`title` as `item_title`,`cart`.`bill_tax` as `bill_tax`,`cart`.`bill_discount` as `bill_discount`,SUM(round(tax_value,2)) as `tax_value`,item.sku,SUM(`item`.`price`)
+		as `base_price`,SUM(`cart`.`quantity`) as `quantity`,sum(`cart`.`discount_amount`)  as `discount`, SUM(`cart`.`price`)  
+		as `sold_price`,`item`.`item_image` as `item_image`, `cat`.`name` as `cat_name`,`cart`.`created_at`,`cart`.`updated_at` 
+		as `updated_at`,`cart`.`status` as `status` ");
 	  
 		$this->db->from("adv_pos_cart_item cart");
 		$date = date('Y-m-d', strtotime('-30 days'));
-		// $this->db->where('DATE(cart.updated_at) >=', $start_date);
-	 //    $this->db->where('DATE(cart.updated_at) <=', $end_date);
-	    $this->db->where('cart.updated_at >=', $start_date);
-	    $this->db->where('cart.updated_at <=', $end_date);
+		$this->db->where('DATE(cart.updated_at) >=', $start_date);
+	    $this->db->where('DATE(cart.updated_at) <=', $end_date);
  		$this->db->where('cart.merchant_id', $merchant_id);
  		$this->db->where('cart.status', 2);
  		$this->db->where('item.mode', 0);
@@ -368,7 +210,7 @@ public function get_full_inventory_spreportdata_array($start_date, $end_date,$ma
  		$this->db->group_by("item_id");
 		$this->db->order_by("item.id", "desc");
 		$this->db->join('mis_adv_pos_item item', 'item.item_id = cart.item_id');
-		//$this->db->join('adv_pos_category cat', 'cat.id = item.category_id');
+		$this->db->join('adv_pos_category cat', 'cat.id = item.category_id');
 		$query = $this->db->get(); 
 		return $query->result_array();
 	}
@@ -376,14 +218,14 @@ public function get_full_inventory_spreportdata_array($start_date, $end_date,$ma
 	public function get_full_inventory_reportdata_main_no_main_item1($start_date, $end_date,$merchant_id) { 
 	    $this->db->select(" `cart`.`item_id` as `item_id`,`item`.`sku`,`item`.`item_id` as `main_item_id`,`item`.`item_id` as `cat_item_id`,`item.name` as `mname`,
 		`item`.`name` as `item_name`,
-		`item`.`title` as `item_title`,round((`cart`.`price`)*(`item`.`tax`)/100,2) as `tax_value`,item.sku,`cart`.`quantity`
+		`item`.`title` as `item_title`,round((`cart`.`price`)*(`item`.`tax`)/100,2) as `tax_value`,item.sku,`item`.`price` as `base_price`,`cart`.`quantity`
 		as `quantity`,
 		`cart`.`new_price` as `new_price`, `cart`.`price` as `price`, (`cart`.`quantity`*`cart`.`new_price`) as `quantity*new_price`,
 		CASE WHEN (`cart`.`new_price`=`item`.`price` AND cart.quantity * `cart`.`new_price`>`cart`.`price`) THEN cart.quantity *`cart`.`new_price`-`cart`.`price`
 		WHEN ( cart.quantity *`cart`.`new_price`>`cart`.`price`) THEN (cart.quantity *`cart`.`new_price`-`cart`.`price`) ELSE 
 			`cart`.`quantity`*`cart`.`new_price`-`cart`.`price` END as `discount`, (`cart`.`quantity`*`item`.`price`)  
-		as `sold_price`,`item`.`item_image` as `item_image`,`cart`.`created_at`,`cart`.`updated_at` 
-		as `updated_at` ");
+		as `sold_price`,`item`.`item_image` as `item_image`, `cat`.`name` as `cat_name`,`cart`.`created_at`,`cart`.`updated_at` 
+		as `updated_at`,`cart`.`status` as `status` ");
 	    $this->db->from("adv_pos_cart_item cart");
 		$date = date('Y-m-d', strtotime('-30 days'));
 	    $this->db->where('DATE(cart.updated_at) >=', $start_date);
@@ -396,26 +238,22 @@ public function get_full_inventory_spreportdata_array($start_date, $end_date,$ma
 		$this->db->group_by("item_id");
 		$this->db->order_by("item.id", "desc");
 		$this->db->join('adv_pos_item item', 'item.id = cart.item_id');
-		//$this->db->join('adv_pos_category cat', 'cat.id = item.category_id');
+		$this->db->join('adv_pos_category cat', 'cat.id = item.category_id');
 		$query = $this->db->get(); 
 		return $query->result_array();
 	}
 	
 		public function get_full_inventory_reportdata($start_date, $end_date,$merchant_id,$main_item_id) { 
 		//SUM((`cart`.`price`)*(`item`.`tax`)/100);
-	    $this->db->select(" `cart`.`id` as `cid`,`cart`.`item_id` as `item_id`,`item`.`item_id` as `cat_item_id`,`item`.`name` as `item_name`,`item`.`title` as `item_title`,item.sku,
-		SUM(`cart`.`quantity`) as `quantity`,SUM(round(tax_value,2)) as `tax_value`, round(`item`.`tax`,2) as `tax_value1` ,sum(`cart`.`discount_amount`)  as `discount`, 
-		SUM(`cart`.`price`)  as `sold_price`,`item`.`item_image` as `item_image`,`cart`.`created_at`,
-		`cart`.`updated_at` as `updated_at`,`cart`.`bill_tax` as `bill_tax`,`cart`.`bill_discount` as `bill_discount` ");
+	    $this->db->select(" `cart`.`id` as `cid`,`cart`.`item_id` as `item_id`,`item`.`item_id` as `cat_item_id`,`item`.`name` as `item_name`,`po`.`invoice_no` as `order_id`,`item`.`title` as `item_title`,item.sku,
+		SUM(`item`.`price`) as `base_price`,SUM(`cart`.`quantity`) as `quantity`,SUM(round(tax_value,2)) as `tax_value`,sum(`cart`.`discount_amount`)  as `discount`, 
+		SUM(`cart`.`price`)  as `sold_price`,`item`.`item_image` as `item_image`, `cat`.`name` as `cat_name`,`cart`.`created_at`,
+		`cart`.`updated_at` as `updated_at`,`cart`.`status` as `status` ");
 	  
 		$this->db->from("adv_pos_cart_item cart");
 		
-		// $this->db->where('DATE(cart.updated_at) >=', $start_date );
-		// $this->db->where('DATE(cart.updated_at) <=', $end_date );
-
-		  $this->db->where('cart.updated_at >=', $start_date );
-		 $this->db->where('cart.updated_at <=', $end_date );
-
+		$this->db->where('DATE(cart.updated_at) >=', $start_date );
+		$this->db->where('DATE(cart.updated_at) <=', $end_date );
 		$this->db->where('cart.merchant_id', $merchant_id);
 		$this->db->where('item.item_id', $main_item_id);
 		$this->db->where('cart.status', 2);
@@ -424,8 +262,8 @@ public function get_full_inventory_spreportdata_array($start_date, $end_date,$ma
 		$this->db->where('item.merchant_id', $merchant_id);
 		$this->db->order_by("item.item_id", "desc");
 		$this->db->join('adv_pos_item item', 'item.id = cart.item_id');
-		//$this->db->join('pos po', 'cart.transaction_id = po.transaction_id');
-		//$this->db->join('adv_pos_category cat', 'cat.id = item.category_id');
+		$this->db->join('pos po', 'cart.transaction_id = po.transaction_id');
+		$this->db->join('adv_pos_category cat', 'cat.id = item.category_id');
 		$query = $this->db->get(); 
 		// echo $this->db->last_query(); die("ol");    
 		//return $query->result();
@@ -437,52 +275,18 @@ public function get_full_inventory_spreportdata_array($start_date, $end_date,$ma
 	public function get_full_inventory_reportdata_sale($start_date, $end_date,$merchant_id,$main_items) { 
 		
 	    $this->db->select(" `cart`.`item_id` as `item_id`,`po`.`invoice_no` as `order_id`,`cart`.`transaction_id` as `transaction_id`,`item`.`item_id` as `cat_item_id`,
-		`item`.`name` as `item_name`,`item`.`title` as `item_title`,
-		`cart`.`quantity` as `quantity`,round((`cart`.`price`)*(`item`.`tax`)/100,2) as `tax_value`,(`cart`.`discount_amount`)  as `discount`, 
-		(`cart`.`price`)  as `sold_price`,
-		`cart`.`updated_at` as `updated_at` ");
-	   
-		$this->db->from("adv_pos_cart_item cart");
-		$this->db->where('cart.updated_at >=', $start_date );
-		$this->db->where('cart.updated_at <=', $end_date  );
-		$this->db->where('cart.merchant_id', $merchant_id);
-		$this->db->where('cart.status', 2);
-		$where = "cart.bill_discount is NULL";
-        $this->db->where($where);
-		$this->db->where('item.merchant_id', $merchant_id);
-		$this->db->where('po.merchant_id', $merchant_id);
-		if($main_items!=''){
-		$this->db->where('item.category_id', $main_items);
-		}
-		$this->db->order_by("cart.updated_at", "desc");
-		$this->db->join('adv_pos_item item', 'item.id = cart.item_id');
-		$this->db->join('pos po', 'cart.transaction_id = po.transaction_id');
-		$query = $this->db->get(); 
-		// echo $this->db->last_query(); die("ol");    
-		return $query->result_array();
-	}
-
-	public function get_full_inventory_reportdata_sale_limit($start_date, $end_date,$merchant_id,$main_items,$start,$limit) { 
-		
-	    $this->db->select(" `cart`.`item_id` as `item_id`,`po`.`invoice_no` as `order_id`,`cart`.`transaction_id` as `transaction_id`,`item`.`item_id` as `cat_item_id`,
 		`item`.`name` as `item_name`,`item`.`title` as `item_title`,item.sku,
-		`cart`.`quantity` as `quantity`,round((`cart`.`price`)*(`item`.`tax`)/100,2) as `tax_value`,(`cart`.`discount_amount`)  as `discount`, 
+		`item`.`price` as `base_price`,`cart`.`quantity` as `quantity`,round((`cart`.`price`)*(`item`.`tax`)/100,2) as `tax_value`,(`cart`.`discount_amount`)  as `discount`, 
 		(`cart`.`price`)  as `sold_price`, `cat`.`name` as `cat_name`,`cart`.`created_at`,
-		`cart`.`updated_at` as `updated_at` ");
+		`cart`.`updated_at` as `updated_at`,`cart`.`status` as `status` ");
 	   
 		$this->db->from("adv_pos_cart_item cart");
 		
-		// $this->db->where('DATE(cart.updated_at) >=', $start_date );
-		// $this->db->where('DATE(cart.updated_at) <=', $end_date  );
-
-		$this->db->where('cart.updated_at >=', $start_date );
-		$this->db->where('cart.updated_at <=', $end_date  );
-
+		$this->db->where('DATE(cart.updated_at) >=', $start_date );
+		$this->db->where('DATE(cart.updated_at) <=', $end_date  );
 		$this->db->where('cart.merchant_id', $merchant_id);
 		//$this->db->where('cart.main_item_id', $main_item_id);
 		$this->db->where('cart.status', 2);
-		$where = "cart.bill_discount is NULL";
-        $this->db->where($where);
 		//$this->db->group_by("cart.item_id");
 		$this->db->where('item.merchant_id', $merchant_id);
 		if($main_items!=''){
@@ -493,78 +297,6 @@ public function get_full_inventory_spreportdata_array($start_date, $end_date,$ma
 		$this->db->join('adv_pos_item item', 'item.id = cart.item_id');
 		$this->db->join('pos po', 'cart.transaction_id = po.transaction_id');
 		$this->db->join('adv_pos_category cat', 'cat.id = item.category_id');
-
-		 $this->db->limit($limit, $start);
-		$query = $this->db->get(); 
-		// echo $this->db->last_query(); die("ol");    
-		//return $query->result();
-		return $query->result_array();
-	}
-
-	public function get_full_inventory_reportdata_sale_split($start_date, $end_date,$merchant_id,$main_items) { 
-		
-	    $this->db->select(" DISTINCT(`cart`.`item_id`) as `item_id`,`po`.`invoice_no` as `order_id`,`cart`.`transaction_id` as `transaction_id`,`item`.`item_id` as `cat_item_id`,
-		`item`.`name` as `item_name`,`item`.`title` as `item_title`,
-		`cart`.`quantity` as `quantity`,round((`cart`.`price`)*(`item`.`tax`)/100,2) as `tax_value`,(`cart`.`discount_amount`)  as `discount`, 
-		(`cart`.`price`)  as `sold_price`,
-		`cart`.`updated_at` as `updated_at` ");
-	   
-		$this->db->from("adv_pos_cart_item cart");
-		$this->db->where('cart.updated_at >=', $start_date );
-		$this->db->where('cart.updated_at <=', $end_date  );
-		$this->db->where('cart.merchant_id', $merchant_id);
-		$this->db->where('cart.status', 2);
-		$where = "cart.bill_discount is NULL";
-        $this->db->where($where);
-		$this->db->where('item.merchant_id', $merchant_id);
-		if($main_items!=''){
-		$this->db->where('item.category_id', $main_items);
-		}
-		$this->db->order_by("cart.updated_at", "desc");
-		$this->db->join('adv_pos_item item', 'item.id = cart.item_id');
-		$this->db->join('pos po', 'cart.transaction_id = po.invoice_no');
-		$query = $this->db->get(); 
-		//echo $this->db->last_query(); die("ol");    
-		//return $query->result();
-		return $query->result_array();
-	}
-
-	public function get_full_inventory_reportdata_sale_discount($start_date, $end_date,$merchant_id,$main_items,$transaction_id) { 
-		
-	 //    $this->db->select(" `cart`.`item_id` as `item_id`,`cart`.`transaction_id` as `transaction_id`,`item`.`item_id` as `cat_item_id`,
-		// `item`.`name` as `item_name`,`item`.`title` as `item_title`,item.sku,
-		// `item`.`price` as `base_price`,`cart`.`quantity` as `quantity`,round((`cart`.`price`)*(`item`.`tax`)/100,2) as `tax_value`,(`cart`.`discount_amount`)  as `discount`, 
-		// (`cart`.`price`)  as `sold_price`, `cat`.`name` as `cat_name`,`cart`.`created_at`,
-		// `cart`.`updated_at` as `updated_at`,`cart`.`status` as `status` ");
-
-		 $this->db->select(" `cart`.`item_id` as `item_id`,`cart`.`transaction_id` as `transaction_id`,`item`.`item_id` as `cat_item_id`,
-		`item`.`name` as `item_name`,`item`.`title` as `item_title`,`cart`.`quantity` as `quantity`,
-		(`cart`.`price`)  as `sold_price`,`cart`.`created_at`,
-		`cart`.`updated_at` as `updated_at` ");
-	   
-		$this->db->from("adv_pos_cart_item cart");
-		
-		// $this->db->where('DATE(cart.updated_at) >=', $start_date );
-		// $this->db->where('DATE(cart.updated_at) <=', $end_date  );
-       $this->db->where('cart.transaction_id', $transaction_id);
-		$this->db->where('cart.updated_at >=', $start_date );
-		$this->db->where('cart.updated_at <=', $end_date  );
-
-		$this->db->where('cart.merchant_id', $merchant_id);
-		//$this->db->where('cart.main_item_id', $main_item_id);
-		$this->db->where('cart.status', 2);
-		$where = "cart.bill_discount is NOT NULL";
-        $this->db->where($where);
-		//$this->db->group_by("cart.item_id");
-		$this->db->where('item.merchant_id', $merchant_id);
-		if($main_items!=''){
-		$this->db->where('item.category_id', $main_items);
-		}
-		$this->db->order_by("cart.updated_at", "desc");
-		
-		$this->db->join('adv_pos_item item', 'item.id = cart.item_id');
-		//$this->db->join('pos po', 'cart.transaction_id = po.transaction_id');
-		//$this->db->join('adv_pos_category cat', 'cat.id = item.category_id');
 		$query = $this->db->get(); 
 		// echo $this->db->last_query(); die("ol");    
 		//return $query->result();

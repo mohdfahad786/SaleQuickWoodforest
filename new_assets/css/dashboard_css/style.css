@@ -274,6 +274,8 @@
     overflow: hidden;
     z-index: 1;
 }
+
+
 /*.sidebar:hover {
     overflow-y: scroll;
 }*/
@@ -294,6 +296,7 @@
     background-color: #E0E0E0;
     border-radius: 10px;
 }
+
 
 .sidebar .sidebar-header {
     border-bottom: 1px solid #2c3744;

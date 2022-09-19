@@ -1,5 +1,4 @@
-
- <?php
+<?php
   if (!empty($this->session->userdata('merchant_name')))
   {
       header('Location:  '.  'https://salequick.com/merchant'  );

@@ -415,7 +415,6 @@ class Inventory_graph_model extends CI_Model {
 	   $this->db->where('status !=','pending');
        $this->db->where('status !=','declined');
        $this->db->where('status !=','block');
-        $this->db->where('status !=','Chargeback_Confirm');
 	   if($employee!=0)
 	   {
 		   $this->db->where('sub_merchant_id', $employee);
@@ -832,7 +831,7 @@ function get_search_merchant_other_charges_total($start_date, $end_date, $mercha
 	
 	
 	 public function get_full_inventory_data_no_limit($merchant_id) {
-		$this->db->select(' positm.id, positm.barcode_data, positm.category_id, positm.sub_category_id, positm.item_id, positm.mode, positm.title, positm.name,posmain.name as mname, positm.sku, 
+		$this->db->select(' positm.id, positm.category_id, positm.sub_category_id, positm.item_id, positm.mode, positm.title, positm.name,posmain.name as mname, positm.sku, 
 		SUM(positm.price) as price , positm.tax, positm.merchant_id, positm.description, SUM(positm.quantity) as quantity, SUM(positm.sold_quantity) as sold_quantity , positm.item_image, 
 		positm.created_at, positm.updated_at,
 		positm.status,poscat.name as cat_name,poscat.code as cat_code');
@@ -862,7 +861,7 @@ function get_search_merchant_other_charges_total($start_date, $end_date, $mercha
 	
 	
 	 public function get_full_inventory_data_no_limit_list($merchant_id,$item_id) {
-		$this->db->select(' positm.id, positm.barcode_data, positm.category_id, positm.sub_category_id, positm.item_id, positm.mode, positm.title, positm.name, positm.sku, 
+		$this->db->select(' positm.id, positm.category_id, positm.sub_category_id, positm.item_id, positm.mode, positm.title, positm.name, positm.sku, 
 		SUM(positm.price) as price , positm.tax, positm.merchant_id, positm.description, SUM(positm.quantity) as quantity, SUM(positm.sold_quantity) as sold_quantity , positm.item_image, 
 		positm.created_at, positm.updated_at,
 		positm.status,poscat.name as cat_name,poscat.code as cat_code');
@@ -899,23 +898,7 @@ function get_search_merchant_other_charges_total($start_date, $end_date, $mercha
 		
 		   	$this->db->join($table . ' mt', 'mt.invoice_no = r.invoice_no');
 		}
-	    
-		$query = $this->db->get();
-		return $query->result_array();
-
-	}
-
-		public function get_full_refund_cash_check_s($start_date, $end_date,$table, $merchant_id,$condition) {
-		
-		$this->db->select('count(r.id) as id, SUM(r.amount) as amount');
-		$this->db->from("refund r");
-		$this->db->where('r.date_c >=', $start_date);
-		$this->db->where('r.date_c <=', $end_date);
-		$this->db->where('mt.card_type', $condition);
-		$this->db->where('mt.status', 'Chargeback_Confirm');
-		if($merchant_id!=""){ $this->db->where('r.merchant_id', $merchant_id); }
-	
-		 if('mt.transaction_type == split'){
+	    else if('mt.transaction_type == split'){
 		$this->db->join($table . ' mt', 'mt.split_payment_id = r.payment_id');
 		}
 		$query = $this->db->get();
@@ -952,32 +935,9 @@ function get_search_merchant_other_charges_total($start_date, $end_date, $mercha
 		
 		   	$this->db->join($table . ' mt', 'mt.invoice_no = r.invoice_no');
 		}
-	  
-		$query = $this->db->get();
-		return $query->result_array();
-
-	}
-
-	public function get_full_refund_card_s($start_date, $end_date,$table, $merchant_id) {
-		
-		$this->db->select('count(r.id) as id, SUM(r.amount) as amount');
-		$this->db->from("refund r");
-		$this->db->where('r.date_c >=', $start_date);
-		$this->db->where('r.date_c <=', $end_date);
-		$this->db->where('mt.card_type!=', 'CASH');
-		$this->db->where('mt.card_type!=', 'CHECK');
-		$this->db->where('mt.card_type!=', 'ONLINE');
-		$this->db->where('mt.card_no!=', '0');
-		$this->db->where('mt.status', 'Chargeback_Confirm');
-		if($merchant_id!=""){ $this->db->where('r.merchant_id', $merchant_id); }
-		 
-		
-		
-
-		if('mt.transaction_type == split'){
+	    else if('mt.transaction_type == split'){
 		$this->db->join($table . ' mt', 'mt.split_payment_id = r.payment_id');
 		}
-		
 		$query = $this->db->get();
 		return $query->result_array();
 
@@ -999,24 +959,7 @@ function get_search_merchant_other_charges_total($start_date, $end_date, $mercha
 		
 		   	$this->db->join($table . ' mt', 'mt.invoice_no = r.invoice_no');
 		}
-	   
-		$query = $this->db->get();
-		return $query->result_array();
-
-	}
-	public function get_full_refund_online_s($start_date, $end_date,$table, $merchant_id) {
-		
-		$this->db->select('count(r.id) as id, SUM(r.amount) as amount');
-		$this->db->from("refund r");
-		$this->db->where('r.date_c >=', $start_date);
-		$this->db->where('r.date_c <=', $end_date);
-		$this->db->where('mt.card_type!=', 'CASH');
-		$this->db->where('mt.card_type!=', 'CHECK');
-		$this->db->where('mt.card_type!=', 'ONLINE');
-		$this->db->where('mt.card_no', '0');
-		$this->db->where('mt.status', 'Chargeback_Confirm');
-		if($merchant_id!=""){ $this->db->where('r.merchant_id', $merchant_id); }
-	if('mt.transaction_type == split'){
+	    else if('mt.transaction_type == split'){
 		$this->db->join($table . ' mt', 'mt.split_payment_id = r.payment_id');
 		}
 		$query = $this->db->get();

@@ -1,0 +1,35 @@
+[16-Jan-2019 10:12:30 UTC] PHP Fatal error:  Namespace declaration statement has to be the very first statement in the script in /home/salequicknew/public_html/cnp-sdk/mytest.php on line 125
+[17-Jan-2019 09:33:32 UTC] PHP Fatal error:  Call to a member function saleRequest() on null in /home/salequicknew/public_html/cnp-sdk/mytest.php on line 43
+[17-Jan-2019 09:34:01 UTC] PHP Fatal error:  Call to a member function saleRequest() on null in /home/salequicknew/public_html/cnp-sdk/mytest.php on line 43
+[17-Jan-2019 09:34:30 UTC] PHP Fatal error:  Call to a member function saleRequest() on null in /home/salequicknew/public_html/cnp-sdk/mytest.php on line 38
+[17-Jan-2019 13:06:17 UTC] PHP Warning:  DOMDocument::schemaValidate(): Element '{http://www.vantivcnp.com/schema}amount': '10,100' is not a valid value of the atomic type '{http://www.vantivcnp.com/schema}transactionAmountType'. in /home/salequicknew/public_html/cnp-sdk/cnp/sdk/Checker.php on line 40
+[17-Jan-2019 13:06:17 UTC] PHP Fatal error:  Uncaught cnpSDKException : [0]: Fatal ERROR: Invalid XML Request!
+
+  thrown in /home/salequicknew/public_html/cnp-sdk/cnp/sdk/Checker.php on line 43
+[17-Jan-2019 13:26:59 UTC] PHP Warning:  DOMDocument::schemaValidate(): Element '{http://www.vantivcnp.com/schema}expDate': [facet 'minLength'] The value has a length of '0'; this underruns the allowed minimum length of '4'. in /home/salequicknew/public_html/cnp-sdk/cnp/sdk/Checker.php on line 40
+[17-Jan-2019 13:26:59 UTC] PHP Warning:  DOMDocument::schemaValidate(): Element '{http://www.vantivcnp.com/schema}expDate': '' is not a valid value of the atomic type '{http://www.vantivcnp.com/schema}expDateType'. in /home/salequicknew/public_html/cnp-sdk/cnp/sdk/Checker.php on line 40
+[17-Jan-2019 13:26:59 UTC] PHP Fatal error:  Uncaught cnpSDKException : [0]: Fatal ERROR: Invalid XML Request!
+
+  thrown in /home/salequicknew/public_html/cnp-sdk/cnp/sdk/Checker.php on line 43
+[17-Jan-2019 13:27:26 UTC] PHP Warning:  DOMDocument::schemaValidate(): Element '{http://www.vantivcnp.com/schema}expDate': [facet 'minLength'] The value has a length of '0'; this underruns the allowed minimum length of '4'. in /home/salequicknew/public_html/cnp-sdk/cnp/sdk/Checker.php on line 40
+[17-Jan-2019 13:27:26 UTC] PHP Warning:  DOMDocument::schemaValidate(): Element '{http://www.vantivcnp.com/schema}expDate': '' is not a valid value of the atomic type '{http://www.vantivcnp.com/schema}expDateType'. in /home/salequicknew/public_html/cnp-sdk/cnp/sdk/Checker.php on line 40
+[17-Jan-2019 13:27:26 UTC] PHP Fatal error:  Uncaught cnpSDKException : [0]: Fatal ERROR: Invalid XML Request!
+
+  thrown in /home/salequicknew/public_html/cnp-sdk/cnp/sdk/Checker.php on line 43
+[17-Jan-2019 13:27:39 UTC] PHP Warning:  DOMDocument::schemaValidate(): Element '{http://www.vantivcnp.com/schema}expDate': [facet 'minLength'] The value has a length of '0'; this underruns the allowed minimum length of '4'. in /home/salequicknew/public_html/cnp-sdk/cnp/sdk/Checker.php on line 40
+[17-Jan-2019 13:27:39 UTC] PHP Warning:  DOMDocument::schemaValidate(): Element '{http://www.vantivcnp.com/schema}expDate': '' is not a valid value of the atomic type '{http://www.vantivcnp.com/schema}expDateType'. in /home/salequicknew/public_html/cnp-sdk/cnp/sdk/Checker.php on line 40
+[17-Jan-2019 13:27:39 UTC] PHP Fatal error:  Uncaught cnpSDKException : [0]: Fatal ERROR: Invalid XML Request!
+
+  thrown in /home/salequicknew/public_html/cnp-sdk/cnp/sdk/Checker.php on line 43
+[17-Jan-2019 13:28:26 UTC] PHP Warning:  DOMDocument::schemaValidate(): Element '{http://www.vantivcnp.com/schema}expDate': [facet 'minLength'] The value has a length of '0'; this underruns the allowed minimum length of '4'. in /home/salequicknew/public_html/cnp-sdk/cnp/sdk/Checker.php on line 40
+[17-Jan-2019 13:28:26 UTC] PHP Warning:  DOMDocument::schemaValidate(): Element '{http://www.vantivcnp.com/schema}expDate': '' is not a valid value of the atomic type '{http://www.vantivcnp.com/schema}expDateType'. in /home/salequicknew/public_html/cnp-sdk/cnp/sdk/Checker.php on line 40
+[17-Jan-2019 13:28:26 UTC] PHP Fatal error:  Uncaught cnpSDKException : [0]: Fatal ERROR: Invalid XML Request!
+
+  thrown in /home/salequicknew/public_html/cnp-sdk/cnp/sdk/Checker.php on line 43
+[17-Jan-2019 13:29:10 UTC] PHP Fatal error:  Class 'cnp\sdk\XmlParser' not found in /home/salequicknew/public_html/cnp-sdk/pos.php on line 186
+[17-Jan-2019 13:29:31 UTC] PHP Fatal error:  Class 'cnp\sdk\XmlParser' not found in /home/salequicknew/public_html/cnp-sdk/pos.php on line 186
+[18-Jan-2019 04:49:36 UTC] PHP Warning:  DOMDocument::schemaValidate(): Element '{http://www.vantivcnp.com/schema}expDate': [facet 'minLength'] The value has a length of '0'; this underruns the allowed minimum length of '4'. in /home/salequicknew/public_html/cnp-sdk/cnp/sdk/Checker.php on line 40
+[18-Jan-2019 04:49:36 UTC] PHP Warning:  DOMDocument::schemaValidate(): Element '{http://www.vantivcnp.com/schema}expDate': '' is not a valid value of the atomic type '{http://www.vantivcnp.com/schema}expDateType'. in /home/salequicknew/public_html/cnp-sdk/cnp/sdk/Checker.php on line 40
+[18-Jan-2019 04:49:36 UTC] PHP Fatal error:  Uncaught cnpSDKException : [0]: Fatal ERROR: Invalid XML Request!
+
+  thrown in /home/salequicknew/public_html/cnp-sdk/cnp/sdk/Checker.php on line 43

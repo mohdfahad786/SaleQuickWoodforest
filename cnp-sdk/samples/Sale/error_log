@@ -1,0 +1,75 @@
+[15-Dec-2018 10:50:07 UTC] PHP Fatal error:  Uncaught exception 'Exception' with message 'CnpSaleTransaction does not get the right response' in /home/milstead/public_html/cnp-sdk/samples/Sale/CnpSaleTransaction.php:34
+Stack trace:
+#0 {main}
+  thrown in /home/milstead/public_html/cnp-sdk/samples/Sale/CnpSaleTransaction.php on line 34
+[15-Dec-2018 10:53:17 UTC] PHP Fatal error:  Uncaught exception 'Exception' with message 'CnpSaleTransaction does not get the right response' in /home/milstead/public_html/cnp-sdk/samples/Sale/CnpSaleTransaction.php:34
+Stack trace:
+#0 {main}
+  thrown in /home/milstead/public_html/cnp-sdk/samples/Sale/CnpSaleTransaction.php on line 34
+[15-Dec-2018 10:53:19 UTC] PHP Fatal error:  Uncaught exception 'Exception' with message 'CnpSaleTransaction does not get the right response' in /home/milstead/public_html/cnp-sdk/samples/Sale/CnpSaleTransaction.php:34
+Stack trace:
+#0 {main}
+  thrown in /home/milstead/public_html/cnp-sdk/samples/Sale/CnpSaleTransaction.php on line 34
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/XmlFields.php on line 32
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/CnpOnlineRequest.php on line 1143
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/CnpOnlineRequest.php on line 1143
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/CnpOnlineRequest.php on line 1143
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/CnpOnlineRequest.php on line 1143
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/CnpOnlineRequest.php on line 1143
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/CnpOnlineRequest.php on line 1143
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/CnpOnlineRequest.php on line 1143
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/CnpOnlineRequest.php on line 1143
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/CnpOnlineRequest.php on line 1143
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/CnpOnlineRequest.php on line 1143
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/CnpOnlineRequest.php on line 1143
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/CnpOnlineRequest.php on line 1143
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/CnpOnlineRequest.php on line 1143
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/CnpOnlineRequest.php on line 1143
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/CnpOnlineRequest.php on line 1143
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/CnpOnlineRequest.php on line 1143
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/CnpOnlineRequest.php on line 1143
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/CnpOnlineRequest.php on line 1143
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/CnpOnlineRequest.php on line 1143
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/CnpOnlineRequest.php on line 1143
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  array_key_exists() expects parameter 2 to be array, null given in /home/milstead/public_html/cnp-sdk/cnp/sdk/CnpOnlineRequest.php on line 1143
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  DOMDocument::schemaValidate(): Element '{http://www.vantivcnp.com/schema}authorization': The attribute 'id' is required but missing. in /home/milstead/public_html/cnp-sdk/cnp/sdk/Checker.php on line 40
+[28-Dec-2018 09:40:05 UTC] PHP Warning:  DOMDocument::schemaValidate(): Element '{http://www.vantivcnp.com/schema}authorization': Missing child element(s). Expected is one of ( {http://www.vantivcnp.com/schema}cnpTxnId, {http://www.vantivcnp.com/schema}orderId ). in /home/milstead/public_html/cnp-sdk/cnp/sdk/Checker.php on line 40
+[28-Dec-2018 09:40:05 UTC] PHP Fatal error:  Uncaught cnpSDKException : [0]: Fatal ERROR: Invalid XML Request!
+
+  thrown in /home/milstead/public_html/cnp-sdk/cnp/sdk/Checker.php on line 43

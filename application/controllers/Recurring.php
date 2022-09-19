@@ -877,6 +877,7 @@ class Recurring extends CI_Controller {
 												'recurring_next_pay_date' => $recurring_next_pay_date,
 												'recurring_pay_type' => $paytype,
 												
+												'add_date' => $today3,
 												'status' => 'pending',
 												'year' => $year,
 												'month' => $month,
@@ -1335,6 +1336,7 @@ class Recurring extends CI_Controller {
 																		'recurring_next_pay_date' => $recurring_next_pay_date,
 																		'recurring_pay_type' => $paytype,
 
+																		'add_date' => $today2,  ///fffff
 																		'status' => $staus,
 																		'year' => $year,
 																		'month' => $month,
@@ -1543,6 +1545,7 @@ class Recurring extends CI_Controller {
 													'recurring_next_pay_date' => $recurring_next_pay_date,
 													'recurring_pay_type' => $paytype,
 													
+													'add_date' => $today3,
 													'status' => 'pending',
 													'year' => $year,
 													'month' => $month,
@@ -2119,6 +2122,7 @@ class Recurring extends CI_Controller {
 																			'recurring_pay_start_date' => $recurring_pay_start_date1,
 																			'recurring_next_pay_date' => $recurring_next_pay_date,
 																			'recurring_pay_type' => $paytype,
+																			'add_date' => $today2,  ///fffff
 																			'status' => $staus,
 																			'year' => $year,
 																			'month' => $month,
@@ -2629,6 +2633,7 @@ class Recurring extends CI_Controller {
 											'recurring_next_pay_date' => $recurring_next_pay_date,
 											'recurring_pay_type' => $paytype,
 											
+											'add_date' => $today3,
 											'status' => 'pending',
 											'year' => $year,
 											'month' => $month,
@@ -2922,6 +2927,7 @@ class Recurring extends CI_Controller {
 																		'recurring_next_pay_date' => $recurring_next_pay_date,
 																		'recurring_pay_type' => $paytype,
 
+																		'add_date' => $today2,  ///fffff
 																		'status' => $staus,
 																		'year' => $year,
 																		'month' => $month,
@@ -3137,6 +3143,7 @@ class Recurring extends CI_Controller {
 													'recurring_next_pay_date' => $recurring_next_pay_date,
 													'recurring_pay_type' => $paytype,
 													
+													'add_date' => $today3,
 													'status' => 'pending',
 													'year' => $year,
 													'month' => $month,
@@ -3299,6 +3306,7 @@ class Recurring extends CI_Controller {
 												'recurring_next_pay_date' => $recurring_next_pay_date,
 												'recurring_pay_type' => $paytype,
 												
+												'add_date' => $today3,
 												'status' => 'pending',
 												'year' => $year,
 												'month' => $month,
@@ -3736,6 +3744,7 @@ class Recurring extends CI_Controller {
 																	'recurring_pay_start_date' => $recurring_pay_start_date1,
 																	'recurring_next_pay_date' => $recurring_next_pay_date,
 																	'recurring_pay_type' => $paytype,
+																	'add_date' => $today2,  ///fffff
 																	'status' => $staus,
 																	'year' => $year,
 																	'month' => $month,
@@ -4240,6 +4249,7 @@ class Recurring extends CI_Controller {
 											'recurring_next_pay_date' => $recurring_next_pay_date,
 											'recurring_pay_type' => $paytype,
 											
+											'add_date' => $today3,
 											'status' => 'pending',
 											'year' => $year,
 											'month' => $month,

@@ -1,4 +1,12 @@
 @font-face {
+    font-family: 'Nunito-Regular';
+    src: url('../fonts/Nunito-Regular.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'ocraexta';
+    src: url('../fonts/ocraexta.TTF') format('truetype');
+}
+@font-face {
     font-family: 'Roboto-Thin';
     font-style: normal;
     src: url('../fonts/Roboto-Thin.woff') format('woff'),
@@ -582,7 +590,7 @@ td a.badge-btn {
     border-color: #e1e6ea;
     font-weight: normal;
     border-radius: 3px;
-    /*background-image: url(new_assets/img/search.png);*/
+    background-image: url(http://localhost/salequick/new_assets/img/search.png);
     background-repeat: no-repeat;
     background-size: 15px;
     background-position: right 15px center;

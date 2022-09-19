@@ -15,14 +15,6 @@ class Reset_model extends CI_Model
           $query = $this->db->query($sql);
           return $query->num_rows();
      }
-
-      function get_user_detail($usr)
-     {
-          $sql = "select id from admin where email_id = '" . $usr . "'  and status = 'active'";
-          $query = $this->db->query($sql);
-          return $query->result_array();
-     }
-     
       function get_userb($usr)
      {
           $sql = "select * from sub_admin where email = '" . $usr . "'  and status = 'active'";
@@ -35,13 +27,6 @@ class Reset_model extends CI_Model
           $sql = "select * from merchant where email = '" . $usr . "'  and (status = 'active' OR status = 'confirm'  OR status = 'Waiting_For_Approval' )";
           $query = $this->db->query($sql);
           return $query->num_rows();
-     }
-
-     function get_merchant_detail($usr)
-     {
-          $sql = "select id from merchant where email = '" . $usr . "'  and (status = 'active' OR status = 'confirm'  OR status = 'Waiting_For_Approval' )";
-          $query = $this->db->query($sql);
-          return $query->result_array();
      }
 
 	 
