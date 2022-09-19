@@ -1,6 +1,4 @@
 <?php
-ini_set('MAX_EXECUTION_TIME', '-1');
-ini_set('memory_limit','2048M');
 if (!defined('BASEPATH')) {
 	exit('No direct script access allowed');
 }

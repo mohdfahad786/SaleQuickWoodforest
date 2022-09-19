@@ -17,8 +17,8 @@ class Otp extends CI_Controller
         $this->load->model('Home_model');
         $this->load->library('email');
         date_default_timezone_set("America/Chicago");
-       // ini_set('display_errors', 1);
-        //error_reporting(E_ALL);
+       ini_set('display_errors', 1);
+        error_reporting(E_ALL);
      }
 
     function my_encrypt( $string, $action = 'e' ) {
@@ -123,10 +123,7 @@ public function otp()
                 
                  $usr_result = $this->login_model->get_user_id($admin_id); 
                
-                    $sessiondata = array( 'id' => $usr_result['id'], 'username' => $usr_result['username'], 
-              'time_zone' => 'America/Chicago',
-            'user_type' => $usr_result['user_type'],
-            'name' => $usr_result['name'],'wf_merchants'=>$usr_result['wf_merchants'], 'image' => $usr_result['image'], 'loginuser' => TRUE
+                    $sessiondata = array( 'id' => $usr_result['id']
          );
                     //print_r($sessiondata);die;
             $this->session->set_userdata($sessiondata);
