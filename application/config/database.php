@@ -75,11 +75,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => '',
-	// 'database' => 'salequicklive',
-	'database' => 'agent_new',
+	'hostname' => 'salequickdb.cx39u3ygqjrl.us-east-1.rds.amazonaws.com',
+	'username' => 'AdminSalequick',
+	'password' => 'SalequickDB2020',
+	'database' => 'salequicklive',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
@@ -89,13 +88,14 @@ $db['default'] = array(
 	'char_set' => 'utf8',
 	'dbcollat' => 'utf8_general_ci',
 	'swap_pre' => '',
-	'ssl_key' => '/home/salequicknew/public_html/key/server-key.pem',
-    'ssl_cert' => '/home/salequicknew/public_html/key/server-cert.pem',
-    'ssl_ca' => '/home/salequicknew/public_html/key/ca.key',
-    'ssl_verify' => TRUE,
-	'encrypt' => FALSE,
+	'ssl_key' => NULL,
+        'ssl_cert' => NULL,
+        'ssl_ca' => '/var/www/html/SSL/rds-ca-2019-root.pem',
+        'ssl_verify' => TRUE,
+	'encrypt' => TRUE,
 	'compress' => FALSE,
 	'stricton' => FALSE,
 	'failover' => array(),
 	'save_queries' => TRUE
 );
+
