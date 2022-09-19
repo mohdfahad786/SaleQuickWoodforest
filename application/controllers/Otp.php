@@ -128,8 +128,8 @@ public function otp()
          );
                     //print_r($sessiondata);die;
             $this->session->set_userdata($sessiondata);
-            print_r($this->session->userdata); 
-            die();
+           //print_r($this->session->userdata); 
+           // die();
 
             $data = Array("ip" => $this->input->post("ip"),  "user_type" => 'wf', 'user_id' => $usr_result['id'],  'status' => 'true'  );
      
