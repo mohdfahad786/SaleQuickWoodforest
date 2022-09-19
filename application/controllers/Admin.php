@@ -20,14 +20,14 @@ class Admin extends CI_Controller {
 		}
        
 		date_default_timezone_set("America/Chicago");
-		ini_set('memory_limit', '-1');
-		ini_set('max_execution_time', -1);
 		
-		// ini_set('display_errors', 1);
-	 //    error_reporting(E_ALL);
+	ini_set('display_errors', 1);
+	 error_reporting(E_ALL);
 	}
 
 	public function index() {
+
+		echo 'ss'; die();
 		$data["title"] = "Admin Panel";
 
 		$getDashboard = $this->db->query("SELECT ( SELECT count(id) as NewTotalOrders from customer_payment_request where date_c = CURDATE()  ) as NewTotalOrders,  ( SELECT count(id) as TotalOrders from customer_payment_request where status='confirm' ) as TotalOrders, ( SELECT count(id) as TotalpendingOrders from customer_payment_request where status='pending' ) as TotalpendingOrders, (SELECT sum(amount) as TotalAmount from customer_payment_request where status='confirm' ) as TotalAmount ");
