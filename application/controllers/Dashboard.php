@@ -34,6 +34,7 @@ class Dashboard extends CI_Controller {
 	public function index() {
 		// echo '123';die;
 		print_r($this->session->userdata); 
+		print_r($this->session->all_userdata()); 
 		$data["title"] = "Admin Panel";
 		$data["meta"] = "Dashboard";
 		$month = date("m");
