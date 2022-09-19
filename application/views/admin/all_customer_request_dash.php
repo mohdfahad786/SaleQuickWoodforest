@@ -4,7 +4,7 @@
     header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
     header('Pragma: no-cache');
 ?>
-
+<link href="https://salequick.com/new_assets/css/select2.min.css" rel="stylesheet" type="text/css">
 <style>
 	@media screen and (max-width: 640px) {
         .btn:not(.social-icon-btn).social-btn-outlined {
@@ -68,6 +68,16 @@
                         <input name="end_date" id="end_date" type="hidden">
                     </div>
                 </div>
+                <div class="custom_employee_selector">
+                    <?php $data = $this->admin_model->data_get_where_1('merchant', array('status' => 'active' , 'user_type' => 'merchant'));  ?>
+                    
+                    <select name="employee" class="form-control selectOption" id="employee" style="background-color: #f5f5fb !important;border: none !important;color: rgb(110, 110, 110) !important;font-family: Avenir-Heavy !important;">
+                        <option  value="" >All Merchant</option>
+                        <?php foreach ($data as $view) { ?>
+                            <option  value="<?php echo $view['id']; ?>"><?php if(empty($view['business_dba_name'])){echo $view['name'];} else {echo $view['business_dba_name'];} ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
                 <div class="table_custom_status_selector">
                     <select class="form-control"  name="status" id="status" style="border: none !important;color: rgb(110, 110, 110) !important;font-family: Avenir-Heavy !important;">
                         <option value="">Select Status</option>
@@ -127,7 +137,11 @@
     </div>
 </div>
 
+
 <script>
+    $(function(){
+        $('.selectOption').select2();
+    })
     function dateFormatter(date) {
         var d = new Date(date);
         var day = d.getDate();
@@ -212,6 +226,7 @@
                     data.start_date = $('#start_date').val();
                     data.end_date = $('#end_date').val();
                     data.status = $('#status').val();
+                    data.merchant_id = $('#employee').val();
                 }
             },
             preDrawCallback: function(settings) {
@@ -311,3 +326,4 @@
 </script>
 
 <?php include_once'footer_dash.php'; ?>
+<script src="https://salequick.com/new_assets/js/select2.min.js"></script>
