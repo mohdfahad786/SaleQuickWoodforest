@@ -1,5 +1,5 @@
 <?php
-
+echo 'ss'; die();
 /**
  * CodeIgniter
  *
@@ -315,4 +315,4 @@ switch (ENVIRONMENT)
  */
 require_once BASEPATH.'core/CodeIgniter.php';
 
-echo 'ss'; die();
+
