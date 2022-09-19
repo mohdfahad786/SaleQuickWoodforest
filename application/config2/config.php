@@ -23,7 +23,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
+// $config['base_url'] = 'https://salequick.com/';
 $config['base_url'] = 'https://woodforest.salequick.com/';
+
 /*
 |--------------------------------------------------------------------------
 | Index File
@@ -373,13 +375,13 @@ $config['encryption_key'] = 'ingDLMRuGe9UKHRNjs7cYckS2yul4lc3ghhf7667xftthh54f89
 |	will be later deleted by the garbage collector.
 |
 | Other session cookie settings are shared with the rest of the application,
-| except for 'cookie_prefix' and 'cookie_httponly', which are ignored here. fkl
+| except for 'cookie_prefix' and 'cookie_httponly', which are ignored here.
 |
 */
 $config['sess_driver'] = 'files';
 $config['sess_cookie_name'] = 'ci_session';
 $config['sess_expiration'] = 7200;
-$config['sess_save_path'] = sys_get_temp_dir();
+$config['sess_save_path'] = NULL;
 $config['sess_match_ip'] = FALSE;
 $config['sess_time_to_update'] = 300;
 $config['sess_regenerate_destroy'] = FALSE;
@@ -421,7 +423,7 @@ $config['standardize_newlines'] = FALSE;
 
 /*
 |--------------------------------------------------------------------------
-| Global XSS Filtering/
+| Global XSS Filtering
 |--------------------------------------------------------------------------
 |
 | Determines whether the XSS filter is always active when GET, POST or
