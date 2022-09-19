@@ -32,6 +32,7 @@ class Recurring_admin_serverside extends CI_Controller {
         $curentDate=date('Y-m-d');
         $status = $this->input->post('status');
         $_result = $this->recurring_admin_model->get_datatables();
+        // echo $this->db->last_query();die;
         // echo '<pre>';print_r($_result);die;
         $package = $_result['result'];
         // echo '<pre>';print_r($package);die;
@@ -54,19 +55,22 @@ class Recurring_admin_serverside extends CI_Controller {
             $this->db->get($table)->row();
             $stmtQuery="";
             $wf_merchants=$this->session->userdata('wf_merchants');
-
-             $x=explode(",",$wf_merchants);
-             $len=sizeof($x);
-             for ($i=0; $i <$len ; $i++) { 
-                 if($i==0){
-                     // $stmt.=$this->db->where('merchant_id', $x[$i]);
-                     $stmtQuery.=" and (merchant_id=".$x[$i];
-                 }else{
-                     $stmtQuery.=" or merchant_id=".$x[$i];
-                 }
-             
-             }
-             $stmtQuery.=")";
+            if(!empty($wf_merchants)) {
+                     $x=explode(",",$wf_merchants);
+                     $len=sizeof($x);
+                     for ($i=0; $i <$len ; $i++) { 
+                         if($i==0){
+                             // $stmt.=$this->db->where('merchant_id', $x[$i]);
+                             $stmtQuery.=" and (merchant_id=".$x[$i];
+                         }else{
+                             $stmtQuery.=" or merchant_id=".$x[$i];
+                         }
+                     
+                     }
+                     $stmtQuery.=")";
+            }else{
+                    $stmtQuery=' and merchant_id is null ';
+            }
             if ($status != '') {
                 switch($status){
                     case "confirm":
@@ -146,8 +150,8 @@ class Recurring_admin_serverside extends CI_Controller {
         // die;
         // return $mem;
         $stmtQuery2="";
-            $wf_merchants=$this->session->userdata('wf_merchants');
-
+        $wf_merchants=$this->session->userdata('wf_merchants');
+        if(!empty($wf_merchants)) {
              $x=explode(",",$wf_merchants);
              $len=sizeof($x);
              for ($i=0; $i <$len ; $i++) { 
@@ -160,6 +164,9 @@ class Recurring_admin_serverside extends CI_Controller {
              
              }
              $stmtQuery2.=")";
+        }else{
+            $stmtQuery2=' and merchant_id is null ';
+        }
         $recur_list = $_result['result'];
         
         $no = $_POST['start'];

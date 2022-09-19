@@ -26,8 +26,8 @@ class Dashboard extends CI_Controller {
 		}
 
 		date_default_timezone_set("America/Chicago");
-		//ini_set('display_errors', 1);
-	    //error_reporting(E_ALL);
+		// ini_set('display_errors', 1);
+	 //    error_reporting(E_ALL);
 	}
 
 	public function index_original() {
@@ -129,7 +129,7 @@ class Dashboard extends CI_Controller {
 	}
 
 	public function index() {
-		// echo '123';die;
+		// echo '<pre>';die;
 		$data["title"] = "Admin Panel";
 		$data["meta"] = "Dashboard";
 		$month = date("m");
@@ -139,20 +139,27 @@ class Dashboard extends CI_Controller {
          $last_date = date('Y-m-t');
 
          $stmt="";
-				$wf_merchants=$this->session->userdata('wf_merchants');
+		$wf_merchants=$this->session->userdata('wf_merchants');
 
-        $x=explode(",",$wf_merchants);
-        $len=sizeof($x);
-        for ($i=0; $i <$len ; $i++) { 
-            if($i==0){
-                // $stmt.=$this->db->where('merchant_id', $x[$i]);
-                $stmt.=" and (merchant_id=".$x[$i];
-            }else{
-                $stmt.=" or merchant_id=".$x[$i];
-            }
-        
-        }
-        $stmt.=")";
+		if(!empty($wf_merchants)) {
+	        $x=explode(",",$wf_merchants);
+	        $len=sizeof($x);
+	        for ($i=0; $i <$len ; $i++) { 
+	            if($i==0){
+	                // $stmt.=$this->db->where('merchant_id', $x[$i]);
+	                $stmt.=" and (merchant_id=".$x[$i];
+	            }else{
+	                $stmt.=" or merchant_id=".$x[$i];
+	            }
+	        
+	        }
+	        $stmt.=")";
+
+		}else{
+			$stmt=' and merchant_id is null ';
+
+		}
+
         // echo $month;die;
     	if($month=='01' ){
          	$amount = $this->db->query("SELECT sum(amount) as Totaljan from ( SELECT month,amount from customer_payment_request where  month = '01' and year = '" . $today2 . "'".$stmt." and status='confirm'    union all SELECT month,amount from pos where  month = '01' and year = '" . $today2 . "'".$stmt." and status='confirm' )x group by month  ");
@@ -390,7 +397,7 @@ else if($month=='08' ){
  }
 		else if($month=='09') {
          	$amount = $this->db->query("SELECT sum(amount) as Totalsep from ( SELECT month,amount from customer_payment_request where  month = '09' and year = '" . $today2 . "' ".$stmt." and status='confirm'    union all SELECT month,amount from pos where  month = '09' and year = '" . $today2 . "' ".$stmt." and status='confirm' )x group by month  ");
-          
+// echo $this->db->last_query();die;          
       		$getamount = $amount->result_array();
 
           	$fee = $this->db->query("SELECT avg(amount) as Totalsepf from ( SELECT month,amount from customer_payment_request where month = '09' and year = '" . $today2 . "' ".$stmt." and status='confirm'    union all SELECT month,amount from pos where  month = '09' and year = '" . $today2 . "' ".$stmt." and status='confirm' )x group by month ");
@@ -477,20 +484,24 @@ else if($month=='08' ){
 		$date = date("Y-m-d");
 
 		$stmtQuery="";
-				$wf_merchants=$this->session->userdata('wf_merchants');
+		$wf_merchants=$this->session->userdata('wf_merchants');
 
-        $x=explode(",",$wf_merchants);
-        $len=sizeof($x);
-        for ($i=0; $i <$len ; $i++) { 
-            if($i==0){
-                // $stmt.=$this->db->where('merchant_id', $x[$i]);
-                $stmtQuery.=" and (merchant_id=".$x[$i];
-            }else{
-                $stmtQuery.=" or merchant_id=".$x[$i];
-            }
-        
-        }
-        $stmtQuery.=")";
+		if(!empty($wf_merchants)) {
+	        $x=explode(",",$wf_merchants);
+	        $len=sizeof($x);
+	        for ($i=0; $i <$len ; $i++) { 
+	            if($i==0){
+	                // $stmt.=$this->db->where('merchant_id', $x[$i]);
+	                $stmtQuery.=" and (merchant_id=".$x[$i];
+	            }else{
+	                $stmtQuery.=" or merchant_id=".$x[$i];
+	            }
+	        
+	        }
+	        $stmtQuery.=")";
+	    }else{
+			$stmtQuery=' and merchant_id is null ';
+		}
 
 		if ($_POST['employee'] == 'all') {
 			$stmt = $this->db->query("SELECT id,merchant_id,invoice_no ,sum(amount) as amount,sum(tax) as tax,sum(fee) as fee,name,date_c from ( SELECT id,merchant_id,invoice_no,amount,tax,fee,name,date_c from customer_payment_request where  date_c >= '".$date_c."' and date_c <= '".$date_cc."' and status='confirm' ".$stmtQuery." and merchant_id!='413'  union all SELECT id,merchant_id,invoice_no,amount,tax,fee,name,date_c from recurring_payment where date_c > '".$date_c."' and date_c < '".$date_cc."' ".$stmtQuery." and status='confirm'   union all SELECT id,merchant_id,invoice_no,amount,tax,fee,name,date_c from pos where  date_c >= '".$date_c."' and date_c <= '".$date_cc."' ".$stmtQuery." and status='confirm' and merchant_id!='413' ) x group by date_c");
@@ -502,7 +513,7 @@ else if($month=='08' ){
 		} else {
 			$stmt = $this->db->query("SELECT id,merchant_id,invoice_no ,sum(amount) as amount,sum(tax) as tax,sum(fee) as fee,name,date_c from ( SELECT id,merchant_id,invoice_no,amount,tax,fee,name,date_c from customer_payment_request where  date_c >= '".$date_c."' and date_c <= '".$date_cc."' and status='confirm' and merchant_id IN($employee)  union all SELECT id,merchant_id,invoice_no,amount,tax,fee,name,date_c from recurring_payment where  date_c >= '".$date_c."' and date_c <= '".$date_cc."' and status='confirm' and merchant_id= $employee  union all SELECT id,merchant_id,invoice_no,amount,tax,fee,name,date_c from pos where  date_c >= '".$date_c."' and date_c <= '".$date_cc."' and status='confirm' and merchant_id IN($employee) ) x group by date_c");
 		}
-	// echo $this->db->last_query();
+	// echo $this->db->last_query();die;
 
 		if ($stmt->num_rows() > 0) {
 			foreach ($stmt->result_array() as $result) {
@@ -892,20 +903,25 @@ else if($month=='08' ){
 		$end = $this->input->post('end');
 		$employee = $this->input->post('employee');
 		$stmtQuery="";
-				$wf_merchants=$this->session->userdata('wf_merchants');
+		
+		$wf_merchants=$this->session->userdata('wf_merchants');
+		if(!empty($wf_merchants)) {
+	        $x=explode(",",$wf_merchants);
+	        $len=sizeof($x);
+	        for ($i=0; $i <$len ; $i++) { 
+	            if($i==0){
+	                // $stmt.=$this->db->where('merchant_id', $x[$i]);
+	                $stmtQuery.=" and (r.merchant_id=".$x[$i];
+	            }else{
+	                $stmtQuery.=" or r.merchant_id=".$x[$i];
+	            }
+	        
+	        }
+	        $stmtQuery.=")";
+	    }else{
+			$stmtQuery=' and r.merchant_id is null ';
+		}
 
-        $x=explode(",",$wf_merchants);
-        $len=sizeof($x);
-        for ($i=0; $i <$len ; $i++) { 
-            if($i==0){
-                // $stmt.=$this->db->where('merchant_id', $x[$i]);
-                $stmtQuery.=" and (r.merchant_id=".$x[$i];
-            }else{
-                $stmtQuery.=" or r.merchant_id=".$x[$i];
-            }
-        
-        }
-        $stmtQuery.=")";
 		if ($employee == 'all') {
 			$stmt = $this->db->query("SELECT (select sum(CASE when r.amount is null OR r.amount='' then p.amount else r.amount end) as rAmu from pos p join refund r on p.invoice_no=r.invoice_no where r.date_c>='".$start."' and r.date_c <= '".$end."' and  p.status='Chargeback_Confirm' ".$stmtQuery.")  As RAmountPOS, (select sum(CASE when r.amount is null OR r.amount='' then p.amount else r.amount end) as rAmu from customer_payment_request p join refund r on p.invoice_no=r.invoice_no where r.date_c>='".$start."' and r.date_c <= '".$end."' and  p.status='Chargeback_Confirm' ".$stmtQuery." ) As RAmountCPR");
 				// echo $this->db->last_query();die;
@@ -931,20 +947,23 @@ else if($month=='08' ){
 		$sumTipPOSRef = 0;
 
 		$stmtQuery="";
-				$wf_merchants=$this->session->userdata('wf_merchants');
-
-        $x=explode(",",$wf_merchants);
-        $len=sizeof($x);
-        for ($i=0; $i <$len ; $i++) { 
-            if($i==0){
-                // $stmt.=$this->db->where('merchant_id', $x[$i]);
-                $stmtQuery.=" and (merchant_id=".$x[$i];
-            }else{
-                $stmtQuery.=" or merchant_id=".$x[$i];
-            }
-        
-        }
-        $stmtQuery.=")";
+		$wf_merchants=$this->session->userdata('wf_merchants');
+		if(!empty($wf_merchants)) {
+	        $x=explode(",",$wf_merchants);
+	        $len=sizeof($x);
+	        for ($i=0; $i <$len ; $i++) { 
+	            if($i==0){
+	                // $stmt.=$this->db->where('merchant_id', $x[$i]);
+	                $stmtQuery.=" and (merchant_id=".$x[$i];
+	            }else{
+	                $stmtQuery.=" or merchant_id=".$x[$i];
+	            }
+	        
+	        }
+	        $stmtQuery.=")";
+	    }else{
+			$stmtQuery=' and merchant_id is null ';
+		}
 		$ArrInv = $this->db->query("SELECT amount, tax, card_type, tip_amount, type, add_date, reference, status from customer_payment_request where date_c >= '".$start."' and date_c <= '".$end."' ".$stmtQuery." and status='confirm'")->result_array();
 		
 		// echo '<pre>';print_r($invArr);die;
@@ -2811,7 +2830,7 @@ else if($month=='08' ){
 		$data['meta'] = 'View All Subadmin';
 		$this->load->view('admin/all_subadmin_dash', $data);
 	}
-
+	
 	public function all_merchant() {
 		$data = array();
 		$data['meta'] = 'Woodforest Merchant Accounts';

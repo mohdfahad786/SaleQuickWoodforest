@@ -49,19 +49,22 @@ class Admin_Graph extends CI_Controller {
 		$merchnat = $this->input->post('employee');
 		$stmtQuery="";
 		$wf_merchants=$this->session->userdata('wf_merchants');
-
-        $x=explode(",",$wf_merchants);
-        $len=sizeof($x);
-        for ($i=0; $i <$len ; $i++) { 
-            if($i==0){
-                // $stmt.=$this->db->where('merchant_id', $x[$i]);
-                $stmtQuery.=" and (merchant_id=".$x[$i];
-            }else{
-                $stmtQuery.=" or merchant_id=".$x[$i];
-            }
-        
-        }
-        $stmtQuery.=")";
+		if(!empty($wf_merchants)) {
+		        $x=explode(",",$wf_merchants);
+		        $len=sizeof($x);
+		        for ($i=0; $i <$len ; $i++) { 
+		            if($i==0){
+		                // $stmt.=$this->db->where('merchant_id', $x[$i]);
+		                $stmtQuery.=" and (merchant_id=".$x[$i];
+		            }else{
+		                $stmtQuery.=" or merchant_id=".$x[$i];
+		            }
+		        
+		        }
+		        $stmtQuery.=")";
+		}else{
+			$stmtQuery=' and merchant_id is null ';
+		}
 		// Sales Summary Chart Data
 		if ($employee == 'all') {
 			$stmt = $this->db->query("SELECT id,merchant_id,invoice_no ,sum(amount) as amount,sum(tax) as tax,sum(fee) as fee,name,date_c from ( SELECT id,merchant_id,invoice_no,amount,tax,fee,name,date_c from customer_payment_request where date_c >= '".$date_c."' and date_c <= '".$date_cc."' and status='confirm' ".$stmtQuery."  union all SELECT id,merchant_id,invoice_no,amount,tax,fee,name,date_c from pos where date_c >= '".$date_c."' and date_c <= '".$date_cc."' and status='confirm' ".$stmtQuery." ) x group by date_c");
@@ -71,12 +74,12 @@ class Admin_Graph extends CI_Controller {
 		} elseif ($employee != 'all') {
 			$stmt = $this->db->query("SELECT id,merchant_id,invoice_no ,sum(amount) as amount,sum(tax) as tax,sum(fee) as fee,name,date_c from ( SELECT id,merchant_id,invoice_no,amount,tax,fee,name,date_c from customer_payment_request where  date_c >= '".$date_c."' and date_c <= '".$date_cc."' and status='confirm' and merchant_id IN($employee) union all SELECT id,merchant_id,invoice_no,amount,tax,fee,name,date_c from pos where date_c >= '".$date_c."' and date_c <= '".$date_cc."' and status='confirm' and merchant_id IN ($employee)  ) x group by date_c");
 
-			
+						// echo $this->db->last_query();die;
 
 		} else {
 			$stmt = $this->db->query("SELECT id,merchant_id,invoice_no ,sum(amount) as amount,sum(tax) as tax,sum(fee) as fee,name,date_c from ( SELECT id,merchant_id,invoice_no,amount,tax,fee,name,date_c from customer_payment_request where  date_c >= '".$date_c."' and date_c <= '".$date_cc."' and status='confirm' and merchant_id IN($employee) union all SELECT id,merchant_id,invoice_no,amount,tax,fee,name,date_c from pos where  date_c >= '".$date_c."' and date_c <= '".$date_cc."' and status='confirm' and merchant_id IN($employee)  ) x group by date_c");
-		}
 		// echo $this->db->last_query();die;
+		}
 		// echo $stmt->num_rows();die;
 		// echo '<pre>';print_r($stmt->result_array());die;
 		if ($stmt->num_rows() > 0) {
@@ -287,19 +290,22 @@ class Admin_Graph extends CI_Controller {
 		// Summary Table Data
 		$stmtQuery="";
 		$wf_merchants=$this->session->userdata('wf_merchants');
-
-        $x=explode(",",$wf_merchants);
-        $len=sizeof($x);
-        for ($i=0; $i <$len ; $i++) { 
-            if($i==0){
-                // $stmt.=$this->db->where('merchant_id', $x[$i]);
-                $stmtQuery.=" and (merchant_id=".$x[$i];
-            }else{
-                $stmtQuery.=" or merchant_id=".$x[$i];
-            }
-        
-        }
-        $stmtQuery.=")";
+		if(!empty($wf_merchants)) {
+		        $x=explode(",",$wf_merchants);
+		        $len=sizeof($x);
+		        for ($i=0; $i <$len ; $i++) { 
+		            if($i==0){
+		                // $stmt.=$this->db->where('merchant_id', $x[$i]);
+		                $stmtQuery.=" and (merchant_id=".$x[$i];
+		            }else{
+		                $stmtQuery.=" or merchant_id=".$x[$i];
+		            }
+		        
+		        }
+		        $stmtQuery.=")";
+		}else{
+			$stmtQuery=' and merchant_id is null ';
+		}
 		$tableData = array();
 		if ($employee == 'all') {
 			$stmt = $this->db->query("SELECT (SELECT SUM(amount) as Amount from customer_payment_request where date_c >= '".$date_c."' and date_c <= '".$date_cc."' and merchant_id!='413' ".$stmtQuery." and (status='confirm' or status='Chargeback_Confirm')) as Amount,
@@ -328,7 +334,7 @@ class Admin_Graph extends CI_Controller {
 
   				(select SUM(fee) as RFee from customer_payment_request where date_r>='".$date_c."' and date_r <= '".$date_cc."' ".$stmtQuery." and merchant_id!='413'  and  status='Chargeback_Confirm' and partial_refund='0') As RFee,
   				(select SUM(fee) as RPFee from pos  where date_r>='".$date_c."' and date_r <= '".$date_cc."' ".$stmtQuery."  and status='Chargeback_Confirm' and partial_refund='0') As RPFee ");
-				// echo $this->db->last_query();die;
+					// echo $this->db->last_query();die;
 		}  else {
 			$stmt = $this->db->query("SELECT (SELECT SUM(amount) as Amount from customer_payment_request where date_c >= '".$date_c."' and date_c <= '".$date_cc."' and merchant_id= $employee and (status='confirm' or status='Chargeback_Confirm') ) as Amount,
 				(SELECT SUM(amount) as PAmount from pos where date_c >= '".$date_c."' and date_c <= '".$date_cc."' and merchant_id= $employee and (status='confirm' or status='Chargeback_Confirm')) as PAmount,
@@ -360,8 +366,8 @@ class Admin_Graph extends CI_Controller {
 
   				");
 
-		}
 		// echo $this->db->last_query();die;
+		}
 
 		if ($stmt->num_rows() > 0) {
 			// echo '<pre>';print_r($stmt->result_array());die;
@@ -424,19 +430,22 @@ class Admin_Graph extends CI_Controller {
 		$employee = $this->input->post('employee');
 		$stmtQuery="";
 		$wf_merchants=$this->session->userdata('wf_merchants');
-
-        $x=explode(",",$wf_merchants);
-        $len=sizeof($x);
-        for ($i=0; $i <$len ; $i++) { 
-            if($i==0){
-                // $stmt.=$this->db->where('merchant_id', $x[$i]);
-                $stmtQuery.=" and (merchant_id=".$x[$i];
-            }else{
-                $stmtQuery.=" or merchant_id=".$x[$i];
-            }
-        
-        }
-        $stmtQuery.=")";
+		if(!empty($wf_merchants)) {
+		        $x=explode(",",$wf_merchants);
+		        $len=sizeof($x);
+		        for ($i=0; $i <$len ; $i++) { 
+		            if($i==0){
+		                // $stmt.=$this->db->where('merchant_id', $x[$i]);
+		                $stmtQuery.=" and (merchant_id=".$x[$i];
+		            }else{
+		                $stmtQuery.=" or merchant_id=".$x[$i];
+		            }
+		        
+		        }
+		        $stmtQuery.=")";
+		}else{
+			$stmtQuery=' and merchant_id is null ';
+		}
 		if($employee == 'all') {
 			$getDashboard = $this->db->query("SELECT 
 			(SELECT sum(amount) as Totaljan from ( SELECT amount,status from customer_payment_request where   date_c <= '".$date_cc."' and date_c >= '".$date_c."'   and time1 = '01'  and status='confirm' ".$stmtQuery."    union all SELECT amount,status from pos where   date_c <= '".$date_cc."' and date_c >= '".$date_c."'  and time1 = '01'   and status='confirm' ".$stmtQuery." )x group by status ) as Totaljan   ,
@@ -476,7 +485,7 @@ class Admin_Graph extends CI_Controller {
 			(SELECT avg(amount) as Totalnovfee from ( SELECT amount,status from customer_payment_request where   date_c <= '".$date_cc."' and date_c >= '".$date_c."'   and time1 >= '20' and  time1 < '22' and status='confirm' ".$stmtQuery."    union all SELECT amount,status from pos where   date_c <= '".$date_cc."' and date_c >= '".$date_c."'   and time1 >= '20' and  time1 < '22' and status='confirm' ".$stmtQuery." )x group by status ) as Totalnovfee   ,
 			(SELECT avg(amount) as Totaldecfee from ( SELECT amount,status from customer_payment_request where   date_c <= '".$date_cc."' and date_c >= '".$date_c."'   and time1 >= '22' and  time1 < '24' and status='confirm' ".$stmtQuery."    union all SELECT amount,status from pos where   date_c = '".$date_cc."'  and time1 >= '22' and  time1 < '24' and status='confirm' ".$stmtQuery." )x group by status ) as Totaldecfee  
 			");
-			
+			// echo $this->db->last_query();die;
 		} else {
 		 	$getDashboard = $this->db->query("SELECT 
 			(SELECT sum(amount) as Totaljan from (SELECT amount,status from customer_payment_request where date_c <= '".$date_cc."' and date_c >= '".$date_c."' and time1 = '01' and status='confirm' AND merchant_id IN ($employee) union all SELECT amount,status from pos where date_c <= '".$date_cc."' and date_c >= '".$date_c."' and time1 = '01' and status='confirm' AND merchant_id IN ($employee) )x group by status) as Totaljan,
@@ -516,7 +525,7 @@ class Admin_Graph extends CI_Controller {
 			(SELECT avg(amount) as Totalnovfee from ( SELECT amount,status from customer_payment_request where   date_c <= '".$date_cc."' and date_c >= '".$date_c."'   and time1 >= '20' and  time1 < '22' and status='confirm' AND merchant_id  IN ($employee) union all SELECT amount,status from pos where   date_c <= '".$date_cc."' and date_c >= '".$date_c."'   and time1 >= '20' and  time1 < '22' and status='confirm' AND merchant_id  IN ($employee) )x group by status ) as Totalnovfee   ,
 			(SELECT avg(amount) as Totaldecfee from ( SELECT amount,status from customer_payment_request where   date_c <= '".$date_cc."' and date_c >= '".$date_c."'   and time1 >= '22' and  time1 < '24' and status='confirm' AND merchant_id  IN ($employee) union all SELECT amount,status from pos where   date_c = '".$date_cc."'  and time1 >= '22' and  time1 < '24' and status='confirm'  AND merchant_id  IN ($employee) )x group by status ) as Totaldecfee  
 			");
-	
+			// echo $this->db->last_query();die;
 		}
 
 		$getDashboardData = $getDashboard->result_array();
@@ -541,6 +550,7 @@ class Admin_Graph extends CI_Controller {
 		$merchnat = $this->input->post('employee');
 
 		$package_data = $this->admin_model->get_sales_summary_report("customer_payment_request",$date_cc,$date_c,$employee);
+		// echo $this->db->last_query();die;
 		$mem = array();
 		$sum=0;
 		$member = array();
@@ -563,6 +573,7 @@ class Admin_Graph extends CI_Controller {
 		$responseData['item'] = $mem;
 		
 		$package_data2= $this->admin_model->get_sales_summary_report("pos",$date_cc,$date_c,$employee);
+		// echo $this->db->last_query();die;
 		$mem1 = array();
 		$sum1=0;
 		$member = array();
@@ -591,6 +602,7 @@ class Admin_Graph extends CI_Controller {
 	
 		// for refund
 	   	$package_data3 = $this->admin_model->get_sales_summary_report_refund($date_cc, $date_c, $employee);
+	   	// echo $this->db->last_query();die;
 	   	// echo '<pre>';print_r($package_data3);die;
 		$mem3 = array();
 		$member3 = array();

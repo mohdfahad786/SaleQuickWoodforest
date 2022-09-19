@@ -43,21 +43,22 @@ class Recurring_admin_model extends CI_Model {
 			$wf_merchants=$this->session->userdata('wf_merchants');
 	        $x=explode(",",$wf_merchants);
 	        $len=sizeof($x);
-	        for ($i=0; $i <$len ; $i++) { 
-	           	if($i==0){
-	              		// $this->db->where('(cpr.merchant_id', $x[$i]);
-	           		$mysqlQry.='(cpr.merchant_id='.$x[$i].' or ';
-	           	}else if($i==$len-1){
-	           		 		// $this->db->or_where('cpr.merchant_id', $x[$i]);
-	           		$mysqlQry.='cpr.merchant_id='.$x[$i].')';
-	           	}
-	           	else{
-	               	// $this->db->or_where('cpr.merchant_id', $x[$i]);
-	               	$mysqlQry.='cpr.merchant_id='.$x[$i].' or ';
-	           	}
-	       
-	        }
-	        $this->db->where($mysqlQry);
+	        if(!empty($wf_merchants)) {
+		        for ($i=0; $i <$len ; $i++) { 
+		           	if($i==0){
+		              	$mysqlQry.='(cpr.merchant_id='.$x[$i].' or ';
+		           	}else if($i==$len-1){
+		           		$mysqlQry.='cpr.merchant_id='.$x[$i].')';
+		           	}
+		           	else{
+		               	$mysqlQry.='cpr.merchant_id='.$x[$i].' or ';
+		           	}
+		       
+		        }
+		        $this->db->where($mysqlQry);
+		    }else{
+				$mysqlQry=' and merchant_id is null ';
+			}
 	    }
 		
 		
@@ -135,16 +136,20 @@ class Recurring_admin_model extends CI_Model {
 
         $x=explode(",",$wf_merchants);
         $len=sizeof($x);
-        for ($i=0; $i <$len ; $i++) { 
-            if($i==0){
-                // $stmt.=$this->db->where('merchant_id', $x[$i]);
-                $stmtQuery.=" and (merchant_id=".$x[$i];
-            }else{
-                $stmtQuery.=" or merchant_id=".$x[$i];
-            }
-        
-        }
-        $stmtQuery.=")";
+        if(!empty($wf_merchants)) {
+	        for ($i=0; $i <$len ; $i++) { 
+	            if($i==0){
+	                // $stmt.=$this->db->where('merchant_id', $x[$i]);
+	                $stmtQuery.=" and (merchant_id=".$x[$i];
+	            }else{
+	                $stmtQuery.=" or merchant_id=".$x[$i];
+	            }
+	        
+	        }
+	        $stmtQuery.=")";
+	    }else{
+			$stmtQuery=' and merchant_id is null ';
+		}
 		$query_count_filter = $this->db->query("SELECT invoice_no FROM customer_payment_request WHERE payment_type = 'recurring' ".$stmtQuery." AND date_c >= '".$start_date. "' AND date_c <= '".$end_date. "' AND merchant_id != 413". $where.$where_search);
 		
 
@@ -163,16 +168,20 @@ class Recurring_admin_model extends CI_Model {
 
         $x=explode(",",$wf_merchants);
         $len=sizeof($x);
-        for ($i=0; $i <$len ; $i++) { 
-            if($i==0){
-                // $stmt.=$this->db->where('merchant_id', $x[$i]);
-                $stmtQuery.=" and (merchant_id=".$x[$i];
-            }else{
-                $stmtQuery.=" or merchant_id=".$x[$i];
-            }
-        
-        }
-        $stmtQuery.=")";
+        if(!empty($wf_merchants)) {
+	        for ($i=0; $i <$len ; $i++) { 
+	            if($i==0){
+	                // $stmt.=$this->db->where('merchant_id', $x[$i]);
+	                $stmtQuery.=" and (merchant_id=".$x[$i];
+	            }else{
+	                $stmtQuery.=" or merchant_id=".$x[$i];
+	            }
+	        
+	        }
+	        $stmtQuery.=")";
+	    }else{
+			$stmtQuery=' and merchant_id is null ';
+		}
 		$query_count_all = $this->db->query("SELECT invoice_no FROM customer_payment_request WHERE payment_type = 'recurring' ".$stmtQuery." AND date_c >= '".$start_date. "' AND date_c <= '".$end_date. "' AND merchant_id != 413");
 		
 		return $query_count_all->num_rows();

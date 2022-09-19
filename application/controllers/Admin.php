@@ -366,18 +366,23 @@ class Admin extends CI_Controller {
 		 	if($pos->transaction_type == "split") {
 
 		 		$wf_merchants=$this->session->userdata('wf_merchants');
-				$x=explode(",",$wf_merchants);
-				$len=sizeof($x);
-				$str="";
-				for ($i=0; $i <$len ; $i++) { 
-					if($i==0){
-						$str="(merchant_id=".$x[$i];
-					}else{
-						$str.=" or merchant_id=".$x[$i];
+		 		if(!empty($wf_merchants)) {
+					$x=explode(",",$wf_merchants);
+					$len=sizeof($x);
+					$str="";
+					for ($i=0; $i <$len ; $i++) { 
+						if($i==0){
+							$str="(merchant_id=".$x[$i];
+						}else{
+							$str.=" or merchant_id=".$x[$i];
+						}
+					
 					}
-				
+					$str.=")";
 				}
-				$str.=")";
+				else{
+					$str=' and merchant_id is null ';
+				}
 				$this->db->where($str);
 		 		$get_item_data = $this->db->where('transaction_id', $pos_invoice_no)->get('adv_pos_cart_item')->num_rows();
 
@@ -387,18 +392,22 @@ class Admin extends CI_Controller {
 				$card_type = "SPLIT";
 		 	} else {
 		 		$wf_merchants=$this->session->userdata('wf_merchants');
-				$x=explode(",",$wf_merchants);
-				$len=sizeof($x);
-				$str="";
-				for ($i=0; $i <$len ; $i++) { 
-					if($i==0){
-						$str="(merchant_id=".$x[$i];
-					}else{
-						$str.=" or merchant_id=".$x[$i];
-					}
-				
+		 		if(!empty($wf_merchants)) {
+						$x=explode(",",$wf_merchants);
+						$len=sizeof($x);
+						$str="";
+						for ($i=0; $i <$len ; $i++) { 
+							if($i==0){
+								$str="(merchant_id=".$x[$i];
+							}else{
+								$str.=" or merchant_id=".$x[$i];
+							}
+						
+						}
+						$str.=")";
+				}else{
+						$str=' and merchant_id is null ';
 				}
-				$str.=")";
 				$this->db->where($str);
 				$get_item_data = $this->db->where('transaction_id', $pos_transaction_id)->get('adv_pos_cart_item')->num_rows();
 				// echo $this->db->last_query();

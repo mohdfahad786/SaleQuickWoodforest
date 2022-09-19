@@ -40,18 +40,22 @@ class Pos_model extends CI_Model {
 			$wf_merchants=$this->session->userdata('wf_merchants');
 			$x=explode(",",$wf_merchants);
 			$len=sizeof($x);
-			for ($i=0; $i <$len ; $i++) { 
-				if($i==0){
-	              	$mysqlQry.='(pos.merchant_id='.$x[$i].' or ';
-	           	}else if($i==$len-1){
-	           		 $mysqlQry.='pos.merchant_id='.$x[$i].')';
-	           	}
-	           	else{
-	               	$mysqlQry.='pos.merchant_id='.$x[$i].' or ';
-	           	}
-	       
-	        }
-	        $this->db->where($mysqlQry);
+			if(!empty($wf_merchants)) {
+				for ($i=0; $i <$len ; $i++) { 
+					if($i==0){
+		              	$mysqlQry.='(pos.merchant_id='.$x[$i].' or ';
+		           	}else if($i==$len-1){
+		           		 $mysqlQry.='pos.merchant_id='.$x[$i].')';
+		           	}
+		           	else{
+		               	$mysqlQry.='pos.merchant_id='.$x[$i].' or ';
+		           	}
+		       
+		        }
+		        $this->db->where($mysqlQry);
+		    }else{
+					$stmt=' and pos.merchant_id is null ';
+			}
 		}
 		if (!empty($start_date)) {
 			$this->db->where('pos.date_c >=', $start_date);
@@ -148,13 +152,17 @@ class Pos_model extends CI_Model {
 		$wf_merchants=$this->session->userdata('wf_merchants');
 		$x=explode(",",$wf_merchants);
 		$len=sizeof($x);
-		for ($i=0; $i <$len ; $i++) { 
-			if($i==0){
-				$this->db->where('merchant_id', $x[$i]);
-			}else{
-				$this->db->or_where('merchant_id', $x[$i]);
+		if(!empty($wf_merchants)) {
+			for ($i=0; $i <$len ; $i++) { 
+				if($i==0){
+					$this->db->where('merchant_id', $x[$i]);
+				}else{
+					$this->db->or_where('merchant_id', $x[$i]);
+				}
+			
 			}
-		
+		}else{
+			$this->db->where('merchant_id IS NULL', null, false);
 		}
 		// return $this->db->count_all_results();
 	}

@@ -133,16 +133,20 @@ class Admin_model extends CI_Model {
 	public function data_get_where_1($table, $condition) {
 		$this->db->order_by("id", "desc");
 		$wf_merchants=$this->session->userdata('wf_merchants');
-        $x=explode(",",$wf_merchants);
-        $len=sizeof($x);
-        for ($i=0; $i <$len ; $i++) { 
-            if($i==0){
-               $this->db->where('id', $x[$i]);
-            }else{
-                $this->db->or_where('id', $x[$i]);
-            }
-        
-        } 
+		if(!empty($wf_merchants)) {
+	        $x=explode(",",$wf_merchants);
+	        $len=sizeof($x);
+	        for ($i=0; $i <$len ; $i++) { 
+	            if($i==0){
+	               $this->db->where('id', $x[$i]);
+	            }else{
+	                $this->db->or_where('id', $x[$i]);
+	            }
+	        
+	        } 
+	     }else{
+	     	$this->db->where('id IS NULL', null, false);
+	     }
 		$q = $this->db->get_where($table, $condition);
 		
 		return $q->result_array();
@@ -2468,20 +2472,22 @@ public function get_refund_data_admin($end_date, $start_date, $merchant_id) {
 		$wf_merchants=$this->session->userdata('wf_merchants');
         $x=explode(",",$wf_merchants);
         $len=sizeof($x);
-        
+        if(!empty($wf_merchants)) {
+				for ($i=0; $i <$len ; $i++) { 
+		            if($i==0){
+		               $this->db->where('merchant_id', $x[$i]);
+		            }else{
+		                $this->db->or_where('merchant_id', $x[$i]);
+		            }
+		        
+		        }
+		}else{
+				$this->db->where('merchant_id IS NULL', null, false);
+		}
 		if($merchant_id != 'all') {
 			$this->db->where('merchant_id',$merchant_id);
 		}
-		else{
-			for ($i=0; $i <$len ; $i++) { 
-            if($i==0){
-               $this->db->where('merchant_id', $x[$i]);
-            }else{
-                $this->db->or_where('merchant_id', $x[$i]);
-            }
-        
-        }
-		}
+		
 		$this->db->where('status', 'confirm');
 		$this->db->order_by("id", "desc");
 		$query = $this->db->get();
@@ -2503,18 +2509,31 @@ public function get_refund_data_admin($end_date, $start_date, $merchant_id) {
 		if($merchant_id!="" && $merchant_id!='all') {
 		 $this->db->where_in('r.merchant_id', $merchant_id); 
 		} 
+		$sqlQry='';
 		if($merchant_id=='all'){
 			$wf_merchants=$this->session->userdata('wf_merchants');
         	$x=explode(",",$wf_merchants);
         	$len=sizeof($x);
-        	for ($i=0; $i <$len ; $i++) { 
-            	if($i==0){
-               		$this->db->where('mt.merchant_id', $x[$i]);
-            	}else{
-                	$this->db->or_where('mt.merchant_id', $x[$i]);
-            	}
-        
-        	}
+        	if(!empty($wf_merchants)) {
+	        	for ($i=0; $i <$len ; $i++) { 
+	            	if($i==0){
+	               		// $this->db->where('r.merchant_id='. $x[$i]." or ");
+	               		$sqlQry.='(r.merchant_id='. $x[$i].' or ';
+	            	}else if($i==$len-1)
+	            	{
+	            		$sqlQry.='r.merchant_id='. $x[$i].' )';
+	            	}
+	            	else{
+	                	// $this->db->or_where('r.merchant_id', $x[$i]);
+	                	$sqlQry.='r.merchant_id='. $x[$i].' or ';
+	            	}
+	        
+	        	}
+				$this->db->where($sqlQry);
+			}
+			else{
+				$this->db->where('r.merchant_id IS NULL', null, false);
+			}
 		}
 		$this->db->join('pos mt', 'mt.invoice_no = r.invoice_no');
 
@@ -2530,22 +2549,35 @@ public function get_refund_data_admin($end_date, $start_date, $merchant_id) {
 		if($merchant_id!="" && $merchant_id!='all') {
 		 $this->db->where_in('r.merchant_id', $merchant_id); 
 		}
+		$sqlQry='';
 		if($merchant_id=='all'){
 			$wf_merchants=$this->session->userdata('wf_merchants');
         	$x=explode(",",$wf_merchants);
         	$len=sizeof($x);
-        	for ($i=0; $i <$len ; $i++) { 
-            	if($i==0){
-               		$this->db->where('mt.merchant_id', $x[$i]);
-            	}else{
-                	$this->db->or_where('mt.merchant_id', $x[$i]);
-            	}
-        
-        	}
-		} 
+        	if(!empty($wf_merchants)) {
+	        	for ($i=0; $i <$len ; $i++) { 
+	            	if($i==0){
+	               		// $this->db->where('r.merchant_id='. $x[$i]." or ");
+	               		$sqlQry.='(r.merchant_id='. $x[$i].' or ';
+	            	}else if($i==$len-1)
+	            	{
+	            		$sqlQry.='r.merchant_id='. $x[$i].' )';
+	            	}
+	            	else{
+	                	// $this->db->or_where('r.merchant_id', $x[$i]);
+	                	$sqlQry.='r.merchant_id='. $x[$i].' or ';
+	            	}
+	        
+	        	}
+	        	$this->db->where($sqlQry);
+	        }else{
+				$this->db->where('r.merchant_id IS NULL', null, false);
+			} 
+		}
+
 		$this->db->join('customer_payment_request mt', 'mt.invoice_no = r.invoice_no');
 		$query2 = $this->db->get_compiled_select();
-		
+		// echo $query1;die;
 		$query = $this->db->query($query1 . " UNION ALL " . $query2);
 		
 		return $query->result();
