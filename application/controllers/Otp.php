@@ -105,17 +105,22 @@ public function otp()
      $otp = $_POST['otp'];
        $token_detail = $this->db->query("select * from otp_detail where admin_id='".$admin_id."' and otp='".$otp."' and status='0' ")->num_rows();
 
-    echo $this->db->last_query();die;
+   
 
        $this->form_validation->set_rules("otp", "Otp", "required");
 
           if ($this->form_validation->run() == FALSE)
           {
+            echo 'ss';
+             echo $this->db->last_query();die;
            
          $this->load->view('admin/login_view');
 
           }
             else if($token_detail==1){
+
+                echo $token_detail;
+             echo $this->db->last_query();die;
                 
                  $usr_result = $this->login_model->get_user_id($admin_id); 
                
