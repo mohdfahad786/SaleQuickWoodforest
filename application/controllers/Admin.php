@@ -12,10 +12,10 @@ class Admin extends CI_Controller {
 		$this->load->library('form_validation');
 		$this->load->model('admin_model');
 		$this->load->model('pos_model');
-		$this->load->model('session_checker_model');
-		if (!$this->session_checker_model->chk_session()) {
-			redirect('admin');
-		}
+		// $this->load->model('session_checker_model');
+		// if (!$this->session_checker_model->chk_session()) {
+		// 	redirect('admin');
+		// }
        
 		date_default_timezone_set("America/Chicago");
 		
@@ -26,14 +26,14 @@ class Admin extends CI_Controller {
 	public function index() {
 
 		echo 'ss'; die();
-		$data["title"] = "Admin Panel";
+		//$data["title"] = "Admin Panel";
 
-		$getDashboard = $this->db->query("SELECT ( SELECT count(id) as NewTotalOrders from customer_payment_request where date_c = CURDATE()  ) as NewTotalOrders,  ( SELECT count(id) as TotalOrders from customer_payment_request where status='confirm' ) as TotalOrders, ( SELECT count(id) as TotalpendingOrders from customer_payment_request where status='pending' ) as TotalpendingOrders, (SELECT sum(amount) as TotalAmount from customer_payment_request where status='confirm' ) as TotalAmount ");
+		// $getDashboard = $this->db->query("SELECT ( SELECT count(id) as NewTotalOrders from customer_payment_request where date_c = CURDATE()  ) as NewTotalOrders,  ( SELECT count(id) as TotalOrders from customer_payment_request where status='confirm' ) as TotalOrders, ( SELECT count(id) as TotalpendingOrders from customer_payment_request where status='pending' ) as TotalpendingOrders, (SELECT sum(amount) as TotalAmount from customer_payment_request where status='confirm' ) as TotalAmount ");
 
-		$getDashboardData = $getDashboard->result_array();
-		$data['getDashboardData'] = $getDashboardData;
+		// $getDashboardData = $getDashboard->result_array();
+		// $data['getDashboardData'] = $getDashboardData;
 
-		return $this->load->view('admin/dashboard', $data);
+		// return $this->load->view('admin/dashboard', $data);
 
 	}
 
