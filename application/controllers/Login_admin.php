@@ -146,7 +146,7 @@ class Login_admin extends CI_Controller
                     $usr_result = $this->login_model->get_user($username, $password);
                     $usr_result2 = $this->login_model->get_subadmin($username, $password);
                     //print_r($usr_result2); 
-                    print_r($usr_result);die;
+                    //print_r($usr_result);die;
                     // print_r($usr_result['user_type']);  die; 
                     if($usr_result!="") {
                         if (!empty($usr_result) && $usr_result['status']=='active' && $usr_result['user_type']=='wf') {
