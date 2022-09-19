@@ -31,6 +31,7 @@ class Login_model extends CI_Model
 		 $this->db->where('password', ($pwd));
         $this->db->where('status', 'active');
         $query = $this->db->get();
+        echo $this->db->last_query();die;
         return $query->row_array();
      }
      function get_user_id($id)
