@@ -1,4 +1,5 @@
 <?php
+echo 'ss'; die();
 /**
  * CodeIgniter
  *
