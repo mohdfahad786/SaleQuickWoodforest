@@ -17,13 +17,13 @@ class Dashboard extends CI_Controller {
 		$this->load->model("serverside_model");
 		$this->load->model("invoice_model");
 		$this->load->model("recurring_model");
-		$this->load->model('session_checker_model');
+		//$this->load->model('session_checker_model');
 		$this->load->library('email');
 		$this->load->library('twilio');
 
-		if (!$this->session_checker_model->chk_session()) {
-			redirect('admin');
-		}
+		// if (!$this->session_checker_model->chk_session()) {
+		// 	redirect('admin');
+		// }
 
 		date_default_timezone_set("America/Chicago");
 		//ini_set('display_errors', 1);
