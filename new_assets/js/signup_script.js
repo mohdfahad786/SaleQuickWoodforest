@@ -502,18 +502,28 @@
 			}
 			//check if password
 			if($(this).hasClass('p2')) {
-				var p1=$wrapper.find('.password.p1').val();
-				var p2=$wrapper.find('.password.p2').val();
+				var p1=$wrapper.children().children('.check_pswd1').children('#secret11').val();
+				var p2=$wrapper.children().children('.check_pswd2').children('#secret22').val();
+				// console.log($wrapper);return false;
+				// console.log(p1, p2);return false;
 				if(p1 != p2) {
 					$(this).focus();
 					$(this).closest('.form-group').addClass('not-match');
-					console.log('false');
+					console.log('not matched hello');
 					trueFalse=0;
 					return false;
 				} else {
 					console.log('matched')
 					$(this).closest('.form-group').removeClass('not-match');
 				}
+			}
+
+			if($(this).hasClass('accept_check')) {
+				if ( ($('.accept_check').val() == '0') || ($('.accept_check').val() == '') ) {
+					// alert('Merchant Agreement checkbox is required');
+					trueFalse=0;
+	    			return false;
+	    		}
 			}
 		})
 		return trueFalse;
@@ -2432,14 +2442,15 @@
 				var mSignupStepF={};
 				// mSignupStepF.f_name=$wrapper.find('.form-control[name="mbname"]').val();
 				mSignupStepF.email=$wrapper.find('.form-control[name="memail"]').val();
-				// mSignupStepF.mobile=$wrapper.find('.form-control[name="mphone"]').val();
+				mSignupStepF.primary_phone=$wrapper.find('.form-control[name="primary_phone"]').val();
 				
 				// mSignupStepF.password=$wrapper.find('.form-control[name="secret11"]').val();
 				// mSignupStepF.mconfpass=$wrapper.find('.form-control[name="secret22"]').val();
 				mSignupStepF.password=$wrapper.find('#secret11').val();
 				mSignupStepF.mconfpass=$wrapper.find('#secret22').val();
 
-				// console.log(mSignupStepF)
+				mSignupStepF.accept_check=$wrapper.find('input[name="accept_check"]').val();
+				// console.log(mSignupStepF);return false;
 				// var dataString = 'name='+ name + '&email=' + email + '&phone=' + phone;
 				//alert (dataString);return false;
 				$(this).find('span').addClass('fa fa-spinner fa-spin');

@@ -73,39 +73,39 @@ function changeCardImageDetail(SelectedCard){
 }
 $(document)
 .on('change','input[name="card_selection_radio"]',function(){
-    $('.card_type').html('<img src="https://salequick.com/new_assets/img/card/no_card.png" style="width: 27px;">');
+        $('.card_type').html('<div style="width: 35px;"></div>')
 	var SelectedCard=$('input[name="card_selection_radio"]:checked').closest('.card-box');
-    $('.card-inner-sketch .mycl-wrapper  .card-type-logo img').attr('src',SelectedCard.data('src'));//card type
+        $('.card-inner-sketch .mycl-wrapper  .card-type-logo img').attr('src',SelectedCard.data('src'));//card type
 	changeCardImageDetail(SelectedCard);
-    //console.log(SelectedCard)
-    var clicked_event = $(this).parent().attr('class');
-    //console.log(clicked_event)
-    if(clicked_event == 'card-box get_card_box') {
-        $('.pay-detail input:not(:hidden),.pay-detail select,.bill-address input:not(:hidden),.bill-address select').each(function(){
-            $(this).val('').attr('disabled','disabled');
-        })
-    } else {
-        $('.pay-detail input:not(:hidden),.pay-detail select,.bill-address input:not(:hidden),.bill-address select').each(function(){
-            $(this).val('').removeAttr('disabled');
-        })
-    }
+        //console.log(SelectedCard)
+        var clicked_event = $(this).parent().attr('class');
+        //console.log(clicked_event)
+        if(clicked_event == 'card-box get_card_box') {
+             $('.pay-detail input:not(:hidden),.pay-detail select,.bill-address input:not(:hidden),.bill-address select').each(function(){
+		 $(this).val('').attr('disabled','disabled');
+	     })
+        } else {
+             $('.pay-detail input:not(:hidden),.pay-detail select,.bill-address input:not(:hidden),.bill-address select').each(function(){
+		 $(this).val('').removeAttr('disabled');
+	     })
+        }
 })
 .on('keyup','#card__nameoncard',function(){
 	//get name
 	var newVal=$(this).val();
 	newVal=newVal.length > 0 ? newVal : '-';
 	//$('.card-box.new-card-box').data('chn',newVal).find('input[name="card_selection_radio"]').trigger('change');
-    $('.card-box.new-card-box').data('chn',newVal);
-    var SelectedCard=$('input[name="card_selection_radio"]:checked').closest('.card-box');
+        $('.card-box.new-card-box').data('chn',newVal);
+        var SelectedCard=$('input[name="card_selection_radio"]:checked').closest('.card-box');
 	changeCardImageDetail(SelectedCard);
 })
-.on('keyup blur','#card__cnumber',function(){
+.on('keyup blur','#ccnumber',function(){
 	//get type & no
 	//GetCardType(number)
 	//var newVal='',cardno='----',cardtypelogo='cardtypelogo.png';
 	var newVal='',cardno='----';
-	newVal=$(this).val();
-	newVal=newVal.toString().replace(/\D/g,'');
+		newVal=$(this).val();
+		newVal=newVal.toString().replace(/\D/g,'');
 
 	if(newVal){
 		newVal=newVal.toString().replace(/\s/g,'');
@@ -117,9 +117,9 @@ $(document)
 	//console.log(cardtypelogo)
 	//$('.card-box.new-card-box').data('src',"https://salequick.com/demo_new/new_assets/img/"+cardtypelogo);
 	//$('.card-box.new-card-box').data('cardno',cardno).find('input[name="card_selection_radio"]').trigger('change');
-    $('.card-box.new-card-box').data('cardno',cardno);
-    var SelectedCard=$('input[name="card_selection_radio"]:checked').closest('.card-box');
-    //$('.card-inner-sketch .mycl-wrapper  .card-type-logo img').attr('src',SelectedCard.data('src'));//card type
+        $('.card-box.new-card-box').data('cardno',cardno);
+        var SelectedCard=$('input[name="card_selection_radio"]:checked').closest('.card-box');
+        //$('.card-inner-sketch .mycl-wrapper  .card-type-logo img').attr('src',SelectedCard.data('src'));//card type
 	changeCardImageDetail(SelectedCard);
 })
 .on('blur','#card__validutil',function(e){

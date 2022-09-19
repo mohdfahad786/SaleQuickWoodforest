@@ -770,7 +770,7 @@
             var otherCharges = parseFloat(subTotal * (other_charges_value / 100));
         }
         calc_otherCharges = parseFloat(otherCharges.toFixed(2));
-        console.log(calc_otherCharges);
+        // console.log(calc_otherCharges);
         if(calc_otherCharges == 0) {
             $('.ocharges_section').addClass('d-none');
         } else {
@@ -785,7 +785,7 @@
        	$('.charges_view').addClass('d-none');
        	$('.tax_view').addClass('d-none');
        	$("#other_charges").val('');
-        $("#totaltax").val('');
+       	$("#totaltax").val('');
 		// console.log($(btn).data())
 		var x = $(btn).data().val;
 		var y = $(btn).data().val;
@@ -2298,7 +2298,7 @@
             $('.charges_view').addClass('d-none');
             $('.tax_view').addClass('d-none');
             $("#other_charges").val('');
-            $("#totaltax").val('');
+       		$("#totaltax").val('');
 
 			var str = $('#t_amount').val();
 			$('#t_amount').val(formatNumberg(posInputValue));

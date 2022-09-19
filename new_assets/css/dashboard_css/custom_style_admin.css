@@ -1,4 +1,8 @@
 @font-face {
+    font-family: 'Nunito-Regular';
+    src: url('../fonts/Nunito-Regular.ttf') format('truetype');
+}
+@font-face {
     font-family: 'Roboto-Thin';
     font-style: normal;
     src: url('../fonts/Roboto-Thin.woff') format('woff'),
@@ -177,7 +181,7 @@
 }
 .btn.social-btn-outlined i.medium {
     margin-right: 20px !important;
-    margin-left: -20px !important;
+    margin-left: -7px !important;
     color: #4a4a4a;
     border: 1px solid #e3e3e3;
     border-radius: 50%;
@@ -697,9 +701,9 @@ textarea:focus, input:focus, select:focus{
     .btn.social-btn-outlined i.small {
         margin-left: -10px !important;
     }
-    .btn.social-btn-outlined i.medium {
+    /*.btn.social-btn-outlined i.medium {
         margin-left: -7px !important;
-    }
+    }*/
 }
 @media screen and (max-width: 950px) {
     .link-title {
@@ -708,4 +712,7 @@ textarea:focus, input:focus, select:focus{
     .sidebar .navigation-menu li .navigation-submenu li a {
         font-size: 12px !important;
     }
+}
+.daterangepicker .ranges li:hover {
+    color: #007bff !important;
 }

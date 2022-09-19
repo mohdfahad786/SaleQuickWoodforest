@@ -278,23 +278,6 @@
     overflow-y: scroll;
 }*/
 
-.sidebar-foot-div {
-    margin-bottom: 40px !important;
-}
-.sb-body {
-    height: calc(100% - 100px) !important;
-}
-.sb-body:hover {
-    overflow-y: scroll;
-}
-.sb-body::-webkit-scrollbar {
-    width: 5px;
-}
-.sb-body::-webkit-scrollbar-thumb {
-    background-color: #E0E0E0;
-    border-radius: 10px;
-}
-
 .sidebar .sidebar-header {
     border-bottom: 1px solid #2c3744;
 }

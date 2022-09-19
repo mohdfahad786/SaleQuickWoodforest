@@ -780,12 +780,6 @@
 
 	//pos calculation
 	function posCalcFn(btn){
-		$("#carrent_othercharges").prop("checked", false);
-      	$("#carrent_sales_tax_new").prop("checked", false);
-       	$('.charges_view').addClass('d-none');
-       	$('.tax_view').addClass('d-none');
-       	$("#other_charges").val('');
-        $("#totaltax").val('');
 		// console.log($(btn).data())
 		var x = $(btn).data().val;
 		var y = $(btn).data().val;
@@ -2293,13 +2287,6 @@
 			posInputValue = posInputValue.slice(0,posInputValue.length-1); //remove last digit
 			posInput=posInputValue;
 
-			$("#carrent_othercharges").prop("checked", false);
-            $("#carrent_sales_tax_new").prop("checked", false);
-            $('.charges_view').addClass('d-none');
-            $('.tax_view').addClass('d-none');
-            $("#other_charges").val('');
-            $("#totaltax").val('');
-
 			var str = $('#t_amount').val();
 			$('#t_amount').val(formatNumberg(posInputValue));
 			$('#sub_amount').val(formatNumberg(posInputValue));
@@ -2422,8 +2409,7 @@
 			}
 		})
 		//stepper form function
-		
-.on('click','.custom-stepper-form .first-step .stepper-submit',function(e){
+		.on('click','.custom-stepper-form .first-step .stepper-submit',function(e){
 			var $wrapper=$(this).closest('.first-step');
 			// console.log(signUpStepFirst($wrapper));
 			if(signUpStepFirst($wrapper)) {
@@ -2433,12 +2419,8 @@
 				// mSignupStepF.f_name=$wrapper.find('.form-control[name="mbname"]').val();
 				mSignupStepF.email=$wrapper.find('.form-control[name="memail"]').val();
 				// mSignupStepF.mobile=$wrapper.find('.form-control[name="mphone"]').val();
-				
-				// mSignupStepF.password=$wrapper.find('.form-control[name="secret11"]').val();
-				// mSignupStepF.mconfpass=$wrapper.find('.form-control[name="secret22"]').val();
-				mSignupStepF.password=$wrapper.find('#secret11').val();
-				mSignupStepF.mconfpass=$wrapper.find('#secret22').val();
-
+				mSignupStepF.password=$wrapper.find('.form-control[name="mpass"]').val();
+				mSignupStepF.mconfpass=$wrapper.find('.form-control[name="mconfpass"]').val();
 				// console.log(mSignupStepF)
 				// var dataString = 'name='+ name + '&email=' + email + '&phone=' + phone;
 				//alert (dataString);return false;
@@ -2450,7 +2432,6 @@
 			}
 			//completed first step
 		})
-
 		.on('click','.custom-stepper-form .second-step .next-step',function(e){
 			var $wrapper=$(this).closest('.second-step');
 			// console.log(signUpStepSecond($wrapper));

@@ -743,7 +743,7 @@
         var subTotal = parseFloat(main_amount) ;
         var calc_tax_val = parseFloat(subTotal * (tax_value / 100));
         calc_tax_val = parseFloat(calc_tax_val.toFixed(2));
-        // console.log(calc_tax_val);
+        console.log(calc_tax_val);
         if(calc_tax_val == 0) {
             $('.tax_section').addClass('d-none');
         } else {
@@ -779,33 +779,27 @@
     }
 
 	//pos calculation
-	function posCalcFn(btn){
-		$("#carrent_othercharges").prop("checked", false);
-      	$("#carrent_sales_tax_new").prop("checked", false);
-       	$('.charges_view').addClass('d-none');
-       	$('.tax_view').addClass('d-none');
-       	$("#other_charges").val('');
-        $("#totaltax").val('');
-		// console.log($(btn).data())
-		var x = $(btn).data().val;
-		var y = $(btn).data().val;
-		var doc=document.getElementById("t_amount").value;
-		doc+=x;
-		posInputValue+=x
-		posInput=posInputValue;
-		//document.getElementById("t_amount").value = formatNumberg(posInputValue);
-		document.getElementById("t_amount").value = formatNumberg(posInputValue);
-		$('#t_amount').number(true, 2 );
+	// function posCalcFn(btn){
+	// 	// console.log($(btn).data())
+	// 	var x = $(btn).data().val;
+	// 	var y = $(btn).data().val;
+	// 	var doc=document.getElementById("t_amount").value;
+	// 	doc+=x;
+	// 	posInputValue+=x
+	// 	posInput=posInputValue;
+	// 	//document.getElementById("t_amount").value = formatNumberg(posInputValue);
+	// 	document.getElementById("t_amount").value = formatNumberg(posInputValue);
+	// 	$('#t_amount').number(true, 2 );
 			
-		//	var z = document.getElementById("sub_amount");
-		//	z.value = formatNumberg(posInputValue);
-        document.getElementById("amount").value = formatNumberg(posInputValue);
-        document.getElementById("orignal_amount").value = formatNumberg(posInputValue);
-        document.getElementById("main_amount").value = formatNumberg(posInputValue);
+	// 	//	var z = document.getElementById("sub_amount");
+	// 	//	z.value = formatNumberg(posInputValue);
+ //        document.getElementById("amount").value = formatNumberg(posInputValue);
+ //        document.getElementById("orignal_amount").value = formatNumberg(posInputValue);
+ //        document.getElementById("main_amount").value = formatNumberg(posInputValue);
 
-        calc_tax();
-        calc_ocharges();
-	}
+ //        calc_tax();
+ //        calc_ocharges();
+	// }
  
 	//json to csv converter
 	function JSONToCSVConvertor(JSONData, ReportTitle, ShowLabel) {
@@ -2293,13 +2287,6 @@
 			posInputValue = posInputValue.slice(0,posInputValue.length-1); //remove last digit
 			posInput=posInputValue;
 
-			$("#carrent_othercharges").prop("checked", false);
-            $("#carrent_sales_tax_new").prop("checked", false);
-            $('.charges_view').addClass('d-none');
-            $('.tax_view').addClass('d-none');
-            $("#other_charges").val('');
-            $("#totaltax").val('');
-
 			var str = $('#t_amount').val();
 			$('#t_amount').val(formatNumberg(posInputValue));
 			$('#sub_amount').val(formatNumberg(posInputValue));
@@ -2422,8 +2409,7 @@
 			}
 		})
 		//stepper form function
-		
-.on('click','.custom-stepper-form .first-step .stepper-submit',function(e){
+		.on('click','.custom-stepper-form .first-step .stepper-submit',function(e){
 			var $wrapper=$(this).closest('.first-step');
 			// console.log(signUpStepFirst($wrapper));
 			if(signUpStepFirst($wrapper)) {
@@ -2450,7 +2436,6 @@
 			}
 			//completed first step
 		})
-
 		.on('click','.custom-stepper-form .second-step .next-step',function(e){
 			var $wrapper=$(this).closest('.second-step');
 			// console.log(signUpStepSecond($wrapper));
