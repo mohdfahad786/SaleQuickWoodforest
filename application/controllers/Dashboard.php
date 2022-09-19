@@ -1,4 +1,6 @@
 <?php
+ini_set('MAX_EXECUTION_TIME', '-1');
+ini_set('memory_limit','2048M');
 if (!defined('BASEPATH')) {
 	exit('No direct script access allowed');
 }
@@ -15,17 +17,17 @@ class Dashboard extends CI_Controller {
 		$this->load->model("serverside_model");
 		$this->load->model("invoice_model");
 		$this->load->model("recurring_model");
-		//$this->load->model('session_checker_model');
+		$this->load->model('session_checker_model');
 		$this->load->library('email');
 		$this->load->library('twilio');
 
-		// if (!$this->session_checker_model->chk_session()) {
-		// 	redirect('admin');
-		// }
+		if (!$this->session_checker_model->chk_session()) {
+			redirect('admin');
+		}
 
 		date_default_timezone_set("America/Chicago");
-		ini_set('display_errors', 1);
-	    error_reporting(E_ALL);
+		//ini_set('display_errors', 1);
+	    //error_reporting(E_ALL);
 	}
 
 	public function index_original() {
@@ -128,7 +130,6 @@ class Dashboard extends CI_Controller {
 
 	public function index() {
 		// echo '123';die;
-		print_r($this->session->userdata); 
 		$data["title"] = "Admin Panel";
 		$data["meta"] = "Dashboard";
 		$month = date("m");
