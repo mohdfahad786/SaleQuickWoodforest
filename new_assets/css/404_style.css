@@ -1,0 +1,115 @@
+* {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  background-color: #2273dc;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+#notfound {
+    position: relative;
+    min-height: 100vh;
+}
+#notfound:after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    max-width: 100vw;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image: url(https://salequick.com/new_assets/img/ftrBg.png);
+    background-repeat: no-repeat;
+    background-position: bottom;
+    background-size: 100%;
+    opacity: 0.35;
+}
+.btn.btn-first {
+    background-color: #2273dc;
+    -webkit-transition: all 0.3s ease 0s;
+    -o-transition: all 0.3s ease 0s;
+    transition: all 0.3s ease 0s;
+    border: 1px solid #2273dc;
+    color: #fff;
+    padding: 9px 21px;
+}
+.btn.btn-first:focus, .btn.btn-first:hover {
+    outline: none;
+    -webkit-box-shadow: 0 0;
+    box-shadow: 0 0;
+    background-image: none;
+    background-color: transparent!important;
+    border: 1px solid #2273dc!important;
+    color: #1369d9!important;
+}
+
+#notfound .notfound {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+
+.notfound {
+  max-width: 460px;
+  width: 100%;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.notfound .notfound-404 {
+  height: 158px;
+  line-height: 153px;
+}
+
+.notfound .notfound-404 h1 {
+  font-family: 'Josefin Sans', sans-serif;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 220px;
+  letter-spacing: 10px;
+  margin: 0px;
+  font-weight: 700;
+  text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.3), -2px -2px 0px rgba(255, 255, 255, 0.4);
+}
+
+.notfound .notfound-404 h1>span {
+     text-shadow: 2px 2px 0px #1573d2, -2px -2px 0px #1573d2, 0px 0px 8px #1573d2;  
+}
+
+.notfound p {
+  font-family: 'Josefin Sans', sans-serif;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 16px;
+  font-weight: 400;
+  margin-top: 0px;
+  margin-bottom: 15px;
+}
+a{
+    padding-top: 38px;
+    text-decoration: none;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.8);
+    display: inline-block;
+    vertical-align: top;
+}
+a:hover,a:focus{
+  color: rgba(255, 255, 255, 0.5);
+}
+@media only screen and (max-width: 480px) {
+  .notfound .notfound-404 {
+    height: 122px;
+    line-height: 122px;
+  }
+
+  .notfound .notfound-404 h1 {
+      font-size: 122px;
+  }
+}

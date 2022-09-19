@@ -1,0 +1,97 @@
+@keyframes pulse-border
+  0%
+    transform: translate(-50%, -50%) translateZ(0) scale(1)
+    opacity: 0.2
+
+  20%
+    transform: translate(-50%, -50%) translateZ(0) scale(1)
+    opacity: 1
+
+  100%
+    transform: translate(-50%, -50%) translateZ(0) scale(1.5)
+    opacity: 0.1
+@keyframes scroll
+  0%
+    opacity: 1
+
+  100%
+    opacity: 0
+    -webkit-transform: translateY(35px)
+    transform: translateY(35px)
+/*for text*/
+
+.textAnimate 
+    span
+        &:nth-of-type(2) 
+            animation-delay: .05s
+        &:nth-of-type(3) 
+            animation-delay: .1s
+        &:nth-of-type(4) 
+            animation-delay: .15s
+        &:nth-of-type(5) 
+            animation-delay: .2s
+        &:nth-of-type(6) 
+            animation-delay: .25s
+        &:nth-of-type(7) 
+            animation-delay: .3s
+        &:nth-of-type(8) 
+            animation-delay: .35s
+        &:nth-of-type(9) 
+            animation-delay: .4s
+        &:nth-of-type(10) 
+            animation-delay: .45s
+        &:nth-of-type(11) 
+            animation-delay: .5s
+        &:nth-of-type(12) 
+            animation-delay: .55s
+        &:nth-of-type(13) 
+            animation-delay: .6s
+        &:nth-of-type(14) 
+            animation-delay: .65s
+        &:nth-of-type(15) 
+            animation-delay: .7s
+        &:nth-of-type(16) 
+            animation-delay: .75s
+        &:nth-of-type(17) 
+            animation-delay: .8s
+        &:nth-of-type(18) 
+            animation-delay: .85s
+        &:nth-of-type(19) 
+            animation-delay: .9s
+        &:nth-of-type(20) 
+            animation-delay: .95s
+        &:nth-of-type(21) 
+            animation-delay: 1s
+        &:nth-of-type(22) 
+            animation-delay: 1.05s
+        &:nth-of-type(23) 
+            animation-delay: 1.1s
+        &:nth-of-type(24) 
+            animation-delay: 1.15s
+        &:nth-of-type(25) 
+            animation-delay: 1.2s
+        &:nth-of-type(26) 
+            animation-delay: 1.25s
+        &:nth-of-type(27) 
+            animation-delay: 1.3s
+
+/* Animation One */
+
+.onePt0 
+    span 
+        opacity: 0
+        transform: translate(-150px, -50px) rotate(-180deg) scale(3)
+        animation: revolveScale .4s forwards
+.onePt1
+    span 
+        opacity: 0
+        transform: translate(-150px, -50px) rotate(-180deg) scale(3)
+        animation: revolveScale .4s forwards
+
+@keyframes revolveScale 
+    60% 
+        transform: translate(20px, 20px) rotate(30deg) scale(.3)
+
+    100% 
+        transform: translate(0) rotate(0) scale(1)
+        opacity: 1

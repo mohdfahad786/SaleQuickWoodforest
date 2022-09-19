@@ -1,0 +1,398 @@
+    body {
+        background-image: url(../img/bg.jpg);
+        background-size: cover;
+        width: 100%;
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 100vh;
+    }
+
+    .invoice {
+        padding: 80px 0px;
+        width: 72%;
+        margin: 0 auto;
+        float: none;
+    }
+
+    .invoice_box {
+        border-radius: 4px;
+        -moz-border-radius: 4px;
+        -webkit-border-radius: 4px;
+        /*width: 72%;
+
+	height: 500px;*/
+        background-color: #fff;
+        margin: 0 auto;
+        border-radius: 4px;
+        -moz-border-radius: 4px;
+        -webkit-border-radius: 4px;
+
+        box-shadow: 0px -2px 17px -2px #7b7b7b;
+        -moz-box-shadow: 0px -2px 17px -2px #7b7b7b;
+        -webkit-box-shadow: 0px -2px 17px -2px #7b7b7b;
+        margin: 0 auto;
+    }
+
+    .invoice_logo {
+        width: 227px;
+        float: left;
+    }
+
+    .invoice_logo img {
+        width: 200px;
+        margin-bottom: 50px;
+    }
+
+    .Recipient {}
+
+    .Recipient1 {
+        font-family: 'OpenSans-Semibold', 'Open Sans', sans-serif;
+        font-size: 13px;
+        color: #000;
+        text-transform: uppercase;
+    }
+
+    .Recipient_Susan {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 12px;
+        color: #878787;
+        letter-spacing: 0;
+        text-transform: uppercase;
+    }
+
+    .header_right {
+        text-align: right;
+    }
+
+    .header_right_INVOICE1 {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 19px;
+        color: #000;
+        letter-spacing: 0;
+        text-transform: uppercase;
+        margin-bottom: 15px;
+        font-weight: bold;
+    }
+
+    .header_right_INVOICE11 {
+        font-family: 'OpenSans-Semibold', 'Open Sans', sans-serif;
+        font-size: 22px;
+        color: #000;
+        letter-spacing: 0;
+        text-transform: uppercase;
+        margin-bottom: 0px;
+        font-weight: bold;
+    }
+
+    .header_right_INVOICE2 {
+        font-family: 'OpenSans-Semibold', 'Open Sans', sans-serif;
+        font-size: 13px;
+        color: #000;
+        text-transform: uppercase;
+    }
+
+    .header_right_INVOICE3 {
+        margin-bottom: 15px;
+        font-family: 'Open Sans', sans-serif;
+        font-size: 13px;
+        color: #878787;
+        text-transform: uppercase;
+    }
+
+    .header_right_INVOICE4 {
+        font-family: 'OpenSans-Semibold', 'Open Sans', sans-serif;
+        font-size: 13px;
+        color: #000;
+        text-transform: uppercase;
+    }
+
+    .header_right_INVOICE5 {
+        margin-bottom: 15px;
+        font-family: 'Open Sans', sans-serif;
+        font-size: 13px;
+        color: #878787;
+        text-transform: uppercase;
+    }
+
+    .table>tbody>tr>th {
+        color: #878787;
+        font-size: 14px;
+        font-family: 'OpenSans-Semibold', 'Open Sans', sans-serif;
+        line-height: 60px;
+    }
+
+    .table>tfoot>tr>td {
+        color: #878787;
+        font-size: 14px;
+        font-family: 'OpenSans-Semibold', 'Open Sans', sans-serif;
+        font-weight: bold;
+        line-height: 60px;
+    }
+
+    .table>thead>tr>th,
+    .table>tbody>tr>th,
+    .table>tfoot>tr>th,
+    .table>thead>tr>td,
+    .table>tbody>tr>td,
+    .table>tfoot>tr>td {
+        border-top: none;
+    }
+
+    .table>tbody>tr>td {
+        border-bottom: 1px solid #D4D4D4;
+    }
+
+    .table>tbody>tr>td {
+        font-family: 'OpenSans-Semibold', 'Open Sans', sans-serif;
+        font-size: 14px;
+        color: #000000;
+        letter-spacing: 0;
+        font-weight: bold;
+        line-height: 45px;
+    }
+
+    .Recipient1 {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 12px;
+        color: #000;
+        letter-spacing: 0;
+    }
+
+    .invoice_box_mid {
+        margin-top: 20px;
+        padding: 20px 25px;
+    }
+
+    .continuebtn {
+        background: #0077E2;
+        box-shadow: 0 2px 7px 0 rgba(120, 137, 149, 0.25);
+        border-radius: 3px;
+        font-family: 'Open Sans', sans-serif;
+        font-size: 14px;
+        color: #FFFFFF;
+        line-height: 44px;
+        padding-left: 30px;
+        padding-right: 31px;
+        float: right;
+        margin-top: 50px;
+    }
+
+    .continuebtn:hover {
+        color: #f1f1f1;
+    }
+
+    .continuebtn2 {
+        background: #0077E2;
+        box-shadow: 0 2px 7px 0 rgba(120, 137, 149, 0.25);
+        border-radius: 3px;
+        font-family: 'Open Sans', sans-serif;
+        font-size: 14px;
+        color: #FFFFFF;
+        line-height: 44px;
+        padding-left: 30px;
+        padding-right: 31px;
+        float: right;
+    }
+
+    .continuebtn2:hover {
+        color: #f1f1f1;
+    }
+
+    .invoice_box_foot {
+        text-align: center;
+        font-size: 14px;
+        font-family: 'Open Sans', sans-serif;
+        color: #666;
+        font-weight: 500;
+        margin-bottom: 30px;
+    }
+
+    .invoice_box_foot a {
+        color: #666;
+    }
+
+    .Powered_by {
+        color: #4A90E2;
+        font-size: 14px;
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    .Recipient {
+        text-align: left;
+    }
+
+    label {
+        font-size: 12px;
+        color: #878787;
+        font-family: 'Open Sans', sans-serif;
+        text-transform: uppercase;
+        font-weight: 500;
+    }
+
+    .form-control {
+        background: #FFFFFF;
+        border: 1px solid #D1D5D8;
+        border-radius: 3px;
+        height: 54px;
+        margin-bottom: 22px;
+    }
+
+    .CardNumber {
+        background-image: url(../img/CardNumber.jpg);
+        background-repeat: no-repeat;
+        background-position: 97%
+    }
+
+    .Cvv {
+        background-image: url(../img/cvv.jpg);
+        background-repeat: no-repeat;
+        background-position: 93%
+    }
+
+    .BacktoInvoice {
+        font-size: 16px;
+        color: #788995;
+        font-family: 'OpenSans-Semibold', 'Open Sans', sans-serif;
+    }
+
+    .BacktoInvoice:hover {
+        text-decoration: none;
+        color: #788995;
+    }
+
+    .left-div {
+        width: 50%;
+        display: inline-block;
+        float: left;
+        font-size: 14px;
+        color: #353535;
+        font-family: 'Open Sans', sans-serif;
+        font-weight: bold;
+    }
+
+    .right-div {
+        width: 50%;
+        display: inline-block;
+        float: left;
+        text-align: right;
+        font-size: 14px;
+        color: #353535;
+        font-weight: 600;
+        font-family: 'OpenSans-Semibold', 'Open Sans', sans-serif;
+    }
+
+    h4 {
+        color: #000;
+        font-family: 'Open Sans', sans-serif;
+        font-weight: bold;
+    }
+
+    p {
+        font-size: 13px;
+        color: #878787;
+        line-height: 30px;
+        margin: 4px 0px;
+    }
+
+    .blue {
+        color: #4A90E2 !important;
+    }
+
+    .invoice_box_header {}
+
+    .foot_wrp {
+        width: 100%;
+    }
+
+    .foot_wrp_Adr {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .foot_wrp_Adr span {
+        text-transform: capitalize;
+        color: #000;
+    }
+
+    .foot_icon ul {
+        margin: 0 0 20px 0;
+        padding: 0;
+    }
+
+    .foot_icon ul li {
+        display: inline-block;
+        margin-left: 5px;
+    }
+
+    .foot_icon ul li a {}
+
+    @media only screen and (max-width:494px) {
+        .col-res-12 {
+            width: 100% !important;
+            max-width: 100% !important;
+            text-align: center;
+        }
+
+        .col-res-12 .custom-btn {
+            margin-top: 12px;
+            float: none;
+            display: inline-block;
+        }
+    }
+
+    @media only screen and (max-width: 768px) {
+        .header_right {
+            text-align: center;
+        }
+
+        .Recipient {
+            text-align: center;
+        }
+
+        .invoice_box {
+            padding: 20px;
+        }
+
+        .invoice_logo {
+            width: 227px;
+            float: none;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .invoice {
+            padding: 30px 0px 80px 0px;
+            width: 88%;
+            margin: 0 auto;
+            float: none;
+        }
+
+        .continuebtn2 {
+            float: none;
+        }
+
+        .continuebtn {
+            float: none;
+        }
+
+        .foot_icon {
+            text-align: center;
+        }
+    }
+
+    @media only screen and (max-width: 991px) {
+        .foot_icon {
+            text-align: center;
+        }
+    }
+
+    .foot_wrp>div {
+        padding: 0;
+        text-align: center;
+        font-size: 14px;
+        width: 100%;
+        clear: both;
+        margin: 0 auto;
+        display: block;
+        max-width: 1115px;
+    }

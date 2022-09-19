@@ -1,0 +1,32 @@
+.banar .icon-scroll{
+	width: 25px;
+    height: 41px;
+    bottom: 9%;
+}
+.header-wraper.scrolled{
+	padding: 5px 0;
+}
+#ptOfSaleCarousel h2,#apiMclCarousel h2{
+	margin-bottom: 18px;
+}
+body .ptOfSale {
+    padding: 11px 0;
+}
+body .sendDetail {
+    padding: 11px 0;
+}
+@-webkit-keyframes scroll {
+  0% {
+    opacity: 1; }
+  100% {
+    opacity: 0;
+    -webkit-transform: translateY(25px);
+    transform: translateY(25px); } }
+
+@keyframes scroll {
+  0% {
+    opacity: 1; }
+  100% {
+    opacity: 0;
+    -webkit-transform: translateY(25px);
+    transform: translateY(25px); } }

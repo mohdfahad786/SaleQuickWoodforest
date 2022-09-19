@@ -1,0 +1,478 @@
+/*!
+ *  Icon Party CSS
+ *  
+ *  Contains code based on and/or copied from:
+ *  
+ *  Font Awesome by @davegandy - http://fontawesome.io - @fontawesome
+ *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
+ *  
+ *  Font Awesome Free by @fontawesome - https://fontawesome.com
+ *  License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
+ 
+Copyright 2018 Dave Gandy and FontAwesome
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+ */
+
+/* Overriding default Divi behaviour */
+
+#page-container .et-social-icons.ds-icon-party {
+  margin-right: 0;
+}
+#page-container .et-social-facebook a.ds-iparty-awesome:before {
+  content: "\f09a";
+}
+#page-container .et-social-twitter a.ds-iparty-awesome:before {
+  content: "\f099";
+}
+#page-container .et-social-google-plus a.ds-iparty-awesome:before {
+  content: "\f0d5";
+}
+#page-container .et-social-rss a.ds-iparty-awesome:before {
+  content: "\f09e";
+}
+#page-container .et-social-youtube a.ds-iparty-awesome:before {
+  content: "\f167";
+}
+
+/* Start custom icons */
+
+#page-container .et-social-500px a.ds-iparty-awesome:before,
+.et-social-500px a.icon:before {
+  content: "\f26e";
+}
+
+#page-container .et-social-amazon a.ds-iparty-awesome:before,
+.et-social-amazon a.icon:before {
+  content: "\f270";
+}
+
+#page-container .et-social-audible a.ds-iparty-awesome:before,
+.et-social-audible a.icon:before {
+  content: "\f373";
+}
+
+#page-container .et-social-bandcamp a.ds-iparty-awesome:before,
+.et-social-bandcamp a.icon:before {
+  content: "\f2d5";
+}
+
+#page-container .et-social-behance a.ds-iparty-awesome:before,
+.et-social-behance a.icon:before {
+  content: "\f1b4";
+}
+
+#page-container .et-social-bitbucket a.ds-iparty-awesome:before,
+.et-social-bitbucket a.icon:before {
+  content: "\f171";
+}
+
+#page-container .et-social-deviantart a.ds-iparty-awesome:before,
+.et-social-deviantart a.icon:before {
+  content: "\f1bd";
+}
+
+#page-container .et-social-dribbble a.ds-iparty-awesome:before,
+.et-social-dribbble a.icon:before {
+  content: "\f17d";
+}
+
+#page-container .et-social-ebay a.ds-iparty-awesome:before,
+.et-social-ebay a.icon:before {
+  content: "\f4f4";
+}
+
+#page-container .et-social-etsy a.ds-iparty-awesome:before,
+.et-social-etsy a.icon:before {
+  content: "\f2d7";
+}
+
+#page-container .et-social-flickr a.ds-iparty-awesome:before,
+.et-social-flickr a.icon:before {
+  content: "\f16e";
+}
+
+#page-container .et-social-foursquare a.ds-iparty-awesome:before,
+.et-social-foursquare a.icon:before {
+  content: "\f180";
+}
+
+#page-container .et-social-github a.ds-iparty-awesome:before,
+.et-social-github a.icon:before {
+  content: "\f09b";
+}
+
+#page-container .et-social-gitlab a.ds-iparty-awesome:before,
+.et-social-gitlab a.icon:before {
+  content: "\f296";
+}
+
+#page-container .et-social-houzz a.ds-iparty-awesome:before,
+.et-social-houzz a.icon:before {
+  content: "\f27c";
+}
+
+#page-container .et-social-imdb a.ds-iparty-awesome:before,
+.et-social-imdb a.icon:before {
+  content: "\f2d8";
+}
+
+#page-container .et-social-instagram a.ds-iparty-awesome:before {
+  content: "\f16d";
+}
+
+#page-container .et-social-itunes a.ds-iparty-awesome:before,
+.et-social-itunes a.icon:before {
+  content: "\f3b5";
+}
+
+#page-container .et-social-linkedin a.ds-iparty-awesome:before {
+  content: "\f0e1";
+}
+
+#page-container .et-social-medium a.ds-iparty-awesome:before,
+.et-social-medium a.icon:before {
+  content: "\f23a";
+}
+
+#page-container .et-social-meetup a.ds-iparty-awesome:before,
+.et-social-meetup a.icon:before {
+  content: "\f2e0";
+}
+
+#page-container .et-social-mixcloud a.ds-iparty-awesome:before,
+.et-social-mixcloud a.icon:before {
+  content: "\f289";
+}
+
+#page-container .et-social-patreon a.ds-iparty-awesome:before,
+.et-social-patron a.icon:before {
+  content: "\f3d9";
+}
+
+#page-container .et-social-pinterest a.ds-iparty-awesome:before {
+  content: "\f231";
+}
+
+#page-container .et-social-podcast a.ds-iparty-awesome:before,
+.et-social-podcast a.icon:before {
+  content: "\f2ce";
+}
+
+#page-container .et-social-skype a.ds-iparty-awesome:before {
+  content: "\f17e";
+}
+
+#page-container .et-social-slack a.ds-iparty-awesome:before,
+.et-social-slack a.icon:before {
+  content: "\f198";
+}
+
+#page-container .et-social-snapchat a.ds-iparty-awesome:before,
+.et-social-snapchat a.icon:before {
+  content: "\f2ac";
+}
+
+#page-container .et-social-soundcloud a.ds-iparty-awesome:before,
+.et-social-soundcloud a.icon:before {
+  content: "\f1be";
+}
+
+#page-container .et-social-spotify a.ds-iparty-awesome:before,
+.et-social-spotify a.icon:before {
+  content: "\f1bc";
+}
+
+#page-container .et-social-stackoverflow a.ds-iparty-awesome:before,
+.et-social-stackoverflow a.icon:before {
+  content: "\f16c";
+}
+
+#page-container .et-social-stumbleupon a.ds-iparty-awesome:before,
+.et-social-stumbleupon a.icon:before {
+  content: "\f1a4";
+}
+
+#page-container .et-social-tripadvisor a.ds-iparty-awesome:before,
+.et-social-tripadvisor a.icon:before {
+  content: "\f262";
+}
+
+#page-container .et-social-tumblr a.ds-iparty-awesome:before {
+  content: "\f173";
+}
+
+#page-container .et-social-twitch a.ds-iparty-awesome:before,
+.et-social-twitch a.icon:before {
+  content: "\f1e8";
+}
+
+#page-container .et-social-vimeo a.ds-iparty-awesome:before {
+  content: "\f27d";
+}
+
+#page-container .et-social-whatsapp a.ds-iparty-awesome:before,
+.et-social-whatsapp a.icon:before {
+  content: "\f232";
+}
+
+#page-container .et-social-yelp a.ds-iparty-awesome:before,
+.et-social-yelp a.icon:before {
+  content: "\f1e9";
+}
+
+#page-container .et-social-xing a.ds-iparty-awesome:before,
+.et-social-xing a.icon:before  {
+  content: "\f168";
+}
+
+#page-container .et-social-email a.ds-iparty-awesome:before,
+.et-social-email a.icon:before,
+#page-container .et-social-click-to-email a.ds-iparty-awesome:before,
+.et-social-click-to-email a.icon:before  {
+  content: "\f0e0";
+}
+
+#page-container .et-social-phone a.ds-iparty-awesome:before,
+#page-container .et-social-click-to-call a.ds-iparty-awesome:before,
+.et-social-click-to-call a.icon:before,
+.et-social-phone a.icon:before {
+  content: "\f879";
+}
+
+#page-container .et-social-google a.ds-iparty-awesome:before,
+.et-social-google a.icon:before  {
+  content: "\f1a0";
+}
+
+a.ds-iparty-awesome:before,
+.et-social-500px a.icon:before,
+.et-social-amazon a.icon:before,
+.et-social-audible a.icon:before,
+.et-social-bandcamp a.icon:before,
+.et-social-behance a.icon:before,
+.et-social-bitbucket a.icon:before,
+.et-social-deviantart a.icon:before,
+.et-social-dribbble a.icon:before,
+.et-social-ebay a.icon:before,
+.et-social-etsy a.icon:before,
+.et-social-flickr a.icon:before,
+.et-social-foursquare a.icon:before,
+.et-social-github a.icon:before,
+.et-social-gitlab a.icon:before,
+.et-social-houzz a.icon:before,
+.et-social-imdb a.icon:before,
+.et-social-itunes a.icon:before,
+.et-social-medium a.icon:before,
+.et-social-meetup a.icon:before,
+.et-social-mixcloud a.icon:before,
+.et-social-patreon a.icon:before,
+.et-social-slack a.icon:before,
+.et-social-snapchat a.icon:before,
+.et-social-soundcloud a.icon:before,
+.et-social-spotify a.icon:before,
+.et-social-stackoverflow a.icon:before,
+.et-social-stumbleupon a.icon:before,
+.et-social-tripadvisor a.icon:before,
+.et-social-twitch a.icon:before,
+.et-social-whatsapp a.icon:before,
+.et-social-xing a.icon:before,
+.et-social-yelp a.icon:before,
+.et-social-google a.icon:before {
+  font-family: "Font Awesome\ 5 Brands" !important
+}
+.et-social-podcast a.icon:before,
+.et-social-phone a.icon:before,
+.et-social-click-to-call a.icon:before,
+.et-social-email a.icon:before,
+.et-social-click-to-email a.icon:before,
+.et-social-podcast a.icon:before,
+.et-social-email a.ds-iparty-awesome:before,
+.et-social-click-to-email a.ds-iparty-awesome:before,
+.et-social-phone a.ds-iparty-awesome:before,
+.et-social-click-to-call a.ds-iparty-awesome:before,
+.et-social-rss a.ds-iparty-awesome:before,
+.et-social-podcast a.ds-iparty-awesome:before,
+.et_pb_social_media_follow_network.et-social-podcast a.icon:before,
+.et_pb_social_media_follow_network.et-social-phone a.icon:before,
+.et_pb_social_media_follow_network.et-social-click-to-call a.icon:before,
+.et_pb_social_media_follow_network.et-social-email a.icon:before,
+.et_pb_social_media_follow_network.et-social-click-to-email a.icon:before,
+.et_pb_social_media_follow_network.et-social-podcast a.icon:before {
+  font-family: "Font Awesome\ 5 Free" !important;
+  font-style: normal !important;
+  font-weight: 900 !important;
+}
+
+.et-social-500px a,
+.et-social-amazon a,
+.et-social-audible a,
+.et-social-bandcamp a,
+.et-social-behance a,
+.et-social-bitbucket a,
+.et-social-deviantart a,
+.et-social-dribbble a,
+.et-social-ebay a,
+.et-social-etsy a,
+.et-social-flickr a,
+.et-social-foursquare a,
+.et-social-github a,
+.et-social-gitlab a,
+.et-social-houzz a,
+.et-social-imdb a,
+.et-social-itunes a,
+.et-social-medium a,
+.et-social-meetup a,
+.et-social-mixcloud a,
+.et-social-patreon a,
+.et-social-podcast a,
+.et-social-slack a,
+.et-social-snapchat a,
+.et-social-soundcloud a,
+.et-social-spotify a,
+.et-social-stackoverflow a,
+.et-social-stumbleupon a,
+.et-social-tripadvisor a,
+.et-social-twitch a,
+.et-social-whatsapp a,
+.et-social-yelp a,
+.et-social-email a,
+.et-social-click-to-email a,
+.et-social-phone a,
+.et-social-click-to-call a,
+.et-social-google a {
+  transform: translateY(-1px)
+}
+
+.et-social-flickr a.icon:before {
+  line-height: 34px !important
+}
+
+
+
+/* This code doesn't need to be included when Icon Party is integrated in a child theme */
+.et-social-icons:not(.ds-icon-party) {
+  display: none !important
+}
+/* End code that doesn't need to be included for child theme integration */
+
+/* Turn span into tooltip */
+.ds_icon_party_tooltip .et-social-icon:hover span {
+  display: block;
+  z-index: 999999;
+}
+
+.ds_icon_party_tooltip .et-social-icon span {
+  text-align: center;
+  width: 100px;
+  position: absolute;
+  left: 50%;
+  margin-left: -50px;
+  bottom: -28px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 100;
+  border-radius: 4px;
+  animation: icon-appear 1s;
+  animation-fill-mode: forwards;
+}
+
+.ds_icon_party_tooltip .et-social-icon:hover a {
+  opacity: 1;
+}
+
+#footer-bottom .ds_icon_party_tooltip {
+  margin-bottom: 26px;
+}
+
+@-moz-keyframes icon-appear {
+  0% {
+    -webkit-opacity: 0;
+    opacity: 0;
+  }
+  100% {
+    -webkit-opacity: 1;
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes icon-appear {
+  0% {
+    -webkit-opacity: 0;
+    opacity: 0;
+  }
+  100% {
+    -webkit-opacity: 1;
+    opacity: 1;
+  }
+}
+
+@-ms-keyframes icon-appear {
+  0% {
+    -webkit-opacity: 0;
+    opacity: 0;
+  }
+  100% {
+    -webkit-opacity: 1;
+    opacity: 1;
+  }
+}
+
+@-o-keyframes icon-appear {
+  0% {
+    -webkit-opacity: 0;
+    opacity: 0;
+  }
+  100% {
+    -webkit-opacity: 1;
+    opacity: 1;
+  }
+}
+
+@keyframes icon-appear {
+  0% {
+    -webkit-opacity: 0;
+    opacity: 0;
+  }
+  100% {
+    -webkit-opacity: 1;
+    opacity: 1;
+  }
+}
+
+/* Style icons when included in main header */
+#main-header .et-social-icon a {
+  font-size: 16px;
+}
+
+/* mobile menu modifications */
+.et_mobile_menu .et-social-icon {
+  display: inline-block;
+  padding: 10px;
+  text-align: center;
+  width: 60px;
+  float: left;
+  line-height: 0;
+}
+
+.et_mobile_menu .et-social-icon a {
+  border-bottom: 0;
+}
+
+.et_mobile_menu .et-social-icon a:hover {
+  color: inherit;
+}
+
+.et_pb_social_media_follow div {
+  display: inline-block;
+}
+
+.et_pb_social_media_follow li a {
+  margin-right: 8px !important;
+}
+/*This file was exported by "Export WP Page to Static HTML" plugin which created by ReCorp (https://myrecorp.com) */

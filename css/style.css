@@ -1,0 +1,336 @@
+body
+{
+	font-family: 'Titillium Web', sans-serif;
+}
+h1,h2,h3,h4,h5,h6
+{
+	margin:0px;
+	padding:0px;
+}
+ul
+{
+	padding:0px;
+	margin:0px;
+}
+.smartBtn
+{
+	border-radius:0px 20px 0px 20px;
+	padding:10px 30px;
+	font-size:16px;
+	transition:all 0.5s;
+}
+/*------------------------Header Start------------------------*/
+#sub-header {
+	background: #950909 none repeat scroll 0 0;
+	line-height: 40px;
+}
+.contactDetails ul li {
+    color: #ffffff;
+    display: inline-block;
+    font-style: italic;
+    line-height: 30px;
+    margin-right: 20px;
+}
+.contactDetails ul li .fa {
+    background: #ffffff none repeat scroll 0 0;
+    border-radius: 50px;
+    color: #000;
+    float: left;
+    height: 30px;
+    line-height: 30px;
+    margin-right: 10px;
+    text-align: center;
+    width: 30px;
+}
+.socialBlock ul li {
+    display: inline-block;
+}
+.socialBlock ul li a {
+    color: #ffffff;
+    font-size: 15px;
+    margin-left: 10px;
+    transition: all 0.5s ease 0s;
+}
+.socialBlock ul li a:hover {
+    color: #f57d11;
+}
+#menubar .navbar
+{
+	margin-bottom:0px;
+}
+#menubar .navbar-brand
+{
+	height:auto;
+}
+#menubar .navbar-default .navbar-nav > li > a {
+  padding: 30px;
+}
+/*------------------------Header End--------------------------*/
+
+
+
+/*------------------------Slider Start------------------------*/
+#slider .carousel-caption
+{
+	top:20%;
+}
+.sliderCap
+{
+	font-size:90px;
+	text-transform:uppercase;
+	font-weight:900;
+	margin-bottom:10px;
+}
+.tagLine
+{
+	font-size:20px;
+}
+/*------------------------Slider End--------------------------*/
+
+
+
+/*-------------------Introduction Start-----------------------*/
+#introBlock
+{
+	padding:50px 0px;
+}
+.featureBlock
+{
+	padding:20px;
+	background:#fee600;
+	border-radius:0px 50px 0px 50px;
+}
+.featureBlock .fa
+{
+	float:left;
+	margin-right:10px;
+}
+.featureBlock h3
+{
+	font-weight:bold;
+	margin-bottom:10px;
+	line-height:65px;
+}
+/*-------------------Introduction End--------------------------*/
+
+
+
+
+/*--------------------Track Search Start-----------------------*/
+#trackSearch
+{
+	background:#fe514c; 
+	min-height:300px;
+}
+#trackSearch h2
+{
+	color:#fff;
+	margin-top:50px;
+	margin-bottom:50px;
+	font-size:60px;
+}
+.searchBlock
+{
+	position:relative;
+}
+.searchBlock input
+{
+	height:50px;
+	border-radius:50px;
+}
+.searchBlock button {
+  background: #555555 none repeat scroll 0 0;
+  border-radius: 50px;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 13px 50px;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+/*--------------------Track Search End-------------------------*/
+
+
+
+
+/*--------------------Order Details Start----------------------*/
+#infoBlock
+{
+	padding:50px 0px;
+}
+#infoBlock h2
+{
+	margin-bottom:50px;
+}
+/*--------------------Order Details End------------------------*/
+
+
+
+
+/*--------------------Footer Start-----------------------------*/
+#footer {
+	background: #2a2222 none repeat scroll 0 0;
+	padding: 50px 0;
+}
+.footerBlock img {
+    margin-bottom: 10px;
+}
+.footerBlock p {
+    color: #eeeeee;
+}
+.titleOfFooter {
+    color: #ffffff;
+    margin-bottom: 20px;
+}
+.smart-link ul li {
+    float: left;
+    list-style: outside none none;
+    width: 100%;
+}
+.smart-link ul li a {
+    border-bottom: 1px dotted #cccccc;
+    color: #eeeeee;
+    font-size: 17px;
+    padding: 10px;
+    text-decoration: none;
+    width: 100%;
+}
+.smart-link ul li a:hover {
+    color: #cccccc;
+}
+.social-block {
+    margin-bottom: 30px;
+}
+.social-block ul li {
+    display: inline-block;
+}
+.social-block ul li a {
+	background: #950909 none repeat scroll 0 0;
+	border-radius: 50%;
+	color: #ffffff;
+	float: left;
+	font-size: 20px;
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+	text-decoration: none;
+	width: 50px;
+}
+.social-block ul li a:hover {
+    background: #a15050 none repeat scroll 0 0;
+    border: 2px solid #ffffff;
+}
+.subscribe input {
+    border-radius: 0;
+    height: 50px;
+    margin-bottom: 10px;
+}
+.subscribe button {
+    border-radius: 0;
+    font-size: 17px;
+    padding: 10px;
+    width: 100%;
+}
+#subFooter {
+    float: left;
+    width: 100%;
+}
+#subFooter p {
+    margin-top: 10px;
+}
+#subFooter img {
+    float: right;
+    padding: 5px 0;
+}
+/*--------------------Footer End-------------------------------*/
+
+
+
+
+/*--------------------About Start-----------------------------*/
+#about
+{
+	padding:50px 0px;
+}
+/*--------------------About End--------------------------------*/
+
+
+
+
+/*---------------------Contact Start---------------------------*/
+#contact {
+    padding: 50px 0;
+}
+#contact input {
+    border-radius: 0;
+    height: 40px;
+}
+#contact textarea {
+    border-radius: 0;
+}
+#contact button {
+    background: #f23c31 none repeat scroll 0 0;
+    border-radius: 0;
+    margin-top: 15px;
+    padding: 8px 15px;
+    transition: all 0.5s ease 0s;
+}
+/*---------------------Contact End-----------------------------*/
+
+
+
+
+/*--------------------Services Start----------------------------*/
+#service
+{
+	padding:50px 0px;
+}
+#service h2
+{
+	margin-bottom:20px;
+}
+#service p
+{
+	margin-bottom:50px;
+}
+#service img
+{
+	margin-bottom:20px;
+}
+/*--------------------Services End------------------------------*/
+
+
+
+
+/*--------------------Responsive------------------------------*/
+@media screen and (max-width: 768px)
+{
+	.contactDetails {
+  float: left;
+  text-align: center;
+  width: 100%;
+}
+	.social-list
+	{
+		float:none !important;
+		text-align:center;
+}
+.navbar-toggle {
+  margin-top: 24px;
+}
+#menubar .navbar-default .navbar-nav > li > a {
+  padding: 10px 30px;
+}
+.sliderCap {
+  font-size: 17px;
+}
+.tagLine
+{
+	display:none;
+}
+.featureBlock {
+  margin-bottom: 20px;
+}
+}
