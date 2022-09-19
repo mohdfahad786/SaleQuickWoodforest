@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 // $config['base_url'] = 'https://salequick.com/';
-$config['base_url'] = 'https://reseller.salequick.com/';
+$config['base_url'] = 'https://woodforest.salequick.com/';
 
 /*
 |--------------------------------------------------------------------------
