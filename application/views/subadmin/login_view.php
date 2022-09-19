@@ -1,26 +1,21 @@
-<?php 
-$url =  base_url('agent/dashboard');
-
-if( $this->session->userdata('subadmin_user_type')=='agent' )
- {
-     header('Location:  '.  $url);
+<?php if (($this->session->userdata('username')))
+{
+    header('Location:  '.  'https://salequick.com/dashboard');
 }
-
-
 ?>
 <!DOCTYPE html>
 <html>
-<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    
+<head>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="description" content="A fully featured admin theme which can be used to build CRM, CMS, etc.">
     <meta name="author" content="Coderthemes">
     <link rel="shortcut icon" href="<?php echo base_url('merchant-panel'); ?>/assets/images/favicon_1.ico">
-    <title>Reseller Login</title>
+    <title>Admin | Dashboard</title>
     <link href="https://fonts.googleapis.com/css?family=Encode+Sans:400,500|Raleway:300,400,500,600">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,500,500i,700,700i,900&display=swap" rel="stylesheet">
     <!-- links -->
-    <link href="https://salequick.com/new_assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="<?php echo base_url(); ?>/new_assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="https://salequick.com/new_assets/css/style.css">
     <style type="text/css">
         .custom-form label,.custom-form .custom-checkbox input[type=checkbox]:not(.radio-circle):checked+label, .custom-form .custom-checkbox input[type=radio]:not(.radio-circle):checked+label {
@@ -34,21 +29,7 @@ if( $this->session->userdata('subadmin_user_type')=='agent' )
             border-right-color: rgba(255, 255, 255, 0.75);
             border-bottom-color: rgba(255, 255, 255, 0.75);
         }
-        input.form-control {
-            background-color: rgba(255, 255, 255, 0.8) !important;
-            height: 40px!important;
-            border-color: #e1e6ea !important;
-        }
-        input::placeholder {
-            color: #adb5c7 !important;
-        }
-        label {
-            color: rgba(255, 255, 255, 0.5) !important;
-        }
-        input#checkbox-signup {
-            width: 15px !important;
-            height: 15px !important;
-        }
+
     </style>
 </head>
 <body>
@@ -68,23 +49,11 @@ if( $this->session->userdata('subadmin_user_type')=='agent' )
           ?>
             <div class="col-12">
               <div class="logo-wrapper-outer clearfix">
-                  <a  href="https://salequick.com/" class="logo-wrapper no-ajax">
-                    <img src="https://salequick.com/front/images/logo-w.png" alt="Salequick">
+                  <a  href="<?php echo base_url(); ?>" class="logo-wrapper no-ajax">
+                    <img src="<?php echo base_url('front/images/logo-w.png'); ?>" alt="Salequick">
                   </a>
               </div>
             </div>
-            
-             <!-- <div class="col-12">
-              <div class="form-group ">
-               <h2 style="color: aliceblue;text-align: center;">Agent Login</h2>
-              </div>
-            </div> -->
-            <div class="col-12">
-              <div class="form-group ">
-               <p style="color: rgba(255, 255, 255, 0.5) !important;">Reseller Login</p>
-              </div>
-            </div>
-            
             <div class="col-12">
               <div class="form-group">
                 <input type="text" class="form-control"  placeholder="Email" required id="username" name="username">

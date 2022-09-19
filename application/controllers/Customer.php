@@ -1,59 +1,37 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
- 
-
-class Customer extends CI_Controller
-
-{
-
- public function __construct() 
-
-     {
-
-          parent::__construct();
-
-          $this->load->helper('form');
-
-          $this->load->helper('url');
-
-          $this->load->helper('html');
-
-          $this->load->library('form_validation');
-
-      $this->load->model('admin_model');
-
+class Customer extends CI_Controller {
+    public function __construct() {
+        parent::__construct();
+        $this->load->helper('form');
+        $this->load->helper('url');
+        $this->load->helper('html');
+        $this->load->library('form_validation');
+        $this->load->model('admin_model');
         $this->load->model('session_checker_model');
-
-    if(!$this->session_checker_model->chk_session())
-
-    redirect('admin');
-
-  date_default_timezone_set("America/Chicago");
-
-     }
-
-
-
-     public function all_support()
-     { 
-       $data = array();
-       if (isset($_POST['mysubmit']))
-        {
-        $start_date = $_POST['start_date'];
-        $end_date = $_POST['end_date'];
-        $package_data = $this->admin_model->get_package_details_merchant1a($start_date,$end_date);
-          $data["start_date"] = $_POST['start_date'];
-          $data["end_date"] = $_POST['end_date'];
-        
+        if(!$this->session_checker_model->chk_session()) {
+            redirect('admin');
+            date_default_timezone_set("America/Chicago");
         }
-      else{
-        $package_data = $this->admin_model->get_package_support(""); 
-        }
+    }
+
+    public function all_support() { 
+        $data = array();
+        $data['meta'] = 'View All Support Request';
+
+        if (isset($_POST['mysubmit'])) {
+            $start_date = $_POST['start_date'];
+            $end_date = $_POST['end_date'];
+            $package_data = $this->admin_model->get_package_details_merchant1a($start_date,$end_date);
+            $data["start_date"] = $_POST['start_date'];
+            $data["end_date"] = $_POST['end_date'];
         
+        } else {
+            $package_data = $this->admin_model->get_package_support(""); 
+        }
         $mem = array();
         $member = array();
-        foreach($package_data as $each)
-        {
+        foreach($package_data as $each) {
             $package['id'] = $each->id;
             $package['name'] = $each->name;
             $package['email'] = $each->email;
@@ -64,55 +42,74 @@ class Customer extends CI_Controller
             $package['add_date'] = $each->add_date;
             $mem[] = $package;
         }
-    
         $data['mem'] = $mem;
-        $data['msg'] = "<h3>".$this->session->userdata('mymsg')."</h3>";
-        $this->session->unset_userdata('mymsg');
-        $this->load->view('admin/all_support', $data);
-    
-     }
-    
-    
-    
-    
-    
-     public function all_request()
-     {
-        $data = array();
-        if (isset($_POST['mysubmit']))
-        {
-          $start_date = $_POST['start_date'];
-          $end_date = $_POST['end_date'];
-          // $status = $_POST['status'];
-          // $package_data = $this->admin_model->get_package_details_merchant2($start_date,$end_date,$status);
-          $package_data = $this->admin_model->get_package_details_merchant2a($start_date,$end_date);
-          $data["start_date"] = $_POST['start_date'];
-          $data["end_date"] = $_POST['end_date'];
-          // $status = $_POST['status'];
+        // echo '<pre>';print_r($mem);die;
+        // $data['msg'] = "<h3>".$this->session->userdata('mymsg')."</h3>";
+        // $this->session->unset_userdata('mymsg');
+        $this->load->view('admin/all_support_dash', $data);
+    }
+
+    public function allSupportExportData() {
+        if (isset($_POST)) {
+            $start_date = $_POST['start_date'];
+            $end_date = $_POST['end_date'];
+            $package_data = $this->admin_model->get_package_details_merchant1a($start_date,$end_date);
+        
+        } else {
+            $package_data = $this->admin_model->get_package_support(""); 
         }
-        else{
-          $package_data = $this->admin_model->get_package_request_aa(""); 
-         }
-    
         $mem = array();
-       
         $member = array();
-        foreach($package_data as $each)
-        {
-          $package['id'] = $each->id;
-          $package['name'] = $each->name;
-          $package['phone'] = $each->phone;
-          $package['estimatedmonthluvolume'] = $each->estimatedmonthluvolume;
-          $package['email'] = $each->email;
-          $package['time'] = $each->time;
-          $package['add_date'] = $each->add_date;
-          $mem[] = $package;
+        foreach($package_data as $each) {
+            $package['id'] = $each->id;
+            $package['name'] = $each->name;
+            $package['email'] = $each->email;
+            $package['date_c'] = $each->date_c;
+            $package['phone'] = $each->phone;
+            $package['subject'] = $each->subject;
+            $package['message'] = $each->message;
+            $package['add_date'] = $each->add_date;
+            $mem[] = $package;
         }
         $data['mem'] = $mem;
-        $data['msg'] = "<h3>".$this->session->userdata('mymsg')."</h3>";
-        $this->session->unset_userdata('mymsg');
-        $this->load->view('admin/all_request', $data);
-     }
+        // echo '<pre>';print_r($mem);die;
+        echo json_encode($data);
+    }
+    
+    public function all_request() {
+        $data = array();
+        $data['meta'] = 'View All Call Request';
+
+        if (isset($_POST['mysubmit'])) {
+            $start_date = $_POST['start_date'];
+            $end_date = $_POST['end_date'];
+            // $status = $_POST['status'];
+            // $package_data = $this->admin_model->get_package_details_merchant2($start_date,$end_date,$status);
+            $package_data = $this->admin_model->get_package_details_merchant2a($start_date,$end_date);
+            $data["start_date"] = $_POST['start_date'];
+            $data["end_date"] = $_POST['end_date'];
+            // $status = $_POST['status'];
+
+        } else {
+            $package_data = $this->admin_model->get_package_request_aa(""); 
+        }
+        $mem = array();
+        $member = array();
+        foreach($package_data as $each) {
+            $package['id'] = $each->id;
+            $package['name'] = $each->name;
+            $package['phone'] = $each->phone;
+            $package['estimatedmonthluvolume'] = $each->estimatedmonthluvolume;
+            $package['email'] = $each->email;
+            $package['time'] = $each->time;
+            $package['add_date'] = $each->add_date;
+            $mem[] = $package;
+        }
+        $data['mem'] = $mem;
+        // $data['msg'] = "<h3>".$this->session->userdata('mymsg')."</h3>";
+        // $this->session->unset_userdata('mymsg');
+        $this->load->view('admin/all_request_dash', $data);
+    }
 
 
 

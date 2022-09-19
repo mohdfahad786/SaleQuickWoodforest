@@ -143,10 +143,6 @@ include_once'header_new_partial.php';
     .steps-wrapper .fifth-step:not(.active){
       display: none;
     }
-    /*sth step*/
-    .custom-form input[type="checkbox"] {
-        opacity: 0;
-    }
     .switch {
         --switchSize: 35px;
         vertical-align: top;
@@ -244,6 +240,23 @@ include_once'header_new_partial.php';
     .btn_custom_width {
         width: inherit !important;
     }
+    .owner_check {
+      opacity: 1 !important;
+    }
+    .doc_url {
+      color: #007bff !important;
+    }
+    .doc_url:hover {
+      color: #1956a6 !important;
+    }
+    .custom-form input[type=checkbox] {
+      opacity: 1 !important;
+      width: 18px !important;
+      height: 18px !important;
+    }
+    .sign-up-form .steps-wrapper .form-group.check_form_group.mandatory:after {
+      top: 30px !important;
+    }
 </style>
 <!-- Start Page Content -->
   <div id="wrapper"> 
@@ -327,19 +340,38 @@ include_once'header_new_partial.php';
                 </div>
                 <div class="col-12">
                   <div class="form-group">                
-                    <input type="text" class="form-control email"   value="<?php if($Merchant) echo $Merchant['email']; ?>" name="memail" placeholder="Email" required>
+                    <input type="text" class="form-control email" value="<?php if($Merchant) echo $Merchant['email']; ?>" name="memail" placeholder="Email" required>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <div class="form-group">                
+                    <input type="text" class="form-control us-phone-no" value="<?php if($Merchant) echo $Merchant['pc_phone']; ?>" name="primary_phone" placeholder="Mobile Number" required>
+                  </div>
+                </div>
+
+                 <div class="col-12">
+                  <div class="form-group check_pswd1">                
+                    <input type="text" id="secret1" class="form-control p1" value="<?php if($Merchant) echo $Merchant['password']; ?>" name="secret1" placeholder="Password" required>
+                    <input type="hidden" id="secret11" name="secret11" value="">
                   </div>
                 </div>
                 <div class="col-12">
-                  <div class="form-group">                
-                    <input type="password" class="form-control password p1" value="<?php if($Merchant) echo $Merchant['password']; ?>" name="mpass" placeholder="Password" required>
+                  <div class="form-group check_pswd2">                
+                    <input type="text" id="secret2" value="<?php if($Merchant) echo $Merchant['password']; ?>" class="form-control p2" name="secret22" placeholder="Confirm Password" required>
+                    <input type="hidden" id="secret22" name="secret22" value="">
                   </div>
                 </div>
                 <div class="col-12">
-                  <div class="form-group">                
-                    <input type="password" value="<?php if($Merchant) echo $Merchant['password']; ?>" class="form-control password p2" name="mconfpass" placeholder="Confirm Password" required>
+                  <div class="form-group check_form_group">
+                    <p>
+                      <input class="form-control accept_check" name="accept_check" type="checkbox" value="" required style="display: inline !important;">
+                      <span>By clicking you agree to SaleQuick's <a class="doc_url" target="_blank" href="<?php echo base_url('merchant-services-agreement'); ?>">Merchant Services Agreement</a>, <a class="doc_url" target="_blank" href="<?php echo base_url('terms_and_condition'); ?>">Terms & Privacy Policy</a>. Please take time to read and understand.</span>
+                    </p>
                   </div>
                 </div>
+
+
                 <div class="col-12">
                   <div class="form-group text-right"> 
                     <button type="button" class="btn btn-second stepper-submit"> 
@@ -594,12 +626,13 @@ include_once'header_new_partial.php';
                     <div class="form-group">
                         <!-- <input type="text" class="form-control" name="bsns_website" value="<?php if($Merchant) echo $Merchant['website']; ?>"  placeholder="https://www.yourwebsite.com" required autocomplete="off"> -->
                         <?php
-                        if(!empty($Merchant['website'])) {
-                            $website = $Merchant['website'];
-                        } else {
-                            $website = 'www.';
-                        } ?>
-                        <input type="text" class="form-control" name="bsns_website" value="<?php echo $website ?>" placeholder="https://www.yourwebsite.com" required autocomplete="off">
+                        // if(!empty($Merchant['website'])) {
+                        //     $website = $Merchant['website'];
+                        // } else {
+                        //     $website = 'www.';
+                        // } 
+                        ?>
+                        <input type="text" class="form-control" name="bsns_website" value="<?php echo !empty($Merchant['website']) ? $Merchant['website'] : ''; ?>" placeholder="https://www.yourwebsite.com" autocomplete="off">
                     </div>
                 </div>
                 <div class="col-12">
@@ -715,10 +748,39 @@ include_once'header_new_partial.php';
                                 </div>
                               </div>
                             </div>
+                            <?php if($Merchant) {
+                              $o_question_check = ( ($Merchant['o_question'] != '') && ($Merchant['o_question'] == 'True') ) ? 'checked' : '';
+                              $o_question_check_val = ( ($Merchant['o_question'] != '') && ($Merchant['o_question'] == 'True') ) ? '1' : '0';
+
+                              $is_primary_owner = ( ($Merchant['is_primary_owner'] != '') && ($Merchant['is_primary_owner'] == 'True') ) ? 'checked' : '';
+                              $is_primary_owner_val = ( ($Merchant['is_primary_owner'] != '') && ($Merchant['is_primary_owner'] == 'True') ) ? '1' : '0'; ?>
+
+                              <div class="col-12" style="display: inline-flex !important;">
+                                <input type="checkbox" name="o_question" class="form-control owner_check" style="height: 15px !important;width: auto !important;" <?php echo $o_question_check; ?> value="<?php echo $o_question_check_val; ?>"> <span class="cs-label" style="margin-left:10px;">Are there any owners with 25% or more ownership?</span>
+                              </div>
+                              <div class="col-12" style="display: inline-flex !important;">
+                                <input type="checkbox" name="is_primary_owner" class="form-control owner_check" style="height: 15px !important;width: auto !important;" <?php echo $is_primary_owner; ?> value="<?php echo $is_primary_owner_val; ?>"> <span class="cs-label" style="margin-left:10px;">Is this person the control prong?</span>
+                              </div>
+
+                            <?php } else { ?>
+                              <div class="col-12" style="display: inline-flex !important;">
+                                <input type="checkbox" name="o_question" class="form-control owner_check" style="height: 15px !important;width: auto !important;"  value="0"> <span class="cs-label" style="margin-left:10px;">Are there any owners with 25% or more ownership?</span>
+                              </div>
+                              <div class="col-12" style="display: inline-flex !important;">
+                                <input type="checkbox" name="is_primary_owner" class="form-control owner_check" style="height: 15px !important;width: auto !important;"  value="0"> <span class="cs-label" style="margin-left:10px;">Is this person the control prong?</span>
+                              </div>
+                            <?php } ?>
+
                             <div class="col-12">
-                                <span class="cs-label">SSN</span>
+                              <span class="cs-label">SSN</span>
                               <div class="form-group">
-                                <input type="text" class="form-control us-ssn-no-enc cl_fossn" name="fossn" value="<?php if($Merchant) echo $Merchant['o_ss_number']; ?>"  placeholder="SSN" required autocomplete="off" onkeypress="return isNumberKey(event)" maxlength="11" maxlength="9">
+                                <input type="text" class="form-control us-ssn-no-enc cl_fossn" name="fossn" value="<?php if($Merchant) echo $Merchant['o_ss_number']; ?>"  placeholder="SSN" required autocomplete="off" onkeypress="return isNumberKey(event)" maxlength="11">
+                              </div>
+                            </div>
+                            <div class="col-12">
+                              <span class="cs-label">Ownership Percentage</span>
+                              <div class="form-group">
+                                <input type="text" class="form-control" name="o_percentage" value="<?php if($Merchant) echo $Merchant['o_percentage']; ?>"  placeholder="Ownership Percentage" required onkeypress="return isNumberKey(event)">
                               </div>
                             </div>
                             <div class="col-12">
@@ -917,10 +979,38 @@ include_once'header_new_partial.php';
                                 </div>
                               </div>
                             </div>
+                            <?php if($Merchant) {
+                              $o_question_check = ( ($Merchant['o_question'] != '') || ($Merchant['o_question'] == 'True') ) ? 'checked' : '';
+                              $o_question_check_val = ( ($Merchant['o_question'] != '') || ($Merchant['o_question'] == 'True') ) ? '1' : '0';
+
+                              $is_primary_owner = ( ($Merchant['is_primary_owner'] != '') || ($Merchant['is_primary_owner'] == 'True') ) ? 'checked' : '';
+                              $is_primary_owner_val = ( ($Merchant['is_primary_owner'] != '') || ($Merchant['is_primary_owner'] == 'True') ) ? '1' : '0';
+                              ?>
+                              <div class="col-12" style="display: inline-flex !important;">
+                                <input type="checkbox" name="o_question" class="form-control owner_check" style="height: 15px !important;width: auto !important;" <?php echo $o_question_check; ?> value="<?php echo $o_question_check_val; ?>"> <span class="cs-label" style="margin-left:10px;">Are there any owners with 25% or more ownership?</span>
+                              </div>
+                              <div class="col-12" style="display: inline-flex !important;">
+                                <input type="checkbox" name="is_primary_owner" class="form-control owner_check" style="height: 15px !important;width: auto !important;" <?php echo $is_primary_owner; ?> value="<?php echo $is_primary_owner_val; ?>"> <span class="cs-label" style="margin-left:10px;">Is this person the control prong?</span>
+                              </div>
+                            <?php } else { ?>
+                              <div class="col-12" style="display: inline-flex !important;">
+                                <input type="checkbox" name="o_question" class="form-control owner_check" style="height: 15px !important;width: auto !important;"  value="0"> <span class="cs-label" style="margin-left:10px;">Are there any owners with 25% or more ownership?</span>
+                              </div>
+                              <div class="col-12" style="display: inline-flex !important;">
+                                <input type="checkbox" name="is_primary_owner" class="form-control owner_check" style="height: 15px !important;width: auto !important;"  value="0"> <span class="cs-label" style="margin-left:10px;">Is this person the control prong?</span>
+                              </div>
+                            <?php } ?>
+                            
                             <div class="col-12">
                                 <span class="cs-label">SSN</span>
                               <div class="form-group">
-                                <input type="text" class="form-control us-ssn-no-enc cl_fossn" name="fossn" value="<?php if($Merchant) echo $Merchant['o_ss_number']; ?>"  placeholder="SSN" required autocomplete="off" onkeypress="return isNumberKey(event)" maxlength="11" maxlength="9">
+                                <input type="text" class="form-control us-ssn-no-enc cl_fossn" name="fossn" value="<?php if($Merchant) echo $Merchant['o_ss_number']; ?>"  placeholder="SSN" required autocomplete="off" onkeypress="return isNumberKey(event)" maxlength="11">
+                              </div>
+                            </div>
+                            <div class="col-12">
+                              <span class="cs-label">Ownership Percentage</span>
+                              <div class="form-group">
+                                <input type="text" class="form-control" name="o_percentage" value="<?php if($Merchant) echo $Merchant['o_percentage']; ?>"  placeholder="Ownership Percentage" required onkeypress="return isNumberKey(event)">
                               </div>
                             </div>
                             <div class="col-12">
@@ -1126,10 +1216,23 @@ include_once'header_new_partial.php';
                                     </div>
                                   </div>
                                 </div>
+                                <div class="col-12" style="display: inline-flex !important;">
+                                  <?php $is_primary_o_arr = ( ($o_form_value['is_primary_o_arr'] != '') && ($o_form_value['is_primary_o_arr'] == 'True') ) ? 'checked' : ''; ?>
+                                  <?php $is_primary_o_arr_val = ( ($o_form_value['is_primary_o_arr'] != '') && ($o_form_value['is_primary_o_arr'] == 'True') ) ? '1' : '0'; ?>
+                                  
+
+                                  <input type="checkbox" name="is_primary_o_arr" class="form-control owner_check" style="height: 15px !important;width: auto !important;" <?php echo $is_primary_o_arr; ?> value="<?php echo $is_primary_o_arr_val; ?>"> <span class="cs-label" style="margin-left:10px;">Is this person the control prong?</span>
+                                </div>
                                 <div class="col-12">
                                     <span class="cs-label">SSN</span>
                                   <div class="form-group">
-                                    <input type="text" class="form-control us-ssn-no-enc cl_fossn" name="fossn_arr" value="<?php if($o_form_value) echo $o_form_value['o_ss_number_arr']; ?>"  placeholder="SSN" required autocomplete="off" onkeypress="return isNumberKey(event)" maxlength="11" maxlength="9">
+                                    <input type="text" class="form-control us-ssn-no-enc cl_fossn" name="fossn_arr" value="<?php if($o_form_value) echo $o_form_value['o_ss_number_arr']; ?>"  placeholder="SSN" required autocomplete="off" onkeypress="return isNumberKey(event)" maxlength="11">
+                                  </div>
+                                </div>
+                                <div class="col-12">
+                                  <span class="cs-label">Ownership Percentage</span>
+                                  <div class="form-group">
+                                    <input type="text" class="form-control" name="o_perc_arr" value="<?php if($o_form_value) echo $o_form_value['o_perc_arr']; ?>"  placeholder="Ownership Percentage" required onkeypress="return isNumberKey(event)">
                                   </div>
                                 </div>
                                 <div class="col-12">
@@ -1207,7 +1310,7 @@ include_once'header_new_partial.php';
                                   </div>
                                 </div>
                                 <div class="col-12">
-                                  <span class="cs-label">Home Address</span>                          
+                                  <span class="cs-label">Home Address</span>
                                   <div class="form-group mb-5px">  
                                     <select class="form-control selectOption cl_fohadd_cntry" name="fohadd_cntry_arr" required autocomplete="off">
                                       <option value="">Select Country</option>
@@ -1383,11 +1486,7 @@ include_once'header_new_partial.php';
                   </div>
                 </div>
               </div>
-              <div class="col-12 alertmessage">
-               
-                
-               
-              </div>
+              <div class="col-12 alertmessage"></div>
             </div>
           </div>
           <div class="row">
@@ -1403,13 +1502,39 @@ include_once'header_new_partial.php';
   </div>
 
 <script type="text/javascript">
-  function mSignupStep1Fn(mSignupStepF)
-  {
-    console.log(mSignupStepF)
+  $(document).on('click', '.owner_check', function() {
+    var $this = $(this);
+    if ($this.is(':checked')) {
+      $this.val('1');
+      // console.log($this.val());
+    } else {
+      $this.val('0');
+      // console.log($this.val());
+    }
+  })
+
+  $(document).on('click', '.accept_check', function() {
+    if ($('.accept_check').is(':checked')) {
+      $('.accept_check').val('1');
+    } else {
+      $('.accept_check').val('0');
+    }
+  })
+
+  function mSignupStep1Fn(mSignupStepF) {
+    // console.log(mSignupStepF);return false;
+    var email_en = mSignupStepF.email;
+    var mconfpass_en = mSignupStepF.mconfpass;
+    var password_en = mSignupStepF.password;
+    var pc_phone_en = mSignupStepF.primary_phone;
+    var allData = email_en+"/"+mconfpass_en+"/"+password_en+"/"+pc_phone_en;
+    // console.log(allData);return false;
+
     $.ajax({
       type: "POST",
       url: "<?php echo base_url('signup/stepone_signup');?>",
-      data: mSignupStepF,
+      // data: mSignupStepF,
+      data: {'allData': allData},
       dataType: "JSON",
       success: function(data) {
         // console.log(data, 'man');return false;
@@ -1468,7 +1593,8 @@ include_once'header_new_partial.php';
   //3nd
   function mSignupStep3Fn(mSignupStepTh)
   {
-    console.log(mSignupStepTh)
+    // console.log(mSignupStepTh);
+    console.log('hello');return false;
     $.ajax({
       type: "POST",
       url: "<?php echo base_url('signup/stepthree_signup');?>",
@@ -1549,12 +1675,15 @@ include_once'header_new_partial.php';
 
                 if(data.Status=='30') {
                     window.location.href='<?=base_url("login");?>';
-                    alert('Send Successfully'); 
+                    // alert('Send Successfully'); 
                     $('.alertmessage').html('<div class="alert alert-danger text-center">Send Successfully!</div>');
 
                 } else if(data.Status=='400' ||  data.Status=='40') {
-                    alert('all fields are required'); 
+                    // alert('all fields are required'); 
                     $('.alertmessage').html('<div class="alert alert-danger text-center">all fields are required!</div>');
+
+                } else if(data.Status=='500') {
+                    $('.alertmessage').html('<div class="alert alert-danger text-center">Mail not sent!</div>');
 
                 } else {
                     $('.alertmessage').html(data.StatusMessage); 
@@ -1601,6 +1730,134 @@ include_once'header_new_partial.php';
             // console.log($(this));
         })
         return trueFalse;
+    }
+
+
+    $(function() {
+        //Extends JQuery Methods to get current cursor postion in input text.
+        //GET CURSOR POSITION
+        jQuery.fn.getCursorPosition = function() {
+            if (this.length == 0) return -1;
+            return $(this).getSelectionStart();
+        }
+
+        jQuery.fn.getSelectionStart = function() {
+            if (this.length == 0) return -1;
+            input = this[0];
+            var pos = input.value.length;
+
+            if (input.createTextRange) {
+                var r = document.selection.createRange().duplicate();
+                r.moveEnd('character', input.value.length);
+                if (r.text == '') pos = input.value.length;
+                pos = input.value.lastIndexOf(r.text);
+            } else if (typeof(input.selectionStart) != "undefined") pos = input.selectionStart;
+
+            return pos;
+        }
+
+        //Bind Key Press event with password field    
+        $("#secret1").keypress(function(e) {
+            setTimeout(function() {
+                maskPassword1(e)
+            }, 500);
+        });
+
+        $("#secret1").keydown(function(e) {
+            if (e.keyCode == 8) {
+                setTimeout(function() {
+                    maskPassword1(e)
+                }, 1);
+            }
+        });
+
+        $("#secret1").bind("paste", function(e) {
+            setTimeout(function() {
+                maskPassword1(e)
+            }, 500);
+        });
+
+        $("#secret2").keypress(function(e) {
+            setTimeout(function() {
+                maskPassword2(e)
+            }, 500);
+        });
+
+        $("#secret2").keydown(function(e) {
+            if (e.keyCode == 8) {
+                setTimeout(function() {
+                    maskPassword2(e)
+                }, 1);
+            }
+        });
+
+        $("#secret2").bind("paste", function(e) {
+            setTimeout(function() {
+                maskPassword2(e)
+            }, 500);
+        });
+    });
+
+    function generateStars(n) {
+        var stars = '';
+        for (var i = 0; i < n; i++) {
+            stars += '*';
+        }
+        return stars;
+    }
+
+    function maskPassword1(e) {
+        var text = $('#secret11').val();
+
+        var stars1 = $('#secret11').val().length;
+        var unicode = e.keyCode ? e.keyCode : e.charCode;
+        
+        //Get Current Cursor Position on Password Textbox
+        var curPos = $("#secret1").getCursorPosition();
+        var PwdLength = $("#secret1").val().length;
+
+        if (unicode != 9 && unicode != 13 && unicode != 37 && unicode != 40 && unicode != 37 && unicode != 39) {
+            //If NOT <Back Space> OR <DEL> Then...
+            if (unicode != 8 && unicode != 46) {
+                text = text + String.fromCharCode(unicode);
+                stars1 += 1;
+            }
+            //If Press <Back Space> Or <DEL> Then...
+            else if ((unicode == 8 || unicode == 46) && stars1 != PwdLength) {
+                stars1 -= 1;
+                text = text.substr(0, curPos) + text.substr(curPos + 1);
+            }
+            //Set New String on both input fields
+            $('#secret11').val(text);
+            $('#secret1').val(generateStars(stars1));
+        }
+    }
+
+    function maskPassword2(e) {
+        var text = $('#secret22').val();
+        var stars2 = $('#secret22').val().length;
+        var unicode = e.keyCode ? e.keyCode : e.charCode;
+        
+        //Get Current Cursor Position on Password Textbox
+        var curPos = $("#secret2").getCursorPosition();
+        var PwdLength = $("#secret2").val().length;
+
+        if (unicode != 9 && unicode != 13 && unicode != 37 && unicode != 40 && unicode != 37 && unicode != 39) {
+            //If NOT <Back Space> OR <DEL> Then...
+            if (unicode != 8 && unicode != 46) {
+                text = text + String.fromCharCode(unicode);
+                stars2 += 1;
+            }
+            //If Press <Back Space> Or <DEL> Then...
+            else if ((unicode == 8 || unicode == 46) && stars2 != PwdLength) {
+                stars2 -= 1;
+                text = text.substr(0, curPos) + text.substr(curPos + 1);
+            }
+            //Set New String on both input fields
+            $('#secret22').val(text);
+
+            $('#secret2').val(generateStars(stars2));
+        }
     }
  
     $(function(){
@@ -1675,7 +1932,7 @@ include_once'header_new_partial.php';
             for (i = 1900; i <= current_year; i++) {
                 owner_doy += '<option value="'+i+'">'+i+'</option>';
             }
-            newOwnerRow += '<div class="first_busi_owner_section pointer"><input type="hidden" name="saved_id" class="savedId" value=""><div class="col-12"><span class="cs-label">Name</span><div class="form-group"><div class="fmlname row"><div class="col"><input type="text" class="form-control cl_foname1" value="" name="foname1_arr" placeholder="First" required autocomplete="off"></div><div class="col"><input type="text" class="form-control cl_foname2" value="" name="foname2_arr" placeholder="Middle" autocomplete="off"></div><div class="col"><input type="text" class="form-control cl_foname3" value="" name="foname3_arr" placeholder="Last"  autocomplete="off"></div></div></div></div><div class="col-12"><span class="cs-label">SSN</span><div class="form-group"><input type="text" class="form-control us-ssn-no-enc cl_fossn" name="fossn_arr" value="" placeholder="SSN" required autocomplete="off" onkeypress="return isNumberKey(event)" maxlength="11" maxlength="9"></div></div><div class="col-12"><span class="cs-label">Date of Birth</span><div class="form-group"><div class="mdy-wraper row"><div class="col"><select class="form-control mb-1 selectOption cl_fodobm" name="fodobm_arr" required><option value="">Month</option><option value="01">Jan</option><option value="02">Feb</option><option value="03">Mar</option><option value="04">Apr</option><option value="05">May</option><option value="06">Jun</option><option value="07">Jul</option><option value="08">Aug</option><option value="09">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select></div><div class="col"><select class="form-control mb-1 selectOption cl_fodobd" name="fodobd_arr" required><option value="">Day</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option></select></div><div class="col"><select class="form-control mb-1 selectOption cl_fodoby" name="fodoby_arr" required><option value="">Year</option>' + owner_doy + '</select></div></div></div></div><div class="col-12"><span class="cs-label">Home Address</span><div class="form-group mb-5px"><select class="form-control selectOption cl_fohadd_cntry" name="fohadd_cntry_arr" required autocomplete="off"><option value="">Select Country</option><option value="USA">United States of America</option></select></div></div><div class="col-12"><div class="form-group mb-5px"><input type="text" class="form-control cl_fohadd_1" name="fohadd_1_arr" value="" placeholder="Enter Address 1" required autocomplete="off"></div></div><div class="col-12"><div class="form-group mb-5px"><input type="text" class="form-control cl_fohadd_2" name="fohadd_2_arr" value="" placeholder="Enter Address 2" autocomplete="off"></div></div><div class="col-12"><div class="form-group"><div class="csz row"><div class="col"><input type="text" class="form-control mb5 cl_fohadd_city" name="fohadd_city_arr" value="" placeholder="City" required autocomplete="off"></div><div class="col"><select class="form-control mb5 selectOption cl_fohadd_state" name="fohadd_state_arr" required><option value="">Select State</option><option value="AL">Alabama</option><option value="AK">Alaska</option><option value="AZ">Arizona</option><option value="AR">Arkansas</option><option value="CA">California</option><option value="CO">Colorado</option><option value="CT">Connecticut</option><option value="DE">Delaware</option><option value="DC">District Of Columbia</option><option value="FL">Florida</option><option value="GA">Georgia</option><option value="HI">Hawaii</option><option value="ID">Idaho</option><option value="IL">Illinois</option><option value="IN">Indiana</option><option value="IA">Iowa</option><option value="KS">Kansas</option><option value="KY">Kentucky</option><option value="LA">Louisiana</option><option value="ME">Maine</option><option value="MD">Maryland</option><option value="MA">Massachusetts</option><option value="MI">Michigan</option><option value="MN">Minnesota</option><option value="MS">Mississippi</option><option value="MO">Missouri</option><option value="MT">Montana</option><option value="NE">Nebraska</option><option value="NV">Nevada</option><option value="NH">New Hampshire</option><option value="NJ">New Jersey</option><option value="NM">New Mexico</option><option value="NY">New York</option><option value="NC">North Carolina</option><option value="ND">North Dakota</option><option value="OH">Ohio</option><option value="OK">Oklahoma</option><option value="OR">Oregon</option><option value="PA">Pennsylvania</option><option value="RI">Rhode Island</option><option value="SC">South Carolina</option><option value="SD">South Dakota</option><option value="TN">Tennessee</option><option value="TX">Texas</option><option value="UT">Utah</option><option value="VT">Vermont</option><option value="VA">Virginia</option><option value="WA">Washington</option><option value="WV">West Virginia</option><option value="WI">Wisconsin</option><option value="WY">Wyoming</option></select></div><div class="col"><input type="text" class="form-control mb5 cl_fohadd_zip" name="fohadd_zip_arr" value="" placeholder="Zip code" required autocomplete="off" maxlength="6" onkeypress="return isNumberKey(event)"></div></div></div></div><div class="col-12"><span class="cs-label">Owner Phone Number</span><div class="form-group"><input type="text" class="form-control us-phone-no cl_fo_phone" value="" name="fo_phone_arr" placeholder="Owner Phone Number" required autocomplete="off"></div></div><div class="col-12"><span class="cs-label">Owner Email Address</span><div class="form-group"><input type="text" class="form-control email cl_fo_email" value="" name="fo_email_arr" placeholder="Owner Email Address" required autocomplete="off"></div></div><hr class="custom_hr"></div>';
+            newOwnerRow += '<div class="first_busi_owner_section pointer"><input type="hidden" name="saved_id" class="savedId" value=""><div class="col-12"><span class="cs-label">Name</span><div class="form-group"><div class="fmlname row"><div class="col"><input type="text" class="form-control cl_foname1" value="" name="foname1_arr" placeholder="First" required autocomplete="off"></div><div class="col"><input type="text" class="form-control cl_foname2" value="" name="foname2_arr" placeholder="Middle" autocomplete="off"></div><div class="col"><input type="text" class="form-control cl_foname3" value="" name="foname3_arr" placeholder="Last"  autocomplete="off"></div></div></div></div><div class="col-12" style="display: inline-flex !important;"><input type="checkbox" name="is_primary_o_arr" class="form-control owner_check" style="height: 15px !important;width: auto !important;" value="0"> <span class="cs-label" style="margin-left:10px;">Is this person the control prong?</span></div><div class="col-12"><span class="cs-label">SSN</span><div class="form-group"><input type="text" class="form-control us-ssn-no-enc cl_fossn" name="fossn_arr" value="" placeholder="SSN" required autocomplete="off" onkeypress="return isNumberKey(event)" maxlength="11"></div></div><div class="col-12"><span class="cs-label">Ownership Percentage</span><div class="form-group"><input type="text" class="form-control" name="o_perc_arr" value="" placeholder="Ownership Percentage" required onkeypress="return isNumberKey(event)"></div></div><div class="col-12"><span class="cs-label">Date of Birth</span><div class="form-group"><div class="mdy-wraper row"><div class="col"><select class="form-control mb-1 selectOption cl_fodobm" name="fodobm_arr" required><option value="">Month</option><option value="01">Jan</option><option value="02">Feb</option><option value="03">Mar</option><option value="04">Apr</option><option value="05">May</option><option value="06">Jun</option><option value="07">Jul</option><option value="08">Aug</option><option value="09">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select></div><div class="col"><select class="form-control mb-1 selectOption cl_fodobd" name="fodobd_arr" required><option value="">Day</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option></select></div><div class="col"><select class="form-control mb-1 selectOption cl_fodoby" name="fodoby_arr" required><option value="">Year</option>' + owner_doy + '</select></div></div></div></div><div class="col-12"><span class="cs-label">Home Address</span><div class="form-group mb-5px"><select class="form-control selectOption cl_fohadd_cntry" name="fohadd_cntry_arr" required autocomplete="off"><option value="">Select Country</option><option value="USA">United States of America</option></select></div></div><div class="col-12"><div class="form-group mb-5px"><input type="text" class="form-control cl_fohadd_1" name="fohadd_1_arr" value="" placeholder="Enter Address 1" required autocomplete="off"></div></div><div class="col-12"><div class="form-group mb-5px"><input type="text" class="form-control cl_fohadd_2" name="fohadd_2_arr" value="" placeholder="Enter Address 2" autocomplete="off"></div></div><div class="col-12"><div class="form-group"><div class="csz row"><div class="col"><input type="text" class="form-control mb5 cl_fohadd_city" name="fohadd_city_arr" value="" placeholder="City" required autocomplete="off"></div><div class="col"><select class="form-control mb5 selectOption cl_fohadd_state" name="fohadd_state_arr" required><option value="">Select State</option><option value="AL">Alabama</option><option value="AK">Alaska</option><option value="AZ">Arizona</option><option value="AR">Arkansas</option><option value="CA">California</option><option value="CO">Colorado</option><option value="CT">Connecticut</option><option value="DE">Delaware</option><option value="DC">District Of Columbia</option><option value="FL">Florida</option><option value="GA">Georgia</option><option value="HI">Hawaii</option><option value="ID">Idaho</option><option value="IL">Illinois</option><option value="IN">Indiana</option><option value="IA">Iowa</option><option value="KS">Kansas</option><option value="KY">Kentucky</option><option value="LA">Louisiana</option><option value="ME">Maine</option><option value="MD">Maryland</option><option value="MA">Massachusetts</option><option value="MI">Michigan</option><option value="MN">Minnesota</option><option value="MS">Mississippi</option><option value="MO">Missouri</option><option value="MT">Montana</option><option value="NE">Nebraska</option><option value="NV">Nevada</option><option value="NH">New Hampshire</option><option value="NJ">New Jersey</option><option value="NM">New Mexico</option><option value="NY">New York</option><option value="NC">North Carolina</option><option value="ND">North Dakota</option><option value="OH">Ohio</option><option value="OK">Oklahoma</option><option value="OR">Oregon</option><option value="PA">Pennsylvania</option><option value="RI">Rhode Island</option><option value="SC">South Carolina</option><option value="SD">South Dakota</option><option value="TN">Tennessee</option><option value="TX">Texas</option><option value="UT">Utah</option><option value="VT">Vermont</option><option value="VA">Virginia</option><option value="WA">Washington</option><option value="WV">West Virginia</option><option value="WI">Wisconsin</option><option value="WY">Wyoming</option></select></div><div class="col"><input type="text" class="form-control mb5 cl_fohadd_zip" name="fohadd_zip_arr" value="" placeholder="Zip code" required autocomplete="off" maxlength="6" onkeypress="return isNumberKey(event)"></div></div></div></div><div class="col-12"><span class="cs-label">Owner Phone Number</span><div class="form-group"><input type="text" class="form-control us-phone-no cl_fo_phone" value="" name="fo_phone_arr" placeholder="Owner Phone Number" required autocomplete="off"></div></div><div class="col-12"><span class="cs-label">Owner Email Address</span><div class="form-group"><input type="text" class="form-control email cl_fo_email" value="" name="fo_email_arr" placeholder="Owner Email Address" required autocomplete="off"></div></div><hr class="custom_hr"></div>';
             
             $('.busi_owner_inputs').append(newOwnerRow);
             $('.pointer').find('.cl_fo_phone').mask("(999) 999-9999");
@@ -1765,5 +2022,5 @@ include_once'header_new_partial.php';
     })
 </script>
 <?php
-include_once 'footer_new_partial.php';
+include_once 'footer_signup.php';
 ?>

@@ -840,8 +840,8 @@
 		public function testmailfuncion() {
 			$merchnat_msg="recurring OOOOOOOOOOO Working Email Msg";
 			$MailSubject="recurring Test";
-		//	$merchant_email="vaibhav.angad@gmail.com";//'pk1105806@gmail.com';
-			$this->email->from('info@salequick.com',"gsjgfgsjjkg");
+		 $merchant_email="fahad@salequick.com";//'pk1105806@gmail.com';
+			$this->email->from('info@salequick.com','SaleQuick');
 			$this->email->to($merchant_email);
 			$this->email->subject($MailSubject);
 			$this->email->message($merchnat_msg);
@@ -849,7 +849,7 @@
 		}
 		public function autocallfunction() {   
 			//  $this->testmailfuncion(); 
-			$this->autosendinvoice();  
+			//$this->autosendinvoice();  
 	 
 		 	$result=$this->admin_model->getallDistinct_Invoice_for_autopayment('customer_payment_request'); 
 		 	$getallRecurringRecord=$this->setDataInArray($result);
@@ -889,7 +889,7 @@
 						$terminal_id=$Merchantdata['terminal_id']; 
 						$TicketNumber =  (rand(100000,999999)); 
 						$mob = str_replace(array( '(', ')','-',' ' ), '', $mobile_no);  
-						$getQuery_t = $this->db->query(" SELECT token.*,invoice_token.invoice_no FROM token INNER JOIN invoice_token on token.id=invoice_token.token_id  WHERE token.mobile='$mob'   AND invoice_token.invoice_no='$invoice_no' group by card_no"); 
+						$getQuery_t = $this->db->query(" SELECT token.*,invoice_token.invoice_no FROM token INNER JOIN invoice_token on token.id=invoice_token.token_id  WHERE token.mobile='$mob'   AND invoice_token.invoice_no='$invoice_no' and token.payroc='0' group by card_no"); 
 						//$getQuery_t = $this->db->query("SELECT * FROM  token WHERE  card_type='$card_type' AND  mobile  ='".$mob."' group by card_no ");
 						// echo $this->db->last_query(); 
 						$token_data = $getQuery_t->row_array();
@@ -1132,7 +1132,7 @@
 						 $json = json_encode($xml);
 						 $arrayy = json_decode($json,TRUE);
 						 //print_r($arrayy);   die(); 
-						 //echo 'shuaeb'; 
+						 
 						 curl_close($ch);
 					 	if($arrayy['Response']['ExpressResponseMessage']=='Approved' ) {
 							 $card_a_no = $arrayy['Response']['Card']['CardNumberMasked'];
@@ -1538,7 +1538,7 @@
 												//     //array_push($arraydata,$notic_emails[$i]);
 												//     }
 												// }
-											 $m=$this->retrypayment('Declined',$Merchantdata,$token_data,$id,$transaction_id,$merchant_id,$card_type,$mobile_no,$email_id,$amount);    
+											// $m=$this->retrypayment('Declined',$Merchantdata,$token_data,$id,$transaction_id,$merchant_id,$card_type,$mobile_no,$email_id,$amount);    
 											 
 									 }
 									 else if($arrayy['Response']['ExpressResponseMessage']=='Expired Card')
@@ -1717,7 +1717,7 @@
 	 }
 				
 }
-public function retrypayment($ExpressResponseMessage,$Merchantdata,$token_data,$id,$transaction_id,$merchant_id,$card_type,$mobile_no,$email_id,$amount)
+public function retrypayment_new($ExpressResponseMessage,$Merchantdata,$token_data,$id,$transaction_id,$merchant_id,$card_type,$mobile_no,$email_id,$amount)
 {
 		// print($ExpressResponseMessage.'---'.$id.'--'.$transaction_id.'----'.$merchant_id.'--'.$card_type.'---'.$mobile_no.'--'.$email_id.'----'.$amount); 
 		// echo "<br/>"; print_r($Merchantdata); 
@@ -1811,7 +1811,7 @@ public function retrypayment($ExpressResponseMessage,$Merchantdata,$token_data,$
 										$json = json_encode($xml);
 										$arrayy = json_decode($json,TRUE);
 										//print_r($arrayy);   die(); 
-										//echo 'shuaeb'; 
+										 
 										curl_close($ch);
 								if($arrayy['Response']['ExpressResponseMessage']=='Approved')  
 									 { 

@@ -1,22 +1,43 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+ini_set('MAX_EXECUTION_TIME', '-1');
+ini_set('memory_limit','4048M');
+if (!defined('BASEPATH')) {
+		exit('No direct script access allowed');
+	}
 
 class Report extends CI_Controller {
 	public function __construct() {
+		// print_r("expression1");die;
 		parent::__construct();
 		$this->load->model('Inventory_model');
 		$this->load->model('Inventory_graph_model');
+		$this->load->model('Inventory_graph_model_new');
+		$this->load->model('Inventory_graph_model_report');
 		$this->load->helper('pdf_helper');
 		$this->load->model('profile_model');
+		$this->load->model('Email_report_model');
 		$this->load->model('admin_model');
 		$this->load->model('home_model');
 		$this->load->library('email');
 		$this->load->library('twilio');
 
 		date_default_timezone_set("America/Chicago");
+		// ini_set('display_errors', 1);
+		// error_reporting(E_ALL);
+		
+		ignore_user_abort(1);
 		
 	}
-	public function dateTimeConvertTimeZone($Adate) {
+
+	function test()
+	{
+		$last_date = date("Y-m-d", strtotime("-1 days"));
+$getQuery1 = $this->db->query("SELECT count(id) as id from daily_report_email where  date ='" . $last_date . "'  ");
+						$getEmail1 = $getQuery1->result_array();
+						print_r($getEmail1); die();
+
+	}
+	public function dateTimeConvertTimeZone2($Adate) {
 			if($this->session->userdata('time_zone')) {
 				$time_Zone=$this->session->userdata('time_zone') ? $this->session->userdata('time_zone') :'';
 				date_default_timezone_set('America/Chicago');
@@ -36,14 +57,32 @@ class Report extends CI_Controller {
 			return $convertedDateTime; 
 		}
 		
+		 public function dateTimeConvertTimeZone($Adate,$timezone) {
+
+		 	date_default_timezone_set("UTC");
+        if($timezone!=''){
+            $time_Zone=$timezone;
+        }
+        else
+        {
+         $time_Zone='America/Chicago';   
+        }
+                    $datetime = new DateTime($Adate);
+                    $la_time = new DateTimeZone($time_Zone);
+                    $datetime->setTimezone($la_time);
+                    $convertedDateTime=$datetime->format('Y-m-d H:i:s');
+
+     
+            return $convertedDateTime; 
+        }
 		
 		
-		public function allreportpdf() {
+	public function allreportpdf() {
 		$data = array();
 		$merchant_id = $this->uri->segment(3);
 		$merchant_data = $this->profile_model->get_merchant_details($merchant_id);
 		// echo "<pre>";print_r($merchant_data);die;
-
+        $time_zone=$merchant_data[0]->time_zone;
 		
 			
 			$start_date = $id = $this->uri->segment(2); 
@@ -53,15 +92,21 @@ class Report extends CI_Controller {
 			$status = '';
 			$employee=0;
 			
-			$package_data_cash = $this->Inventory_graph_model->get_search_merchant_pos_type($start_date, $end_date, $status, $merchant_id,$employee, 'pos','CASH');
-			$package_data_check = $this->Inventory_graph_model->get_search_merchant_pos_type($start_date, $end_date, $status, $merchant_id,$employee, 'pos','CHECK');
-			//$package_data_online = $this->Inventory_graph_model->get_search_merchant_pos_type($start_date, $end_date, $status, $merchant_id,$employee, 'pos','ONLINE');
-			$package_data_splite = $this->Inventory_graph_model->get_search_merchant_pos_type_split($start_date, $end_date, $status, $merchant_id,$employee, 'pos');
+   $package_data_cash = $this->Inventory_graph_model_report->get_search_merchant_pos_type($start_date, $end_date, $status, $merchant_id,$employee, 'pos','CASH');
 			
-			$package_data_online = $this->Inventory_graph_model->get_search_merchant_pos_type_online($start_date, $end_date, $status, $merchant_id,$employee, 'pos');
-			$package_data_card = $this->Inventory_graph_model->get_search_merchant_pos_type_card($start_date, $end_date, $status, $merchant_id,$employee, 'pos');
-			$package_data_card_invoice = $this->Inventory_graph_model->get_search_merchant_pos_type_card_invoice($start_date, $end_date, $status, $merchant_id,$employee, 'customer_payment_request');
-			$package_data_card_invoice_re = $this->Inventory_graph_model->get_search_merchant_pos_type_card_invoice_re($start_date, $end_date, $status, $merchant_id,$employee, 'recurring_payment');
+			$package_data_check = $this->Inventory_graph_model_report->get_search_merchant_pos_type($start_date, $end_date, $status, $merchant_id,$employee, 'pos','CHECK');
+		
+			$package_data_splite = $this->Inventory_graph_model_report->get_search_merchant_pos_type_split($start_date, $end_date, $status, $merchant_id,$employee, 'pos');
+			
+			$package_data_online = $this->Inventory_graph_model_report->get_search_merchant_pos_type_online($start_date, $end_date, $status, $merchant_id,$employee, 'pos');
+			$package_data_card = $this->Inventory_graph_model_report->get_search_merchant_pos_type_card($start_date, $end_date, $status, $merchant_id,$employee, 'pos');
+
+			
+
+			$package_data_card_invoice = $this->Inventory_graph_model_report->get_search_merchant_pos_type_card_invoice($start_date, $end_date, $status, $merchant_id,$employee, 'customer_payment_request');
+
+			$package_data_card_invoice_re = $this->Inventory_graph_model_report->get_search_merchant_pos_type_card_invoice_re($start_date, $end_date, $status, $merchant_id,$employee, 'recurring_payment');
+			//end new
 			
 			$package_data_cash_total = $this->Inventory_graph_model->get_search_merchant_pos_total($start_date, $end_date, $status, $merchant_id,$employee, 'pos','CASH');
 			
@@ -72,176 +117,46 @@ class Report extends CI_Controller {
 			//$package_data_total_pending = $this->Inventory_graph_model->get_search_merchant_pending_total($start_date, $end_date,$merchant_id,$employee, 'pos');
 			$package_data_total_pos_tip = $this->Inventory_graph_model->get_search_merchant_tip_total($start_date, $end_date,$merchant_id,$employee, 'pos');
 			$package_data_total_invoice_tip = $this->Inventory_graph_model->get_search_merchant_tip_total($start_date, $end_date,$merchant_id,$employee, 'customer_payment_request');
-			
+
 			$package_data_total_pos_tax = $this->Inventory_graph_model->get_search_merchant_tax_total($start_date, $end_date,$merchant_id,$employee, 'pos');
 			$package_data_total_invoice_tax = $this->Inventory_graph_model->get_search_merchant_tax_total($start_date, $end_date,$merchant_id,$employee, 'customer_payment_request');
 
 			$package_data_total_pos_other_charges = $this->Inventory_graph_model->get_search_merchant_other_charges_total($start_date, $end_date,$merchant_id,$employee, 'pos');
+			//print_r($package_data_total_pos_other_charges); 
 			$package_data_total_invoice_other_charges = $this->Inventory_graph_model->get_search_merchant_other_charges_total($start_date, $end_date,$merchant_id,$employee, 'customer_payment_request');
-
-			
+			//print_r($package_data_total_invoice_other_charges); die();
 			$package_data_check_total = $this->Inventory_graph_model->get_search_merchant_pos_total($start_date, $end_date, $status, $merchant_id,$employee, 'pos','CHECK');
-			//$package_data_online_total = $this->Inventory_graph_model->get_search_merchant_pos_total($start_date, $end_date, $status, $merchant_id,$employee, 'pos','ONLINE');
+			
 			$package_data_online_total = $this->Inventory_graph_model->get_search_merchant_pos_total_online($start_date, $end_date, $status, $merchant_id,$employee, 'pos');
 			$package_data_card_total = $this->Inventory_graph_model->get_search_merchant_pos_total_card($start_date, $end_date, $status, $merchant_id,$employee, 'pos');
-			$refund_data_search = $this->Inventory_graph_model->get_full_refund_data_search_pdf($start_date, $end_date,'pos', $merchant_id);
-
-
-
-			$refund_data_search_invoice = $this->Inventory_graph_model->get_full_refund_data_search_pdf($start_date, $end_date,'customer_payment_request', $merchant_id);
-			$refund_data_search_invoice_rec = $this->Inventory_graph_model->get_full_refund_data_search_pdf($start_date, $end_date,'recurring_payment', $merchant_id);
 			
-		$refund_data_cash = $this->Inventory_graph_model->get_full_refund_cash_check($start_date, $end_date,'pos',$merchant_id,'CASH');
+			$refund_data_search = $this->Inventory_graph_model_new->get_full_refund_data_search_pdf($start_date, $end_date,'pos', $merchant_id);
+			$refund_data_search_full = $this->Inventory_graph_model_new->get_full_refund_data_search_pdf_full($start_date, $end_date,'pos', $merchant_id);
+			$refund_data_search_split = $this->Inventory_graph_model_new->get_full_refund_data_search_pdf_split($start_date, $end_date,'pos', $merchant_id);
 
-$refund_data_check = $this->Inventory_graph_model->get_full_refund_cash_check($start_date, $end_date,'pos',$merchant_id,'CHECK');
+			$refund_data_search_invoice = $this->Inventory_graph_model_new->get_full_refund_data_search_pdf($start_date, $end_date,'customer_payment_request', $merchant_id);
+			$refund_data_search_invoice_rec = $this->Inventory_graph_model_new->get_full_refund_data_search_pdf($start_date, $end_date,'recurring_payment', $merchant_id);
 
-$refund_data_card = $this->Inventory_graph_model->get_full_refund_card($start_date, $end_date,'pos',$merchant_id);
+            $refund_data_cash = $this->Inventory_graph_model->get_full_refund_cash_check($start_date, $end_date,'pos',$merchant_id,'CASH');
+            $refund_data_check = $this->Inventory_graph_model->get_full_refund_cash_check($start_date, $end_date,'pos',$merchant_id,'CHECK');
+            $refund_data_card = $this->Inventory_graph_model->get_full_refund_card($start_date, $end_date,'pos',$merchant_id);
+            $refund_data_online = $this->Inventory_graph_model->get_full_refund_online($start_date, $end_date,'pos',$merchant_id);
 
-$refund_data_online = $this->Inventory_graph_model->get_full_refund_online($start_date, $end_date,'pos',$merchant_id);	
+             $refund_data_cash_s = $this->Inventory_graph_model->get_full_refund_cash_check_s($start_date, $end_date,'pos',$merchant_id,'CASH');
+            $refund_data_check_s = $this->Inventory_graph_model->get_full_refund_cash_check_s($start_date, $end_date,'pos',$merchant_id,'CHECK');
+            $refund_data_card_s = $this->Inventory_graph_model->get_full_refund_card_s($start_date, $end_date,'pos',$merchant_id);
+            $refund_data_online_s = $this->Inventory_graph_model->get_full_refund_online_s($start_date, $end_date,'pos',$merchant_id);
+
+
+
+             $refund_data_total_new = $this->Inventory_graph_model->get_full_refund_total_count_new($start_date, $end_date,$merchant_id);
 			
 			
 			$data["start_date"] = $_POST['start_date'];
 			$data["end_date"] = $_POST['end_date'];
 			$data["status"] = $_POST['status'];
-	
-		$mem = array();
-		$member = array();
-		if (isset($package_data)) {
-			foreach ($package_data as $each) {
-				if ($each->receipt_type == null) // no-cepeipt
-				{
-					if ($each->mobile_no && $each->email_id) {
-						$repeiptmethod = $each->mobile_no;
-					} else if ($each->mobile_no != "" && $each->email_id == "") {
-						$repeiptmethod = $each->mobile_no;
-					} else if ($each->mobile_no == "" && $each->email_id != "") {
-						$repeiptmethod = $each->email_id;
-					} else {
-						$repeiptmethod = 'no-receipt';
-					}
 
-				} else if ($each->receipt_type == 'no-cepeipt') {
-					$repeiptmethod = 'no-receipt';
-				} else {
-					$repeiptmethod = (!empty($each->mobile_no)) ? $each->mobile_no : $each->email_id;
-				}
-				//$each->add_date=$this->dateTimeConvertTimeZone($each->add_date);
-
-				$pyadate=str_replace("-","",$each->express_transactiondate);
-				$paytime=str_replace(":","",$each->express_transactiontime);
-				$each->express_transactiontimezone; //  UTC-05:00:00
-      
-				$PayYear=substr($pyadate,0,4); 
-				$PayMonth=substr($pyadate,4,2); 
-				$PayDay=substr($pyadate,6,2); 
-
-				$PayHours=substr($paytime,0,2); 
-				$PayMinut=substr($paytime,2,2); 
-				$PaySecond=substr($paytime,4,2);
-				
-				if(!empty($PayYear) && !empty($PayMonth) && !empty($PayDay) &&  !empty($PayHours) && !empty($PayMinut) &&!empty( $PaySecond)){
-				$payDateTime=$PayYear.'-'.$PayMonth.'-'.$PayDay.' '.$PayHours.':'.$PayMinut.':'.$PaySecond;  
-				// $date = new DateTime($payDateTime, new DateTimeZone('UTC'));
-                // $date->setTimezone(new DateTimeZone('America/Chicago'));
-                // $convertedDatetime=$date->format('Y-m-d H:i:s'); 
-			    $TransactiondateTime=$this->dateTimeConvertTimeZone($payDateTime); 
-				}
-				else {
-					$datetime = new DateTime($each->add_date,new DateTimeZone('America/Vancouver'));
-					$la_time = new DateTimeZone('America/Chicago'); // dggdgh
-					$datetime->setTimezone($la_time);
-					$convertedDateTime=$datetime->format('Y-m-d H:i:s');
-				    $TransactiondateTime=$this->dateTimeConvertTimeZone($convertedDateTime);
-				}
-				
-				
-				$package['id'] = $each->id;
-				$package['refund_row_id'] = "";
-				$package['transaction_id'] = $each->transaction_id;
-				$package['name'] = $each->name;
-				$package['email'] = $each->email_id;
-				$package['repeiptmethod'] = $repeiptmethod;
-				$package['c_type'] = $each->c_type;
-				$package['amount'] = $each->amount;
-				//$package['amount'] = $each->refund_amount;
-				$package['date'] =  $TransactiondateTime;  // $TransactiondateTime; 
-				$package['status'] = $each->status;
-				$package['card_no'] = $each->card_no;
-				$package['card_type'] = $each->card_type;
-				$package['transaction_type'] = $each->transaction_type;
-				if ($each->transaction_type == "split") {
-					$package['transaction_id'] = $each->invoice_no;
-					$package['amount'] = $each->full_amount;
-					$package['card_no'] = "";
-					$package['card_type'] = "SPLIT";
-
-				} else {
-					$package['transaction_id'] = $each->transaction_id;
-					$package['amount'] = $each->amount;
-					$package['card_no'] = $each->card_no;
-					$package['card_type'] = $each->card_type;
-				}
-				$mem[] = $package;
-
-			}
-		}
-        
-		if (isset($refund_data)) {
-			// print_r($refund_data);die;
-			foreach ($refund_data as $each) {
-
-				if ($each->status == 'Chargeback_Confirm') {
-					if ($each->receipt_type == null) // no-cepeipt
-					{
-						if ($each->mobile_no && $each->email_id) {
-							$repeiptmethod = $each->mobile_no;
-						} else if ($each->mobile_no != "" && $each->email_id == "") {
-							$repeiptmethod = $each->mobile_no;
-						} else if ($each->mobile_no == "" && $each->email_id != "") {
-							$repeiptmethod = $each->email_id;
-						} else {
-							$repeiptmethod = 'no-receipt';
-						}
-
-					} else if ($each->receipt_type == 'no-cepeipt') {
-						$repeiptmethod = 'no-receipt';
-					} else {
-						$repeiptmethod = (!empty($each->mobile_no)) ? $each->mobile_no : $each->email_id;
-					}
-                    // $each->refund_dt=$this->dateTimeConvertTimeZone($each->refund_dt);
-					$datetime = new DateTime($each->refund_dt,new DateTimeZone('America/Vancouver'));
-					$la_time = new DateTimeZone('America/Chicago'); // dggdgh
-					$datetime->setTimezone($la_time);
-					$convertedDateTime=$datetime->format('Y-m-d H:i:s');
-
-					$newdate=$this->dateTimeConvertTimeZone($convertedDateTime);
-					
-					$package['id'] = $each->id;
-					$package['refund_row_id'] = $each->refund_row_id;
-					// $package['refund_row_id'] = "ABCD";
-					$package['payment_id'] = $each->invoice_no;
-					$package['name'] = $each->name;
-					$package['email'] = $each->email_id;
-					$package['mobile'] = $each->mobile_no;
-					$package['repeiptmethod'] = $repeiptmethod;
-					$package['c_type'] = $each->c_type;
-					$package['transaction_id'] = $each->refund_transaction;
-					// $package['amount'] = $each->amount;
-					$package['amount'] = $each->refund_amount?$each->refund_amount:$each->amount;
-					//$package['amount'] = $each->refund_amount;
-					$package['date'] =$newdate;
-					$package['status'] = "Refund";
-					$package['card_no'] = $each->card_no;
-					$package['card_type'] = $each->card_type;
-					$mem[] = $package; 
-				}
-			}
-		}
-		array_multisort(array_column($mem, 'date'), SORT_DESC, $mem);
-		//echo '<pre>'; print_r($mem) ; die; 
-		$data['mem'] = $mem;
-		
-	
+		//echo '<pre>';print_r($package_data_card);die;
 
 		tcpdf();
 		$obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -271,15 +186,7 @@ $refund_data_online = $this->Inventory_graph_model->get_full_refund_online($star
 		$enddate = date('M  jS, Y', strtotime($end_date));
 		$enddatee = date("M  jS, Y h:i A");
 	
-		 $i = 0;
-		 $total_item = 0;
-		 $total_paid = 0;
-		//foreach ($package_data_array as $aa_data) 
-		//{
-		//	$total = $aa_data['amount'];
-			//$total_item = 	$i++;
-			//$total_paid+= number_format(($total),2);
-		//}
+		
 		
 		 $j = 0;
 		 $total_item_refund = 0;
@@ -300,421 +207,212 @@ $refund_data_online = $this->Inventory_graph_model->get_full_refund_online($star
 			$total_item_refund_invoice = 	$j++;
 			$total_paid_refund_invoice+= $ab_data['refund_amount'];
 		}
-		$jjj = 0;
-		 $total_item_refund_invoice_rec = 0;
-		 $total_paid_refund_invoice_rec = 0;
-		foreach ($refund_data_search_invoice_rec as $abc_data) 
-		{
-			$total = number_format(($abc_data['refund_amount']),2);
-			$total_item_refund_invoice_rec = 	$j++;
-			$total_paid_refund_invoice_rec+= $abc_data['refund_amount'];
-		}
 		
-		 $k = 0;
-		 $total_item_cash = 0;
-		 $total_paid_cash = 0;
-			foreach ($package_data_cash as $a_data) 
-			{
-				
-			$total = number_format(($a_data['amount']),2);
-			$total_item_cash = 	$k++;
-			$total_paid_cash+= $total;
-			
-			 if ($a_data['status'] == 'pending') {
-				$status =  ucfirst($a_data['status']) ;
-			} elseif ($a_data['status'] == 'confirm' ||  $a_data['status'] == 'Chargeback_Confirm' ) {
-				 $status = 'Paid';
-			} elseif ($a_data['status'] == 'declined') {
-				$status = ucfirst($a_data['status']) ;
-			} elseif ($a_data['status'] == 'Refund') {
-				 $status = ' Refund ';
-			}		
-                 $receipt = (isset($a_data['repeiptmethod']) && !empty($a_data['repeiptmethod']))? $a_data['repeiptmethod'] : 'No Receipt';	
-				
-			
-		$count++;
-		
-			$pyadate=str_replace("-","",$a_data['express_transactiondate']);
-				$paytime=str_replace(":","",$a_data['express_transactiontime']);
-				$each->express_transactiontimezone; //  UTC-05:00:00
-      
-				$PayYear=substr($pyadate,0,4); 
-				$PayMonth=substr($pyadate,4,2); 
-				$PayDay=substr($pyadate,6,2); 
+		foreach ($package_data_cash as $a_data) {
 
-				$PayHours=substr($paytime,0,2); 
-				$PayMinut=substr($paytime,2,2); 
-				$PaySecond=substr($paytime,4,2);
-				
-				if(!empty($PayYear) && !empty($PayMonth) && !empty($PayDay) &&  !empty($PayHours) && !empty($PayMinut) &&!empty( $PaySecond)){
-				$payDateTime=$PayYear.'-'.$PayMonth.'-'.$PayDay.' '.$PayHours.':'.$PayMinut.':'.$PaySecond;  
-				// $date = new DateTime($payDateTime, new DateTimeZone('UTC'));
-                // $date->setTimezone(new DateTimeZone('America/Chicago'));
-                // $convertedDatetime=$date->format('Y-m-d H:i:s'); 
-			    $TransactiondateTime=$this->dateTimeConvertTimeZone($payDateTime); 
-				}
-				else {
-					
-				     $TransactiondateTime=$this->dateTimeConvertTimeZone($a_data['add_date']);
-				}
-						 $newdate = date("M d Y h:i A", strtotime($TransactiondateTime));		
-			  $textcolors .= '<tr>
+			if ($a_data['status'] == 'confirm' ||  $a_data['status'] == 'Chargeback_Confirm' ) {
+				 $status = 'Paid';
+			} else {
+				$status = ucfirst($a_data['status']) ;
+			} 	
+          
+			    $TransactiondateTime=$this->dateTimeConvertTimeZone($a_data['add_date'],$time_zone);
+			
+			$newdate = date("M d Y h:i A", strtotime($TransactiondateTime));		
+			$textcolors .= '<tr>
 				<td width="21%"  style="border-left: 1px solid grey; border-bottom:1px solid grey;font-size: 10px;" >'.$a_data['transaction_id'].'</td>
 				<td width="12%" style="border-bottom:1px solid grey;font-size: 10px;">'.ucfirst($a_data['card_type']).'</td>
 				<td width="12%" style="border-bottom:1px solid grey;font-size: 10px;">'.ucfirst($a_data['transaction_type']).'</td>
 				<td width="10%" style="border-bottom:1px solid grey">$ '.number_format($a_data['amount'], 2).'</td>';
 				
 				if ($merchant_data[0]->csv_Customer_name > 0) {
-				$textcolors .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;">'.$a_data['name'].'</td>';
-											 }else
-											 {
-				$textcolors .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;"></td>';	 
-											 }
-				
+					$textcolors .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;">'.$a_data['name'].'</td>';
+				} else {
+					$textcolors .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;"></td>';
+				}
 				$textcolors .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;">'.$newdate.'</td>
 				<td width="8%" style="border-bottom:1px solid grey;font-size: 10px;">'.$status.'</td>
 				<td width="9%" style="border-right: 1px solid grey; border-bottom:1px solid grey;font-size: 10px;">'.ucfirst($a_data['mname']).'</td>
-				
 			</tr>';
-			
 		}
 		
-		foreach ($package_data_splite as $a_data) 
-			{
-			 if ($a_data['status'] == 'pending') {
-				$status =  ucfirst($a_data['status']) ;
-			} elseif ($a_data['status'] == 'confirm' ||  $a_data['status'] == 'Chargeback_Confirm' ) {
-				 $status = 'Paid';
-			} elseif ($a_data['status'] == 'declined') {
-				$status = ucfirst($a_data['status']) ;
-			} elseif ($a_data['status'] == 'Refund') {
-				 $status = ' Refund ';
-			}		
-                 $receipt = (isset($a_data['repeiptmethod']) && !empty($a_data['repeiptmethod']))? $a_data['repeiptmethod'] : 'No Receipt';	
-				 	$pyadate=str_replace("-","",$a_data['express_transactiondate']);
-				$paytime=str_replace(":","",$a_data['express_transactiontime']);
-				$each->express_transactiontimezone; //  UTC-05:00:00
-      
-				$PayYear=substr($pyadate,0,4); 
-				$PayMonth=substr($pyadate,4,2); 
-				$PayDay=substr($pyadate,6,2); 
+		foreach ($package_data_splite as $a_data) {
 
-				$PayHours=substr($paytime,0,2); 
-				$PayMinut=substr($paytime,2,2); 
-				$PaySecond=substr($paytime,4,2);
-				
-				if(!empty($PayYear) && !empty($PayMonth) && !empty($PayDay) &&  !empty($PayHours) && !empty($PayMinut) &&!empty( $PaySecond)){
-				$payDateTime=$PayYear.'-'.$PayMonth.'-'.$PayDay.' '.$PayHours.':'.$PayMinut.':'.$PaySecond;  
-				// $date = new DateTime($payDateTime, new DateTimeZone('UTC'));
-                // $date->setTimezone(new DateTimeZone('America/Chicago'));
-                // $convertedDatetime=$date->format('Y-m-d H:i:s'); 
-			    $TransactiondateTime=$this->dateTimeConvertTimeZone($payDateTime); 
-				}
-				else {
-					$TransactiondateTime=$this->dateTimeConvertTimeZone($a_data['add_date']);
-				}
-						 $newdate = date("M d Y h:i A", strtotime($TransactiondateTime));
-			
+			if ($a_data['status'] == 'confirm' ||  $a_data['status'] == 'Chargeback_Confirm' ) {
+				 $status = 'Paid';
+			} else {
+				$status = ucfirst($a_data['status']) ;
+			} 
+				$TransactiondateTime=$this->dateTimeConvertTimeZone($a_data['add_date'],$time_zone);
+		
+			$newdate = date("M d Y h:i A", strtotime($TransactiondateTime));
 								
-			  $textcolors_Split .= '<tr>
+			$textcolors_Split .= '<tr>
 				<td width="21%"  style="border-left: 1px solid grey; border-bottom:1px solid grey;font-size: 10px;" >'.$a_data['invoice_no'].'</td>
-				
 				<td width="12%" style="border-bottom:1px solid grey;font-size: 10px;"></td>
 				<td width="12%" style="border-bottom:1px solid grey;font-size: 10px;"></td>
-				
 				<td width="10%" style="border-bottom:1px solid grey"></td>';
-				
-				
-				
 			
 				$textcolors_Split .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;"></td>
 				<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;"></td>
 				<td width="8%" style="border-bottom:1px solid grey;font-size: 10px;">'.$status.'</td>
 				<td width="9%" style="border-right: 1px solid grey; border-bottom:1px solid grey;font-size: 10px;">'.ucfirst($a_data['mname']).'</td>
 			</tr>';
-		
 			
-		if ($a_data['transaction_type'] == "split") {	
-		$merchant_id = $this->session->userdata('merchant_id');
-		$this->db->where('invoice_no', $a_data['invoice_no']);
-		$this->db->where('merchant_id ', $merchant_id);
-		$query = $this->db->get('pos');
-		$split_payment = $query->result_array();
-			
-			//$parent = $this->Inventory_model->get_full_inventory_reportdata($data['start_date'],$data['end_date'],$merchant_id,$a_data['main_item_id']);
-				foreach ($split_payment as $split_payment_Data) 
-                        {
-							
-							 if ($split_payment_Data['status'] == 'pending') {
-				$status =  ucfirst($split_payment_Data['status']) ;
-			} elseif ($split_payment_Data['status'] == 'confirm' ||  $split_payment_Data['status'] == 'Chargeback_Confirm' ) {
-				 $status = 'Paid';
-			} elseif ($split_payment_Data['status'] == 'declined') {
-				$status = ucfirst($split_payment_Data['status']) ;
-			} elseif ($split_payment_Data['status'] == 'Refund') {
-				 $status = ' Refund ';
-			}		
-                 $receipt = (isset($split_payment_Data['repeiptmethod']) && !empty($split_payment_Data['repeiptmethod']))? $split_payment_Data['repeiptmethod'] : 'No Receipt';	
-				 	$pyadate=str_replace("-","",$split_payment_Data['express_transactiondate']);
-				$paytime=str_replace(":","",$split_payment_Data['express_transactiontime']);
-				$each->express_transactiontimezone; //  UTC-05:00:00
-      
-				$PayYear=substr($pyadate,0,4); 
-				$PayMonth=substr($pyadate,4,2); 
-				$PayDay=substr($pyadate,6,2); 
+			if ($a_data['transaction_type'] == "split") {
+				$merchant_id = $this->session->userdata('merchant_id');
+				$this->db->where('invoice_no', $a_data['invoice_no']);
+				$this->db->where('merchant_id ', $merchant_id);
+				$query = $this->db->get('pos');
+				$split_payment = $query->result_array();
+				
+				//$parent = $this->Inventory_model->get_full_inventory_reportdata($data['start_date'],$data['end_date'],$merchant_id,$a_data['main_item_id']);
+				foreach ($split_payment as $split_payment_Data) {
 
-				$PayHours=substr($paytime,0,2); 
-				$PayMinut=substr($paytime,2,2); 
-				$PaySecond=substr($paytime,4,2);
-				
-				if(!empty($PayYear) && !empty($PayMonth) && !empty($PayDay) &&  !empty($PayHours) && !empty($PayMinut) &&!empty( $PaySecond)){
-				$payDateTime=$PayYear.'-'.$PayMonth.'-'.$PayDay.' '.$PayHours.':'.$PayMinut.':'.$PaySecond;  
-				// $date = new DateTime($payDateTime, new DateTimeZone('UTC'));
-                // $date->setTimezone(new DateTimeZone('America/Chicago'));
-                // $convertedDatetime=$date->format('Y-m-d H:i:s'); 
-			    $TransactiondateTime=$this->dateTimeConvertTimeZone($payDateTime); 
-				}
-				else {
-					$TransactiondateTime=$this->dateTimeConvertTimeZone($a_data['add_date']);
-				}
-						 $newdate = date("M d Y h:i A", strtotime($TransactiondateTime));
+					if ($split_payment_Data['status'] == 'pending') {
+						$status =  ucfirst($split_payment_Data['status']) ;
+					} elseif ($split_payment_Data['status'] == 'confirm' ||  $split_payment_Data['status'] == 'Chargeback_Confirm' ) {
+						 $status = 'Paid';
+					} elseif ($split_payment_Data['status'] == 'declined') {
+						$status = ucfirst($split_payment_Data['status']) ;
+					} elseif ($split_payment_Data['status'] == 'Refund') {
+						 $status = ' Refund ';
+					}		
 
-						 if($split_payment_Data['reference_numb_opay']!='0' && $split_payment_Data['reference_numb_opay']!=''){
-                                   $split_payment_Data['card_type'] = ucfirst($split_payment_Data['card_type']).'('.$split_payment_Data['reference_numb_opay'].')';
-						 }	
-						 else
-						 {
-                   $split_payment_Data['card_type'] = ucfirst($split_payment_Data['card_type']);
-						 }
-				 
-							$textcolors_Split .= '<tr>
-							
-				<td width="21%" align="centre"  style="border-left: 1px solid grey; border-bottom:1px solid grey;font-size: 10px;" >'.$split_payment_Data['transaction_id'].'</td>
-				<td width="12%" style="border-bottom:1px solid grey;font-size: 10px;">'.($split_payment_Data['card_type']).'</td>
-				<td width="12%" style="border-bottom:1px solid grey;font-size: 10px;">'.ucfirst($split_payment_Data['transaction_type']).'</td>
-				<td width="10%" style="border-bottom:1px solid grey">$ '.number_format($split_payment_Data['amount'], 2).'</td>
-				';
+	               
+						$TransactiondateTime=$this->dateTimeConvertTimeZone($a_data['add_date'],$time_zone);
 				
-                                if ($merchant_data[0]->csv_Customer_name > 0) {
-					$textcolors_Split .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;">'.$split_payment_Data['name'].'</td>';
-											 }else
-											 {
-											$textcolors_Split .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;"></td>';	 
-											 }
-				$textcolors_Split .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;">'.$newdate.'</td>
-				<td width="8%" style=" border-bottom:1px solid grey;font-size: 10px;">'.$status.'</td>
-				<td width="9%" style="border-right: 1px solid grey; border-bottom:1px solid grey;font-size: 10px;">'.ucfirst($split_payment_Data['name']).'</td>
-				
-                
-                      </tr>';
-						 }
-		 } 
-						 
-		  
+					$newdate = date("M d Y h:i A", strtotime($TransactiondateTime));
+
+					if($split_payment_Data['reference_numb_opay']!='0' && $split_payment_Data['reference_numb_opay']!=''){
+	                    $split_payment_Data['card_type'] = ucfirst($split_payment_Data['card_type']).'('.$split_payment_Data['reference_numb_opay'].')';
+					} else {
+	                   $split_payment_Data['card_type'] = ucfirst($split_payment_Data['card_type']);
+					}
+
+					$textcolors_Split .= '<tr>
+						<td width="21%" align="centre"  style="border-left: 1px solid grey; border-bottom:1px solid grey;font-size: 10px;" >'.$split_payment_Data['transaction_id'].'</td>
+						<td width="12%" style="border-bottom:1px solid grey;font-size: 10px;">'.($split_payment_Data['card_type']).'</td>
+						<td width="12%" style="border-bottom:1px solid grey;font-size: 10px;">'.ucfirst($split_payment_Data['transaction_type']).'</td>
+						<td width="10%" style="border-bottom:1px solid grey">$ '.number_format($split_payment_Data['amount'], 2).'</td>';
+					
+	                    if ($merchant_data[0]->csv_Customer_name > 0) {
+							$textcolors_Split .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;">'.$split_payment_Data['name'].'</td>';
+						} else {
+							$textcolors_Split .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;"></td>';
+						}
+						$textcolors_Split .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;">'.$newdate.'</td>
+						<td width="8%" style=" border-bottom:1px solid grey;font-size: 10px;">'.$status.'</td>
+						<td width="9%" style="border-right: 1px solid grey; border-bottom:1px solid grey;font-size: 10px;">'.ucfirst($split_payment_Data['name']).'</td>
+	                </tr>';
+				}
+			}
 		}
 		
-		$l = 0;
-        $total_item_check = 0;
-		$total_paid_check = 0;
-		
-		foreach ($package_data_check as $a_data) 
-			{
-				
-			$total = number_format(($a_data['amount']),2);
-            $total_item_check = 	$l++;
-			$total_paid_check+= $total;
-				
-				if(!empty($a_data)) {
-			 if ($a_data['status'] == 'pending') {
-				$status =  ucfirst($a_data['status']) ;
-			} elseif ($a_data['status'] == 'confirm' ||  $a_data['status'] == 'Chargeback_Confirm' ) {
-				 $status = 'Paid';
-			} elseif ($a_data['status'] == 'declined') {
-				$status = ucfirst($a_data['status']) ;
-			} elseif ($a_data['status'] == 'Refund') {
-				 $status = ' Refund ';
-			}		
-                 $receipt = (isset($a_data['repeiptmethod']) && !empty($a_data['repeiptmethod']))? $a_data['repeiptmethod'] : 'No Receipt';	
-                 
-				 	$pyadate=str_replace("-","",$a_data['express_transactiondate']);
-				$paytime=str_replace(":","",$a_data['express_transactiontime']);
-				$each->express_transactiontimezone; //  UTC-05:00:00
-      
-				$PayYear=substr($pyadate,0,4); 
-				$PayMonth=substr($pyadate,4,2); 
-				$PayDay=substr($pyadate,6,2); 
-
-				$PayHours=substr($paytime,0,2); 
-				$PayMinut=substr($paytime,2,2); 
-				$PaySecond=substr($paytime,4,2);
-				
-				if(!empty($PayYear) && !empty($PayMonth) && !empty($PayDay) &&  !empty($PayHours) && !empty($PayMinut) &&!empty( $PaySecond)){
-				$payDateTime=$PayYear.'-'.$PayMonth.'-'.$PayDay.' '.$PayHours.':'.$PayMinut.':'.$PaySecond;  
-				// $date = new DateTime($payDateTime, new DateTimeZone('UTC'));
-                // $date->setTimezone(new DateTimeZone('America/Chicago'));
-                // $convertedDatetime=$date->format('Y-m-d H:i:s'); 
-			    $TransactiondateTime=$this->dateTimeConvertTimeZone($payDateTime); 
-				}
-				else {
-					$TransactiondateTime=$this->dateTimeConvertTimeZone($a_data['add_date']);
-				}
-						 $newdate = date("M d Y h:i A", strtotime($TransactiondateTime));
-			
-								
-			  $textcolors_Check .= '<tr>
-				<td width="21%"  style="border-left: 1px solid grey; border-bottom:1px solid grey;font-size: 10px;" >'.$a_data['transaction_id'].'</td>
-				<td width="12%" style="border-bottom:1px solid grey;font-size: 10px;">'.ucfirst($a_data['card_type']).'</td>
-				<td width="12%" style="border-bottom:1px solid grey;font-size: 10px;">'.ucfirst($a_data['transaction_type']).'</td>
-				
-				<td width="10%" style="border-bottom:1px solid grey">$ '.number_format($a_data['amount'], 2).'</td>';
-				
-				if ($merchant_data[0]->csv_Customer_name > 0) {
-				$textcolors_Check .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;">'.$a_data['name'].'</td>';
-											 }else
-											 {
-				$textcolors_Check .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;"></td>';	 
-											 }
-				
-				$textcolors_Check .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;">'.$newdate.'</td>
-					<td width="8%" style="border-bottom:1px solid grey;font-size: 10px;">'.$status.'</td>
-				<td width="9%" style="border-right: 1px solid grey; border-bottom:1px solid grey;font-size: 10px;">'.ucfirst($a_data['mname']).'</td>
-			</tr>';
-				}
-				else{
-					$textcolors_Check .= '<tr> <td colspan="7">No Data</td>  </tr>';
-				}
-						 
-		  
-		}
-		
-		$m = 0;
-        $total_item_online = 0;
-		$total_paid_online = 0;
-		
-		foreach ($package_data_online as $a_data) 
-			{
-				$total = number_format(($a_data['amount']),2);
-                $total_item_online = 	$m++;
-			    $total_paid_online+= $total;
-				
-				if(!empty($a_data)) {
-			 if ($a_data['status'] == 'pending') {
-				$status =  ucfirst($a_data['status']) ;
-			} elseif ($a_data['status'] == 'confirm' ||  $a_data['status'] == 'Chargeback_Confirm' ) {
-				 $status = 'Paid';
-			} elseif ($a_data['status'] == 'declined') {
-				$status = ucfirst($a_data['status']) ;
-			} elseif ($a_data['status'] == 'Refund') {
-				 $status = ' Refund ';
-			}		
-                 $receipt = (isset($a_data['repeiptmethod']) && !empty($a_data['repeiptmethod']))? $a_data['repeiptmethod'] : 'No Receipt';	
-				 	$pyadate=str_replace("-","",$a_data['express_transactiondate']);
-				$paytime=str_replace(":","",$a_data['express_transactiontime']);
-				$each->express_transactiontimezone; //  UTC-05:00:00
-      
-				$PayYear=substr($pyadate,0,4); 
-				$PayMonth=substr($pyadate,4,2); 
-				$PayDay=substr($pyadate,6,2); 
-
-				$PayHours=substr($paytime,0,2); 
-				$PayMinut=substr($paytime,2,2); 
-				$PaySecond=substr($paytime,4,2);
-				
-				if(!empty($PayYear) && !empty($PayMonth) && !empty($PayDay) &&  !empty($PayHours) && !empty($PayMinut) &&!empty( $PaySecond)){
-				$payDateTime=$PayYear.'-'.$PayMonth.'-'.$PayDay.' '.$PayHours.':'.$PayMinut.':'.$PaySecond;  
-				// $date = new DateTime($payDateTime, new DateTimeZone('UTC'));
-                // $date->setTimezone(new DateTimeZone('America/Chicago'));
-                // $convertedDatetime=$date->format('Y-m-d H:i:s'); 
-			    $TransactiondateTime=$this->dateTimeConvertTimeZone($payDateTime); 
-				}
-				else {
-					$TransactiondateTime=$this->dateTimeConvertTimeZone($a_data['add_date']);
-				}
-						 $newdate = date("M d Y h:i A", strtotime($TransactiondateTime));
-			
-						if($a_data['reference_numb_opay']!='0' && $a_data['reference_numb_opay']!=''){
-                                  // $a_data['card_type'] = $a_data['reference_numb_opay'];
-
-                                    $a_data['card_type'] = ucfirst($a_data['card_type']).'('.$a_data['reference_numb_opay'].')';
-						 }	
-						 else
-						 {
-                   $a_data['card_type'] = ucfirst($a_data['card_type']);
-						 }		
-			  $textcolors_Online .= '<tr>
-				<td width="21%"  style="border-left: 1px solid grey; border-bottom:1px solid grey;font-size: 10px;" >'.$a_data['transaction_id'].'</td>
-				<td width="12%" style="border-bottom:1px solid grey;font-size: 10px;">'.($a_data['card_type']).'</td>
-				<td width="12%" style="border-bottom:1px solid grey;font-size: 10px;">'.ucfirst($a_data['transaction_type']).'</td>
-				
-				<td width="10%" style="border-bottom:1px solid grey">$ '.number_format($a_data['amount'], 2).'</td>';
-				
-				if ($merchant_data[0]->csv_Customer_name > 0) {
-				$textcolors_Online .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;">'.$a_data['name'].'</td>';
-											 }else
-											 {
-				$textcolors_Online .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;"></td>';	 
-											 }
-				
-				$textcolors_Online .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;">'.$newdate.'</td>
-					<td width="8%" style="border-bottom:1px solid grey;font-size: 10px;">'.$status.'</td>
-				<td width="9%" style="border-right: 1px solid grey; border-bottom:1px solid grey;font-size: 10px;">'.ucfirst($a_data['mname']).'</td>
-			</tr>';
-				}
-				else{
-					$textcolors_Online .= '<tr> <td colspan="7">No Data</td>  </tr>';
-				}
-						 
-		  
-		}
 	
 		
-		$n = 0;
-        $total_item_card = 0;
-		$total_paid_card = 0;
+		foreach ($package_data_check as $a_data) {
 		
-		foreach ($package_data_card as $a_data) 
-			{
-				$total = number_format(($a_data['amount']),2);
-                $total_item_card = 	$n++;
-			    $total_paid_card+= $total;
-			
-				if(!empty($a_data)) {
-			 if ($a_data['status'] == 'pending') {
-				$status =  ucfirst($a_data['status']) ;
-			} elseif ($a_data['status'] == 'confirm' ||  $a_data['status'] == 'Chargeback_Confirm' ) {
-				 $status = 'Paid';
-			} elseif ($a_data['status'] == 'declined') {
-				$status = ucfirst($a_data['status']) ;
-			} elseif ($a_data['status'] == 'Refund') {
-				 $status = ' Refund ';
-			}		
-                 $receipt = (isset($a_data['repeiptmethod']) && !empty($a_data['repeiptmethod']))? $a_data['repeiptmethod'] : 'No Receipt';	
-					$pyadate=str_replace("-","",$a_data['express_transactiondate']);
-				$paytime=str_replace(":","",$a_data['express_transactiontime']);
-				$each->express_transactiontimezone; //  UTC-05:00:00
-      
-				$PayYear=substr($pyadate,0,4); 
-				$PayMonth=substr($pyadate,4,2); 
-				$PayDay=substr($pyadate,6,2); 
-
-				$PayHours=substr($paytime,0,2); 
-				$PayMinut=substr($paytime,2,2); 
-				$PaySecond=substr($paytime,4,2);
 				
-				if(!empty($PayYear) && !empty($PayMonth) && !empty($PayDay) &&  !empty($PayHours) && !empty($PayMinut) &&!empty( $PaySecond)){
-				$payDateTime=$PayYear.'-'.$PayMonth.'-'.$PayDay.' '.$PayHours.':'.$PayMinut.':'.$PaySecond;  
-				// $date = new DateTime($payDateTime, new DateTimeZone('UTC'));
-                // $date->setTimezone(new DateTimeZone('America/Chicago'));
-                // $convertedDatetime=$date->format('Y-m-d H:i:s'); 
-			    $TransactiondateTime=$this->dateTimeConvertTimeZone($payDateTime); 
-				}
-				else {
-					$TransactiondateTime=$this->dateTimeConvertTimeZone($a_data['add_date']);
-				}
-						 $newdate = date("M d Y h:i A", strtotime($TransactiondateTime));
+			if(!empty($a_data)) {
+
+				if ($a_data['status'] == 'confirm' ||  $a_data['status'] == 'Chargeback_Confirm' ) {
+				 $status = 'Paid';
+			} else {
+				$status = ucfirst($a_data['status']) ;
+			} 	
+				
+			
+					$TransactiondateTime=$this->dateTimeConvertTimeZone($a_data['add_date'],$time_zone);
+				
+				$newdate = date("M d Y h:i A", strtotime($TransactiondateTime));
+								
+			  	$textcolors_Check .= '<tr>
+					<td width="21%"  style="border-left: 1px solid grey; border-bottom:1px solid grey;font-size: 10px;" >'.$a_data['transaction_id'].'</td>
+					<td width="12%" style="border-bottom:1px solid grey;font-size: 10px;">'.ucfirst($a_data['card_type']).'</td>
+					<td width="12%" style="border-bottom:1px solid grey;font-size: 10px;">'.ucfirst($a_data['transaction_type']).'</td>
+					<td width="10%" style="border-bottom:1px solid grey">$ '.number_format($a_data['amount'], 2).'</td>';
+				
+					if ($merchant_data[0]->csv_Customer_name > 0) {
+						$textcolors_Check .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;">'.$a_data['name'].'</td>';
+					} else {
+						$textcolors_Check .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;"></td>';
+					}
+				
+					$textcolors_Check .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;">'.$newdate.'</td>
+					<td width="8%" style="border-bottom:1px solid grey;font-size: 10px;">'.$status.'</td>
+					<td width="9%" style="border-right: 1px solid grey; border-bottom:1px solid grey;font-size: 10px;">'.ucfirst($a_data['mname']).'</td>
+				</tr>';
+			} else {
+				$textcolors_Check .= '<tr> <td colspan="7">No Data</td></tr>';
+			}
+		}
+		
+	
+		
+		foreach ($package_data_online as $a_data) {
+			
+				
+			if(!empty($a_data)) {
+
+			if ($a_data['status'] == 'confirm' ||  $a_data['status'] == 'Chargeback_Confirm' ) {
+				 $status = 'Paid';
+			} else {
+				$status = ucfirst($a_data['status']) ;
+			} 	
+				
+			
+					$TransactiondateTime=$this->dateTimeConvertTimeZone($a_data['add_date'],$time_zone);
+			
+				$newdate = date("M d Y h:i A", strtotime($TransactiondateTime));
+			
+				if($a_data['reference_numb_opay']!='0' && $a_data['reference_numb_opay']!=''){
+                    // $a_data['card_type'] = $a_data['reference_numb_opay'];
+                    $a_data['card_type'] = ucfirst($a_data['card_type']).'('.$a_data['reference_numb_opay'].')';
+				} else {
+                   	$a_data['card_type'] = ucfirst($a_data['card_type']);
+				}		
+			  	$textcolors_Online .= '<tr>
+					<td width="21%"  style="border-left: 1px solid grey; border-bottom:1px solid grey;font-size: 10px;" >'.$a_data['transaction_id'].'</td>
+					<td width="12%" style="border-bottom:1px solid grey;font-size: 10px;">'.($a_data['card_type']).'</td>
+					<td width="12%" style="border-bottom:1px solid grey;font-size: 10px;">'.ucfirst($a_data['transaction_type']).'</td>
+					
+					<td width="10%" style="border-bottom:1px solid grey">$ '.number_format($a_data['amount'], 2).'</td>';
+					
+					if ($merchant_data[0]->csv_Customer_name > 0) {
+						$textcolors_Online .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;">'.$a_data['name'].'</td>';
+					}else {
+						$textcolors_Online .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;"></td>';				 }
+				
+					$textcolors_Online .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;">'.$newdate.'</td>
+					<td width="8%" style="border-bottom:1px solid grey;font-size: 10px;">'.$status.'</td>
+					<td width="9%" style="border-right: 1px solid grey; border-bottom:1px solid grey;font-size: 10px;">'.ucfirst($a_data['mname']).'</td>
+				</tr>';
+			} else {
+				$textcolors_Online .= '<tr> <td colspan="7">No Data</td>  </tr>';
+			}
+		}
+
+		
+		
+		foreach ($package_data_card as $a_data) {
+			
+			
+			if(!empty($a_data)) {
+
+				if ($a_data['status'] == 'confirm' ||  $a_data['status'] == 'Chargeback_Confirm' ) {
+				 $status = 'Paid';
+			} else {
+				$status = ucfirst($a_data['status']) ;
+			} 	
+
+
+				$TransactiondateTime=$this->dateTimeConvertTimeZone($a_data['add_date'],$time_zone);
+				
+				$newdate = date("M d Y h:i A", strtotime($TransactiondateTime));
 			
 								
-			  $textcolors_Card .= '<tr>
+			  	$textcolors_Card .= '<tr>
 				<td width="21%"  style="border-left: 1px solid grey; border-bottom:1px solid grey;font-size: 10px;" >'.$a_data['transaction_id'].'</td>
 				
 				<td width="12%" style="border-bottom:1px solid grey;font-size: 10px;">'.ucfirst($a_data['card_type']).'</td>
@@ -734,36 +432,27 @@ $refund_data_online = $this->Inventory_graph_model->get_full_refund_online($star
 				$textcolors_Card .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;">'.$newdate.'</td>
 				<td width="8%" style="border-bottom:1px solid grey;font-size: 10px;">'.$status.'</td>
 				<td width="9%" style="border-right: 1px solid grey; border-bottom:1px solid grey;font-size: 10px;">'.ucfirst($a_data['mname']).'</td>
-			</tr>';
-				}
-				else{
-					$textcolors_Card .= '<tr> <td colspan="7">No Data</td>  </tr>';
-				}
-						 
-		  
+				</tr>';
+			} else {
+				$textcolors_Card .= '<tr> <td colspan="7">No Data</td>  </tr>';
+			}
 		}
 		
-		foreach ($package_data_card_invoice as $a_data) 
-			{
-				
-			
-				if(!empty($a_data)) {
-			 if ($a_data['status'] == 'pending') {
-				$status =  ucfirst($a_data['status']) ;
-			} elseif ($a_data['status'] == 'confirm' ||  $a_data['status'] == 'Chargeback_Confirm' ) {
+		foreach ($package_data_card_invoice as $a_data) {
+			if(!empty($a_data)) {
+
+					if ($a_data['status'] == 'confirm' ||  $a_data['status'] == 'Chargeback_Confirm' ) {
 				 $status = 'Paid';
-			} elseif ($a_data['status'] == 'declined') {
+			} else {
 				$status = ucfirst($a_data['status']) ;
-			} elseif ($a_data['status'] == 'Refund') {
-				 $status = ' Refund ';
-			}		
+			} 		
                
-					$TransactiondateTime=$this->dateTimeConvertTimeZone($a_data['add_date']);
+					$TransactiondateTime=$this->dateTimeConvertTimeZone($a_data['add_date'],$time_zone);
 				
 						 $newdate = date("M d Y h:i A", strtotime($TransactiondateTime));
 			
 								
-			  $textcolors_Card .= '<tr>
+			  	$textcolors_Card .= '<tr>
 				<td width="21%"  style="border-left: 1px solid grey; border-bottom:1px solid grey;font-size: 10px;" >'.$a_data['transaction_id'].'</td>
 				
 				<td width="12%" style="border-bottom:1px solid grey;font-size: 10px;">'.ucfirst($a_data['card_type']).'</td>
@@ -783,7 +472,7 @@ $refund_data_online = $this->Inventory_graph_model->get_full_refund_online($star
 				$textcolors_Card .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;">'.$newdate.'</td>
 				<td width="8%" style="border-bottom:1px solid grey;font-size: 10px;">'.$status.'</td>
 				<td width="9%" style="border-right: 1px solid grey; border-bottom:1px solid grey;font-size: 10px;">'.ucfirst($a_data['mname']).'</td>
-			</tr>';
+				</tr>';
 				}
 				else{
 					$textcolors_Card .= '<tr> <td colspan="7">No Data</td>  </tr>';
@@ -792,22 +481,16 @@ $refund_data_online = $this->Inventory_graph_model->get_full_refund_online($star
 		  
 		}
 		
-				foreach ($package_data_card_invoice_re as $a_data) 
-			{
-				
-			
-				if(!empty($a_data)) {
-			 if ($a_data['status'] == 'pending') {
-				$status =  ucfirst($a_data['status']) ;
-			} elseif ($a_data['status'] == 'confirm' ||  $a_data['status'] == 'Chargeback_Confirm' ) {
+		foreach ($package_data_card_invoice_re as $a_data) {
+			if(!empty($a_data)) {
+
+			if ($a_data['status'] == 'confirm' ||  $a_data['status'] == 'Chargeback_Confirm' ) {
 				 $status = 'Paid';
-			} elseif ($a_data['status'] == 'declined') {
+			} else {
 				$status = ucfirst($a_data['status']) ;
-			} elseif ($a_data['status'] == 'Refund') {
-				 $status = ' Refund ';
-			}		
-               
-					$TransactiondateTime=$this->dateTimeConvertTimeZone($a_data['add_date']);
+			} 	
+
+					$TransactiondateTime=$this->dateTimeConvertTimeZone($a_data['add_date'],$time_zone);
 				
 						 $newdate = date("M d Y h:i A", strtotime($TransactiondateTime));
 			
@@ -832,7 +515,7 @@ $refund_data_online = $this->Inventory_graph_model->get_full_refund_online($star
 				$textcolors_Card .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;">'.$newdate.'</td>
 				<td width="8%" style="border-bottom:1px solid grey;font-size: 10px;">'.$status.'</td>
 				<td width="9%" style="border-right: 1px solid grey; border-bottom:1px solid grey;font-size: 10px;">'.ucfirst($a_data['mname']).'</td>
-			</tr>';
+				</tr>';
 				}
 				else{
 					$textcolors_Card .= '<tr> <td colspan="7">No Data</td>  </tr>';
@@ -842,33 +525,37 @@ $refund_data_online = $this->Inventory_graph_model->get_full_refund_online($star
 		}
 		
 				$o = 0;
+				$o1 = 0;
+				$o2 = 0;
         $total_item_card = 0;
 		$total_paid_card = 0;
+
+		$total_item_card_f = 0;
+		$total_paid_card_f = 0;
+		$total_item_card_p = 0;
+		$total_paid_card_p = 0;
 		
-		foreach ($refund_data_search as $a_data) 
-			{
-				$total = number_format(($a_data['refund_amount']),2);
-                $total_item_card = 	$o++;
-			    $total_paid_card+= $total;
-			
-				if(!empty($a_data)) {
-			 if ($a_data['status'] == 'pending') {
-				$status =  ucfirst($a_data['status']) ;
-			} elseif ($a_data['status'] == 'confirm' ||  $a_data['status'] == 'Chargeback_Confirm' ) {
-				 $status = 'Paid';
-			} elseif ($a_data['status'] == 'declined') {
-				$status = ucfirst($a_data['status']) ;
-			} elseif ($a_data['status'] == 'Refund') {
-				 $status = ' Refund ';
-			}		
-                 $receipt = (isset($a_data['repeiptmethod']) && !empty($a_data['repeiptmethod']))? $a_data['repeiptmethod'] : 'No Receipt';
+		foreach ($refund_data_search_full as $key1 => $a_data) {
+			$total = number_format(($a_data['refund_amount']),2);
+            $total_item_card = 	$o++;
+		    $total_paid_card+= $a_data['refund_amount'];
+
+		    $total_item_card_f = ($key1+1);
+		    $total_paid_card_f+= $a_data['refund_amount'];
+		
+			if(!empty($a_data)) {
+				if ($a_data['status'] == 'confirm' ||  $a_data['status'] == 'Chargeback_Confirm' ) {
+				 	$status = 'Paid';
+				} else {
+					$status = ucfirst($a_data['status']) ;
+				}
                  
-                 $TransactiondateTime=$this->dateTimeConvertTimeZone($a_data['refund_dt']);
+                $TransactiondateTime=$this->dateTimeConvertTimeZone($a_data['refund_dt'],$time_zone);
 				
-						 $newdate = date("M d Y h:i A", strtotime($TransactiondateTime));
+				$newdate = date("M d Y h:i A", strtotime($TransactiondateTime));
 			
 								
-			  $textcolors_Refund .= '<tr>
+			  	$textcolors_Refund .= '<tr>
 				<td width="21%"  style="border-left: 1px solid grey; border-bottom:1px solid grey;font-size: 10px;" >'.$a_data['refund_transaction'].'</td>
 				
 				<td width="12%" style="border-bottom:1px solid grey;font-size: 10px;">'.ucfirst($a_data['card_type']).'</td>
@@ -888,13 +575,58 @@ $refund_data_online = $this->Inventory_graph_model->get_full_refund_online($star
 				$textcolors_Refund .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;">'.$newdate.'</td>
 				<td width="8%" style="border-bottom:1px solid grey;font-size: 10px;">'.$status.'</td>
 				<td width="9%" style="border-right: 1px solid grey; border-bottom:1px solid grey;font-size: 10px;">'.ucfirst($a_data['mname']).'</td>
-			</tr>';
+				</tr>';
+			
+			} else {
+				$textcolors_Refund .= '<tr> <td colspan="7">No Data</td>  </tr>';
+			}
+		}
+
+		foreach ($refund_data_search_split as $key2 => $a_data) {
+			$total = number_format(($a_data['refund_amount']),2);
+            $total_item_card = 	$o++;
+		    $total_paid_card+= $a_data['refund_amount'];
+
+		    $total_item_card_p = ($key2+1);
+		    $total_paid_card_p+= $a_data['refund_amount'];
+		
+			if(!empty($a_data)) {
+				if ($a_data['status'] == 'confirm' ||  $a_data['status'] == 'Chargeback_Confirm' ) {
+				 	$status = 'Paid';
+				} else {
+					$status = ucfirst($a_data['status']) ;
 				}
-				else{
-					$textcolors_Refund .= '<tr> <td colspan="7">No Data</td>  </tr>';
-				}
-						 
-		  
+                 
+                $TransactiondateTime=$this->dateTimeConvertTimeZone($a_data['refund_dt'],$time_zone);
+				
+				$newdate = date("M d Y h:i A", strtotime($TransactiondateTime));
+			
+								
+			  	$textcolors_Refund .= '<tr>
+				<td width="21%"  style="border-left: 1px solid grey; border-bottom:1px solid grey;font-size: 10px;" >'.$a_data['refund_transaction'].'</td>
+				
+				<td width="12%" style="border-bottom:1px solid grey;font-size: 10px;">'.ucfirst($a_data['card_type']).'</td>
+				<td width="12%" style="border-bottom:1px solid grey;font-size: 10px;">'.ucfirst($a_data['transaction_type']).'</td>
+				
+				<td width="10%" style="border-bottom:1px solid grey">$ '.number_format($a_data['refund_amount'], 2).'</td>';
+				
+				if ($merchant_data[0]->csv_Customer_name > 0) {
+				$textcolors_Refund .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;">'.$a_data['name'].'</td>';
+											 }
+											 else
+											 {
+				$textcolors_Refund .= '<td  width="14%" style="border-bottom:1px solid grey;font-size: 10px;"></td>';	 
+											 }
+				
+			
+				$textcolors_Refund .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;">'.$newdate.'</td>
+				<td width="8%" style="border-bottom:1px solid grey;font-size: 10px;">'.$status.'</td>
+				<td width="9%" style="border-right: 1px solid grey; border-bottom:1px solid grey;font-size: 10px;">'.ucfirst($a_data['mname']).'</td>
+				</tr>';
+			
+			} else {
+				$textcolors_Refund .= '<tr> <td colspan="7">No Data</td>  </tr>';
+			}
 		}
 
 
@@ -903,18 +635,14 @@ $refund_data_online = $this->Inventory_graph_model->get_full_refund_online($star
 			{
 			
 				if(!empty($a_data)) {
-			 if ($a_data['status'] == 'pending') {
-				$status =  ucfirst($a_data['status']) ;
-			} elseif ($a_data['status'] == 'confirm' ||  $a_data['status'] == 'Chargeback_Confirm' ) {
+
+				if ($a_data['status'] == 'confirm' ||  $a_data['status'] == 'Chargeback_Confirm' ) {
 				 $status = 'Paid';
-			} elseif ($a_data['status'] == 'declined') {
+			} else {
 				$status = ucfirst($a_data['status']) ;
-			} elseif ($a_data['status'] == 'Refund') {
-				 $status = ' Refund ';
-			}		
-                 $receipt = (isset($a_data['repeiptmethod']) && !empty($a_data['repeiptmethod']))? $a_data['repeiptmethod'] : 'No Receipt';
+			} 		
                  
-                $TransactiondateTime=$this->dateTimeConvertTimeZone($a_data['refund_dt']);
+                $TransactiondateTime=$this->dateTimeConvertTimeZone($a_data['refund_dt'],$time_zone);
 				
 				$newdate = date("M d Y h:i A", strtotime($TransactiondateTime));
 								
@@ -947,68 +675,22 @@ $refund_data_online = $this->Inventory_graph_model->get_full_refund_online($star
 		  
 		}
 
-		foreach ($refund_data_search_invoice_rec as $a_data) 
-			{
-			
-				if(!empty($a_data)) {
-			 if ($a_data['status'] == 'pending') {
-				$status =  ucfirst($a_data['status']) ;
-			} elseif ($a_data['status'] == 'confirm' ||  $a_data['status'] == 'Chargeback_Confirm' ) {
-				 $status = 'Paid';
-			} elseif ($a_data['status'] == 'declined') {
-				$status = ucfirst($a_data['status']) ;
-			} elseif ($a_data['status'] == 'Refund') {
-				 $status = ' Refund ';
-			}		
-                 $receipt = (isset($a_data['repeiptmethod']) && !empty($a_data['repeiptmethod']))? $a_data['repeiptmethod'] : 'No Receipt';
-                 
-                 $TransactiondateTime=$this->dateTimeConvertTimeZone($a_data['refund_dt']);
-				
-				$newdate = date("M d Y h:i A", strtotime($TransactiondateTime));
-								
-			  $textcolors_Refund .= '<tr>
-				<td width="21%"  style="border-left: 1px solid grey; border-bottom:1px solid grey;font-size: 10px;" >'.$a_data['refund_transaction'].'</td>
-				
-				<td width="12%" style="border-bottom:1px solid grey;font-size: 10px;">'.ucfirst($a_data['card_type']).'</td>
-				<td width="12%" style="border-bottom:1px solid grey;font-size: 10px;">R-Invoice</td>
-				
-				<td width="10%" style="border-bottom:1px solid grey">$ '.number_format($a_data['refund_amount'], 2).'</td>';
-				
-				if ($merchant_data[0]->csv_Customer_name > 0) {
-				$textcolors_Refund .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;">'.$a_data['name'].'</td>';
-											 }
-											 else
-											 {
-				$textcolors_Refund .= '<td  width="14%" style="border-bottom:1px solid grey;font-size: 10px;"></td>';	 
-											 }
-				
-			
-				$textcolors_Refund .= '<td width="14%" style="border-bottom:1px solid grey;font-size: 10px;">'.$newdate.'</td>
-				<td width="8%" style="border-bottom:1px solid grey;font-size: 10px;">'.$status.'</td>
-				<td width="9%" style="border-right: 1px solid grey; border-bottom:1px solid grey;font-size: 10px;">'.ucfirst($a_data['mname']).'</td>
-			</tr>';
-				}
-				else{
-					$textcolors_Refund .= '<tr> <td colspan="7">No Data</td>  </tr>';
-				}
-						 
-		  
-		}
+
 
 		$html = '
 		<style>
 		.borderr {
-  border: 2px solid red;
-  padding: 10px;
-  border-radius: 25px;
-}
-		</style>
-		<table   cellpadding="3">
-			<tr>
-				
-  <td align="left" colspan="4">
-  <span style="font-size: 25px;font-weight:900;">'.ucfirst($data['merchantdata'][0]['business_name']).'</span> 
-  <br >&nbsp;&nbsp;<span style="font-size: 15px;font-weight:800;">Transactions across all terminals  </span> 
+		  border: 2px solid red;
+		  padding: 10px;
+		  border-radius: 25px;
+		}
+				</style>
+				<table   cellpadding="3">
+					<tr>
+						
+		  <td align="left" colspan="4">
+		  <span style="font-size: 25px;font-weight:900;">'.ucfirst($data['merchantdata'][0]['business_name']).'</span> 
+		  <br >&nbsp;&nbsp;<span style="font-size: 15px;font-weight:800;">Transactions across all terminals  </span> 
  
 				 </td>
 				 <td>
@@ -1024,7 +706,7 @@ $refund_data_online = $this->Inventory_graph_model->get_full_refund_online($star
 				
 				</td>
 				
-       <td align="left" colspan="2">
+       	<td align="left" colspan="2">
  
 				 </td>
 				 <td>
@@ -1034,11 +716,11 @@ $refund_data_online = $this->Inventory_graph_model->get_full_refund_online($star
 			<tr>
 				
 					<td  align="left" colspan="4"> 
-				&nbsp;Total # Transactions: '.(($package_data_total_count[0]['id']+$package_data_total_count_invoice[0]['id']+$package_data_total_count_invoice_re[0]['id'])-($j+$jj+$jjj)).'
+				&nbsp;Total # Transactions: '.(($package_data_total_count[0]['id']+$package_data_total_count_invoice[0]['id']+$package_data_total_count_invoice_re[0]['id'])-($refund_data_total_new[0]['id'])).'
 				
 				</td>
 				
-       <td align="left" colspan="3">
+       	<td align="left" colspan="3">
  
 				 </td>
 				 <td>
@@ -1068,15 +750,14 @@ $refund_data_online = $this->Inventory_graph_model->get_full_refund_online($star
 				
 			</tr>
 			
-	
 			<tr>
 				<td style="padding: 10px;" align="left"> <h3>Purchases ('.($package_data_total_count[0]['id']+$package_data_total_count_invoice[0]['id']+$package_data_total_count_invoice_re[0]['id']).')</h3> </td>
 				<td align="right">  <h3> $'.number_format((($package_data_total_count[0]['amount']+$package_data_total_count_invoice[0]['amount']+$package_data_total_count_invoice_re[0]['amount']) -($package_data_total_pos_tax[0]['amount']+$package_data_total_invoice_tax[0]['amount'])),2).' </h3> </td>
 				
 			</tr>
 			<tr>
-				<td style="padding: 10px;" align="left"> <h3>Refunds ('.($j+$jj+$jjj).')</h3> </td>
-				<td align="right" > <h3>$'.number_format(($total_paid_refund+$total_paid_refund_invoice+$total_paid_refund_invoice_rec),2).' </h3> </td>
+				<td style="padding: 10px;" align="left"> <h3>Refunds ('.($refund_data_total_new[0]['id']).')</h3> </td>
+				<td align="right" > <h3>$'.number_format(($refund_data_total_new[0]['amount']),2).' </h3> </td>
 				
 			</tr>
 			
@@ -1097,6 +778,7 @@ $refund_data_online = $this->Inventory_graph_model->get_full_refund_online($star
 				<td align="right" > <h3>$'.number_format(($package_data_total_pos_other_charges[0]['amount']+$package_data_total_invoice_other_charges[0]['amount']),2).' </h3> </td>
 				
 			</tr>
+
 		</table>
 		
 		
@@ -1106,12 +788,12 @@ $refund_data_online = $this->Inventory_graph_model->get_full_refund_online($star
 		<table    cellpadding="2" style="border: 1px solid grey;">
 		<tr >
 			<td  style="border-bottom:1px solid grey;padding: 10px; border-radius:10px;" align="left"> <h3>Net Total</h3> </td>
-			<td align="right" style="border-bottom:1px solid grey;"> <h3>$'.number_format(($package_data_total_count[0]['amount']+$package_data_total_count_invoice[0]['amount']+$package_data_total_count_invoice_re[0]['amount'])-($total_paid_refund+$total_paid_refund_invoice+$total_paid_refund_invoice_rec),2).'</h3> </td>
+			<td align="right" style="border-bottom:1px solid grey;"> <h3>$'.number_format(($package_data_total_count[0]['amount']+$package_data_total_count_invoice[0]['amount']+$package_data_total_count_invoice_re[0]['amount'])-($refund_data_total_new[0]['amount']),2).'</h3> </td>
 				
 			</tr>
 			<tr>
-				<td style="padding: 10px;" align="left"> <h3>Total Purchases ('.($package_data_total_count[0]['id']+$package_data_total_count_invoice[0]['id']+$package_data_total_count_invoice_re[0]['id']-$j+$jj+$jjj).')</h3> </td>
-				<td align="right">  <h3> $'.number_format(($package_data_total_count[0]['amount']+$package_data_total_count_invoice[0]['amount']+$package_data_total_count_invoice_re[0]['amount']-$total_paid_refund+$total_paid_refund_invoice+$total_paid_refund_invoice_rec),2).' </h3></td>
+				<td style="padding: 10px;" align="left"> <h3>Total Purchases ('.($package_data_total_count[0]['id']+$package_data_total_count_invoice[0]['id']+$package_data_total_count_invoice_re[0]['id']-$refund_data_total_new[0]['id']).')</h3> </td>
+				<td align="right">  <h3> $'.number_format(($package_data_total_count[0]['amount']+$package_data_total_count_invoice[0]['amount']+$package_data_total_count_invoice_re[0]['amount']-$refund_data_total_new[0]['amount']),2).' </h3></td>
 				
 			</tr>
 			
@@ -1122,8 +804,8 @@ $refund_data_online = $this->Inventory_graph_model->get_full_refund_online($star
 			</tr>
 			
 			<tr>
-				<td style="padding: 10px;" align="left"> <span style="font-size: 8px;">Card Purchases ('.($package_data_card_total[0]['id']+$package_data_total_count_invoice[0]['id']+$package_data_total_count_invoice_re[0]['id'] -$refund_data_card[0]['id']).')</span> </td>
-				<td align="right">  <span style="font-size: 8px;"> $'.number_format(($package_data_card_total[0]['amount']+$package_data_total_count_invoice[0]['amount']+$package_data_total_count_invoice_re[0]['amount']-$refund_data_card[0]['amount']),2).' </span> </td>
+				<td style="padding: 10px;" align="left"> <span style="font-size: 8px;">Card Purchases ('.($package_data_card_total[0]['id']+$package_data_total_count_invoice[0]['id']+$package_data_total_count_invoice_re[0]['id'] -$refund_data_card[0]['id'] - $total_item_card_p).')</span> </td>
+				<td align="right">  <span style="font-size: 8px;"> $'.number_format(($package_data_card_total[0]['amount']+$package_data_total_count_invoice[0]['amount']+$package_data_total_count_invoice_re[0]['amount']-$refund_data_card[0]['amount']-$total_paid_card_p),2).' </span> </td>
 				
 			</tr>
 			
@@ -1139,32 +821,32 @@ $refund_data_online = $this->Inventory_graph_model->get_full_refund_online($star
 			</tr>
 			
 			<tr>
-				<td style="padding: 10px;" align="left"> <h3>Refunds ('.($j+$jj+$jjj).')</h3> </td>
-				<td align="right" > <h3>$'.number_format(($total_paid_refund+$total_paid_refund_invoice+$total_paid_refund_invoice_rec),2).' </h3> </td>
+				<td style="padding: 10px;" align="left"> <h3>Refunds ('.($refund_data_total_new[0]['id']).')</h3> </td>
+				<td align="right" > <h3>$'.number_format(($refund_data_total_new[0]['amount']),2).' </h3> </td>
 				
 			</tr>
 			
 			<tr>
-				<td style="padding: 10px;" align="left"> <span style="font-size: 8px;">Cash Refunds ('.$refund_data_cash[0]['id'].')</span> </td>
-				<td align="right" > <span style="font-size: 8px;">$'.number_format($refund_data_cash[0]['amount'],2).'  </span> </td>
+				<td style="padding: 10px;" align="left"> <span style="font-size: 8px;">Cash Refunds ('.($refund_data_cash[0]['id'] + $refund_data_cash_s[0]['id']).')</span> </td>
+				<td align="right" > <span style="font-size: 8px;">$'.number_format(($refund_data_cash[0]['amount']+$refund_data_cash_s[0]['amount']),2).'  </span> </td>
 				
 			</tr>
 			
 			<tr>
-				<td style="padding: 10px;" align="left"> <span style="font-size: 8px;">Card Refunds ('.($refund_data_card[0]['id']+$jj+$jjj).')</span> </td>
-				<td align="right" > <span style="font-size: 8px;">$'.number_format(($refund_data_card[0]['amount']+$total_paid_refund_invoice+$total_paid_refund_invoice_rec),2).' </span> </td>
+				<td style="padding: 10px;" align="left"> <span style="font-size: 8px;">Card Refunds ('.($refund_data_card[0]['id'] + $refund_data_card_s[0]['id']).')</span> </td>
+				<td align="right" > <span style="font-size: 8px;">$'.number_format(($refund_data_card[0]['amount'] + $refund_data_card_s[0]['amount']),2).' </span> </td>
 				
 			</tr>
 
 			<tr>
-				<td style="padding: 10px;" align="left"> <span style="font-size: 8px;">Check Refunds ('.$refund_data_check[0]['id'].')</span> </td>
-				<td align="right" > <span style="font-size: 8px;">$'.number_format($refund_data_check[0]['amount'],2).'  </span> </td>
+				<td style="padding: 10px;" align="left"> <span style="font-size: 8px;">Check Refunds ('.($refund_data_check[0]['id']+$refund_data_check_s[0]['id']).')</span> </td>
+				<td align="right" > <span style="font-size: 8px;">$'.number_format(($refund_data_check[0]['amount']+$refund_data_check_s[0]['amount']),2).'  </span> </td>
 				
 			</tr>
 
 			<tr>
-				<td style="padding: 10px;" align="left"> <span style="font-size: 8px;">Other Refunds ('.$refund_data_online[0]['id'].')</span> </td>
-				<td align="right" > <span style="font-size: 8px;">$'.number_format($refund_data_online[0]['amount'],2).'  </span> </td>
+				<td style="padding: 10px;" align="left"> <span style="font-size: 8px;">Other Refunds ('.($refund_data_online[0]['id']+$refund_data_online_s[0]['id']).')</span> </td>
+				<td align="right" > <span style="font-size: 8px;">$'.number_format(($refund_data_online[0]['amount']+$refund_data_online_s[0]['amount']),2).'  </span> </td>
 				
 			</tr>
 		</table>
@@ -1299,7 +981,6 @@ $refund_data_online = $this->Inventory_graph_model->get_full_refund_online($star
 				
 		
 	}
-
 	public function allreportpdf_2() {
 		$this->load->helper('pdf_helper');
 		// $last_date = $id = $this->uri->segment(2);
@@ -1633,72 +1314,47 @@ $refund_data_online = $this->Inventory_graph_model->get_full_refund_online($star
 
 	}
 
-		
+public function email_report_new() {
+
+	return $this->load->view('merchant/report');
+
+}
 
 
-	public function email_report1() {
-		$data = array();
-		// echo "this is the report";die;
-		$get_merchant_data = $this->admin_model->get_merchant_data_new();
-		// echo "<pre>";print_r($get_merchant_data);die;
-		if (!empty($get_merchant_data)) { 
-			foreach ($get_merchant_data as $key => $value) {
-				// $merchant_id = $this->session->userdata('merchant_id');
-				 $merchant_id = $value->id;
-				 $report_type = $value->report_type; 
-				 $reportsType=explode(",",$report_type);
-				// echo "d<pre>";print_r($report_type);
-				 if (in_array("daily",$reportsType)) {
-
-				 	echo "d<pre>";print_r($merchant_id);
-				 }
-
-
-				}}}
-
-
-				public function email_report2() {
-		$data = array();
-		// echo "this is the report";die;
-		$get_merchant_data = $this->admin_model->get_merchant_data_new();
-		// echo "<pre>";print_r($get_merchant_data);die;
-		if (!empty($get_merchant_data)) { 
-			foreach ($get_merchant_data as $key => $value) {
-				// $merchant_id = $this->session->userdata('merchant_id');
-				 $merchant_id = $value->id;
-				 $report_type = $value->report_type; 
-				 $reportsType=explode(",",$report_type);
-				// echo "d<pre>";print_r($report_type);
-				 if (in_array("monthly",$reportsType)) {
-
-				 	echo "m<pre>";print_r($merchant_id);
-				 }
-
-
-				}}}
 
 	public function email_report() {
 		$data = array();
-		// echo "this is the report";die;
-		$get_merchant_data = $this->admin_model->get_merchant_data_new();
-		// echo "<pre>";print_r($get_merchant_data);die;
+
+		$getQuery12 = $this->db->query("SELECT count(id) as mid from merchant where  `user_type` = 'merchant' AND `status` = 'active' AND `report_email` != '' AND `id` != '543' AND find_in_set('daily', report_type)    ");
+       $package_data2 = $getQuery12->result_array();
+       $itemcount=$package_data2[0]['mid']; 
+       $batches1 = round($itemcount / 1); // Number of while-loop calls - around 120.
+ $batches = $batches1+1;
+for ($i = 0; $i <= $batches; $i++) {
+
+  $offset = $i * 1; // MySQL Limit offset number
+  $start=$offset;
+  $limit=1;
+
+//}
+		$get_merchant_data = $this->Email_report_model->get_merchant_data_new_limit($start,$limit);
+// echo "<pre>";print_r($get_merchant_data);
+
+// 		die;
+	//$get_merchant_data = $this->admin_model->get_merchant_data_new_particular();
+
 		if (!empty($get_merchant_data)) { 
 			foreach ($get_merchant_data as $key => $value) {
-				// $merchant_id = $this->session->userdata('merchant_id');
 				 $merchant_id = $value->id;
-				 $report_type = $value->report_type; 
-				 echo "d<pre>";print_r($report_type);
-				// die("oki"); 
-				$reportsType=explode(",",$report_type);
+				//  $report_type = $value->report_type; 
+				// $reportsType=explode(",",$report_type);
                 
 				$report_email =$value->report_email;
 				$email = $value->email;
-				if (in_array("daily",$reportsType)) {
+				// if (in_array("daily",$reportsType)) {
 					$last_date = date("Y-m-d", strtotime("-1 days"));
 					$date = date("Y-m-d", strtotime("-1 days"));
 					$package_data = $this->admin_model->data_get_where_down("customer_payment_request", $date, $last_date, $merchant_id);
-					// echo "<pre>";print_r($package_data);
-					// die;
 					$mem = array();
 					$member = array();
 					$sum = 0;
@@ -1729,37 +1385,11 @@ $refund_data_online = $this->Inventory_graph_model->get_full_refund_online($star
 					} else {
 						$invoice_count = 0;
 					}
-					$package_data1 = $this->admin_model->data_get_where_down("recurring_payment", $date, $last_date, $merchant_id);
-					// echo "<pre>";print_r($package_data1);
-					$mem1 = array();
-					$member1 = array();
+
 					$sum1 = 0;
 					$sum_ref1 = 0;
-					if (!empty($package_data1)) {
-						foreach ($package_data1 as $key1 => $each) {
-							if ($each->status == 'Chargeback_Confirm') {
-								$package1['Amount'] = '-$' . $each->amount;
-								$sum_ref1 += $each->amount;
-							} else {
-								$package1['Amount'] = '$' . $each->amount;
-								
-							}$sum1 += $each->amount;
-							$package1['Tax'] = '$' . $each->tax;
-							$package1['Card'] = Ucfirst($each->card_type);
-							if ($each->type = 'recurring') {
-								$package1['Type'] = 'INV';
-							} else {
-								$package1['Type'] = $each->type;
-							}
-							$package1['Date'] = $each->date_c;
-							$package1['Referece'] = $each->reference;
-							$mem1[] = $package1;
-						}
-						$data['item1'] = $mem1;
-						$recurring_payment_count = $key1 + 1;
-					} else {
-						$recurring_payment_count = 0;
-					}
+					$recurring_payment_count = 0;
+
 					$package_data2 = $this->admin_model->data_get_where_down("pos", $date, $last_date, $merchant_id);
 					// echo "<pre>";print_r($package_data2);
 					$mem2 = array();
@@ -1789,7 +1419,7 @@ $refund_data_online = $this->Inventory_graph_model->get_full_refund_online($star
 						$pos_count = 0;
 					}
                     ####################################
-					$package_data3 = $this->admin_model->get_report_refund_data("pos", $date, $last_date, $merchant_id);
+					$package_data3 = $this->Email_report_model->get_report_refund_data("pos", $date, $last_date, $merchant_id);
 					$sum_ref3 = 0;
 					if (!empty($package_data3)) {
 						foreach ($package_data3 as $key2 => $each) {
@@ -1801,7 +1431,7 @@ $refund_data_online = $this->Inventory_graph_model->get_full_refund_online($star
 						}
 					} 
 					
-					$package_dat5 = $this->admin_model->get_report_refund_data("customer_payment_request", $date, $last_date, $merchant_id);
+					$package_dat5 = $this->Email_report_model->get_report_refund_data("customer_payment_request", $date, $last_date, $merchant_id);
 					$sum_ref5 = 0;
 					if (!empty($package_data5)) {
 						foreach ($package_data5 as $key2 => $each) {
@@ -1818,7 +1448,6 @@ $refund_data_online = $this->Inventory_graph_model->get_full_refund_online($star
 					// $totalsumr=(float)($sum_ref + $sum_ref1 + $sum_ref2+$sum_ref3+$sum_ref5);
 					$totalsumr=(float)($sum_ref3+$sum_ref5);
 					$totalamount=$totalsum-$totalsumr; 
-
 					$reporting_data['invoice_count'] = $invoice_count;
 					$reporting_data['recurring_payment_count'] = $recurring_payment_count;
 					$reporting_data['pos_count'] = $pos_count;
@@ -1828,7 +1457,7 @@ $refund_data_online = $this->Inventory_graph_model->get_full_refund_online($star
 					$reporting_data['totalamount'] = '$' . number_format($totalamount,2);
 					$reporting_data['business_dba_name'] = $value->business_dba_name;
 					$reporting_data['mob_no'] = $value->mob_no;
-					$reporting_data['email'] = $value->email;
+					 $reporting_data['email'] = $value->email;
 					$reporting_data['logo'] = $value->logo;
 					$reporting_data['address1'] = $value->address1;
 					$reporting_data['report_type'] = "Daily";
@@ -1838,157 +1467,287 @@ $refund_data_online = $this->Inventory_graph_model->get_full_refund_online($star
 					// echo "<pre>";print_r($reporting_data);die;
 					// die;
 					// $data['msgData'] = $data;
-
-					//$msg = $this->load->view('email/reporting', $reporting_data, true);
-
+					$msg = $this->load->view('email/reporting', $reporting_data, true);
 					// if($reporting_data['totalsum_email'] > 0) {
 
-					if (!empty($email) && empty($report_email)) {  
-						$this->email->from('info@salequick.com', 'SaleQuick');
-						//$this->email->to($email);
-					    $this->email->to('vaibhav.angad@gmail.com');
-						$this->email->subject('Salequick Reporting');
-						$this->email->message($msg);
-						//$this->email->send();
-					} else {  
+
+				
+
+						$branch_info1 = array(
+						'merchant_id' => $merchant_id,
+						'type' => '2',
+						'date' => $last_date,
+						'email' => $report_email,
+						);
+
+						$id111 = $this->admin_model->insert_data("daily_report_email_2", $branch_info1);
+	
+$getQuery1 = $this->db->query("SELECT count(id) as id from daily_report_email where merchant_id ='" . $merchant_id . "' and date ='" . $last_date . "'  ");
+						$getEmail1 = $getQuery1->result_array();
+						//print_r($getEmail1); die();
+					
+						echo $id =$getEmail1[0]['id'];
+         if ($id<1) { 
+					//if (!empty($email) && empty($report_email)) {  
+						if (!empty($report_email)) {  
+						
 						$this->email->from('info@salequick.com', 'SaleQuick');
 						//$this->email->to($report_email);
-						$this->email->to('vaibhav.angad@gmail.com');
+					    $this->email->to('sq.dev007@gmail.com');
 						$this->email->subject('Salequick Reporting');
 						$this->email->message($msg);
+
+						$getQuery_mail_count = $this->db->query("SELECT count(id) as id from daily_report_email where merchant_id ='" . $merchant_id . "' and date ='" . $last_date . "'  ");
+						$getEmail_count = $getQuery_mail_count->result_array();
+						 $id_count =$getEmail_count[0]['id'];
+         if ($id_count<1) { 
 						//$this->email->send();
-					}
-					 
 					
 
+						$branch_info = array(
+						'merchant_id' => $merchant_id,
+						'type' => '2',
+						'date' => $last_date,
+						'email' => $report_email,
+						);
+
+						$id11 = $this->admin_model->insert_data("daily_report_email", $branch_info);
+					}
+
+					} 
+
+                 }
 				}
-				// else if($report_type == 'weekly'){
-				//     $last_date = date("Y-m-d",strtotime("-1 days"));
-				//     $date = date("Y-m-d",strtotime("-1 days"));
-				//     $package_data = $this->admin_model->data_get_where_down("customer_payment_request",$date,$last_date,$merchant_id);
-				//     // echo "<pre>";print_r($package_data);
-				//     // die;
-				//     $mem = array();
-				//     $member = array();
-				//     $sum = 0;
-				//     $sum_ref = 0;
-				//     if(!empty($package_data)){
-				//         foreach($package_data as $key => $each){
-				//             if($each->status=='Chargeback_Confirm'){
-				//                 $package['Amount'] = '-$'.$each->amount;
-				//                 $sum_ref+= $each->amount;
-				//             }else{
-				//                 $package['Amount'] = '$'.$each->amount;
-				//                 $sum+= $each->amount;
-				//             }
-				//             $package['Tax'] = $each->tax;
-				//             $package['Card'] = Ucfirst($each->card_type);
-				//             if($each->type='straight'){
-				//                 $package['Type'] = 'INV';
-				//             }else{
-				//                 $package['Type'] = $each->type;
-				//             }
-				//             $package['Date'] = $each->date_c;
-				//             $package['Referece'] = $each->reference;
-				//             $mem[] = $package;
-				//         }
-				//         $data['item'] = $mem;
-				//         $invoice_count =  $key+1;
-				//         // echo "<br>";
-				//     }else{
-				//         $invoice_count = 0;
-				//     }
-				//     $package_data1 = $this->admin_model->data_get_where_down("recurring_payment",$date,$last_date,$merchant_id);
-				//     // echo "<pre>";print_r($package_data1);
-				//     $mem1 = array();
-				//     $member1 = array();
-				//     $sum1 = 0;
-				//     $sum_ref1 = 0;
-				//     if(!empty($package_data1)){
-				//         foreach($package_data1 as $key1 => $each){
-				//             if($each->status=='Chargeback_Confirm'){
-				//                 $package1['Amount'] = '-$'.$each->amount;
-				//                 $sum_ref1+= $each->amount;
-				//             }else{
-				//                 $package1['Amount'] = '$'.$each->amount;
-				//                 $sum1+= $each->amount;
-				//             }
-				//             $package1['Tax'] = '$'.$each->tax;
-				//             $package1['Card'] = Ucfirst($each->card_type);
-				//             if($each->type='recurring'){
-				//                 $package1['Type'] = 'INV';
-				//             }else{
-				//                 $package1['Type'] = $each->type;
-				//             }
-				//             $package1['Date'] = $each->date_c;
-				//             $package1['Referece'] = $each->reference;
-				//             $mem1[] = $package1;
-				//         }
-				//         $data['item1'] = $mem1;
-				//         $recurring_payment_count =  $key1+1;
-				//     }else{
-				//         $recurring_payment_count = 0;
-				//     }
-				//     $package_data2 = $this->admin_model->data_get_where_down("pos",$date,$last_date,$merchant_id);
-				//     // echo "<pre>";print_r($package_data2);
-				//     $mem2 = array();
-				//     $member2 = array();
-				//     $sum2 = 0;
-				//     $sum_ref2 = 0;
-				//     if(!empty($package_data2)){
-				//         foreach($package_data2 as $key2  => $each){
-				//             if($each->status=='Chargeback_Confirm'){
-				//                 $package2['Amount'] = '-$'.$each->amount;
-				//                 $sum_ref2+= $each->amount;
-				//             }else{
-				//                 $package2['Amount'] = '$'.$each->amount;
-				//                 $sum2+= $each->amount;
-				//             }
-				//             $package2['Tax'] = '$'.$each->tax;
-				//             $package2['Card'] = Ucfirst($each->card_type);
-				//             $package2['Type'] = strtoupper($each->type);
-				//             $package2['Date'] = $each->date_c;
-				//             $package2['Referece'] = $each->reference;
-				//             $mem2[] = $package2;
-				//         }
-				//         $data['item2'] = $mem2;
-				//         $pos_count =  $key2+1;
-				//         // echo "<br>";
-				//     }else{
-				//         $pos_count = 0;
-				//     }
-				//     $reporting_data['invoice_count'] = $invoice_count;
-				//     $reporting_data['recurring_payment_count'] = $recurring_payment_count;
-				//     $reporting_data['pos_count'] = $pos_count;
-				//     $reporting_data['total_transaction'] = ($invoice_count+$recurring_payment_count+$pos_count);
-				//     $reporting_data['totalsum'] = '$'.number_format($sum + $sum1 + $sum2,2);
-				//     $reporting_data['totalsumr'] = '$'.number_format($sum_ref + $sum_ref1 + $sum_ref2,2);
-				//     $reporting_data['business_dba_name'] = $value->business_dba_name;
-				//     $reporting_data['mob_no'] = $value->mob_no;
-				//     $reporting_data['email'] = $value->email;
-				//     $reporting_data['logo'] = $value->logo;
-				//     $reporting_data['address1'] = $value->address1;
-				//     $reporting_data['report_type'] = $report_type;
-				//     // echo "<pre>";print_r($reporting_data);die;
-				//     // die;
-				//     // $data['msgData'] = $data;
-				//     $msg = $this->load->view('email/reporting', $reporting_data, true);
-				//     if(!empty($email) && empty($report_email)){
-				//         $this->email->from('info@salequick.com', 'SaleQuick');
-				//         $this->email->to($email);
-				//         $this->email->subject('Salequick Reporting');
-				//         $this->email->message($msg);
-				//         $this->email->send();
-				//     }else{
-				//         $this->email->from('info@salequick.com', 'SaleQuick');
-				//         $this->email->to($report_email);
-				//         $this->email->subject('Salequick Reporting');
-				//         $this->email->message($msg);
-				//         $this->email->send();
-				//     }
-				// }
-				   
-				if (in_array("monthly", $reportsType)) {
+				
+		//	}
+			
+		} }
+
+		exit();
+	}
+
+
+	public function email_report_user() {
+		$data = array();
+
+		$getQuery12 = $this->db->query("SELECT count(id) as mid from merchant where  `user_type` = 'merchant' AND `status` = 'active' AND `report_email` != '' AND `id` != '543' AND find_in_set('daily', report_type)    ");
+       $package_data2 = $getQuery12->result_array();
+       $itemcount=$package_data2[0]['mid']; 
+       $batches1 = round($itemcount / 1); // Number of while-loop calls - around 120.
+ $batches = $batches1+1;
+for ($i = 0; $i <= $batches; $i++) {
+
+  $offset = $i * 1; // MySQL Limit offset number
+  $start=$offset;
+  $limit=1;
+
+		$get_merchant_data = $this->Email_report_model->get_merchant_data_new_user_limit($start,$limit);
+//echo "<pre>";print_r($get_merchant_data);die;
+	//$get_merchant_data = $this->admin_model->get_merchant_data_new_particular();
+
+		if (!empty($get_merchant_data)) { 
+			foreach ($get_merchant_data as $key => $value) {
+				 $merchant_id = $value->id;
+				//  $report_type = $value->report_type; 
+				// $reportsType=explode(",",$report_type);
+                
+				$report_email =$value->report_email;
+				$email = $value->email;
+				//if (in_array("daily",$reportsType)) {
+					$last_date = date("Y-m-d", strtotime("-1 days"));
+					$date = date("Y-m-d", strtotime("-1 days"));
+					$package_data = $this->admin_model->data_get_where_down("customer_payment_request", $date, $last_date, $merchant_id);
+					$mem = array();
+					$member = array();
+					$sum = 0;
+					$sum_ref = 0;
+					if (!empty($package_data)) {
+						foreach ($package_data as $key => $each) {
+							if ($each->status == 'Chargeback_Confirm') {
+								$package['Amount'] = '-$' . $each->amount;
+								$sum_ref += $each->amount;
+							} else {
+								$package['Amount'] = '$' . $each->amount;
+								
+							}$sum += $each->amount;
+							$package['Tax'] = $each->tax;
+							$package['Card'] = Ucfirst($each->card_type);
+							if ($each->type = 'straight') {
+								$package['Type'] = 'INV';
+							} else {
+								$package['Type'] = $each->type;
+							}
+							$package['Date'] = $each->date_c;
+							$package['Referece'] = $each->reference;
+							$mem[] = $package;
+						}
+						$data['item'] = $mem;
+						$invoice_count = $key + 1;
+						// echo "<br>";
+					} else {
+						$invoice_count = 0;
+					}
+
+					$sum1 = 0;
+					$sum_ref1 = 0;
+					$recurring_payment_count = 0;
+
+					$package_data2 = $this->admin_model->data_get_where_down("pos", $date, $last_date, $merchant_id);
+					// echo "<pre>";print_r($package_data2);
+					$mem2 = array();
+					$member2 = array();
+					$sum2 = 0;
+					$sum_ref2 = 0;
+					if (!empty($package_data2)) {
+						foreach ($package_data2 as $key2 => $each) {
+							if ($each->status == 'Chargeback_Confirm') {
+								$package2['Amount'] = '-$' . $each->amount;
+								$sum_ref2 += $each->amount;
+							} else {
+								$package2['Amount'] = '$' . $each->amount;
+								
+							}$sum2 += $each->amount;
+							$package2['Tax'] = '$' . $each->tax;
+							$package2['Card'] = Ucfirst($each->card_type);
+							$package2['Type'] = strtoupper($each->type);
+							$package2['Date'] = $each->date_c;
+							$package2['Referece'] = $each->reference;
+							$mem2[] = $package2;
+						}
+						$data['item2'] = $mem2;
+						$pos_count = $key2 + 1;
+						// echo "<br>";
+					} else {
+						$pos_count = 0;
+					}
+                    ####################################
+					$package_data3 = $this->Email_report_model->get_report_refund_data("pos", $date, $last_date, $merchant_id);
+					$sum_ref3 = 0;
+					if (!empty($package_data3)) {
+						foreach ($package_data3 as $key2 => $each) {
+							if ($each->status == 'Chargeback_Confirm') {
+								$package2['Amount'] = '-$' . $each->refund_amount;
+								$sum_ref3 = $sum_ref3+$each->refund_amount;
+							} 
+							
+						}
+					} 
+					
+					$package_dat5 = $this->Email_report_model->get_report_refund_data("customer_payment_request", $date, $last_date, $merchant_id);
+					$sum_ref5 = 0;
+					if (!empty($package_data5)) {
+						foreach ($package_data5 as $key2 => $each) {
+							if ($each->status == 'Chargeback_Confirm') {
+								$package2['Amount'] = '-$' . $each->refund_amount;
+								$sum_ref5 = $sum_ref5+$each->refund_amount;
+							} 
+							
+						}
+					} 
+
+					
+					$totalsum=($sum + $sum1 + $sum2);
+					// $totalsumr=(float)($sum_ref + $sum_ref1 + $sum_ref2+$sum_ref3+$sum_ref5);
+					$totalsumr=(float)($sum_ref3+$sum_ref5);
+					$totalamount=$totalsum-$totalsumr; 
+					$reporting_data['invoice_count'] = $invoice_count;
+					$reporting_data['recurring_payment_count'] = $recurring_payment_count;
+					$reporting_data['pos_count'] = $pos_count;
+					$reporting_data['total_transaction'] = ($invoice_count + $recurring_payment_count + $pos_count);
+					$reporting_data['totalsum'] = '$' . number_format($sum + $sum1 + $sum2, 2);
+					$reporting_data['totalsumr'] = '$' . number_format($sum_ref3+$sum_ref5, 2);
+					$reporting_data['totalamount'] = '$' . number_format($totalamount,2);
+					$reporting_data['business_dba_name'] = $value->business_dba_name;
+					$reporting_data['mob_no'] = $value->mob_no;
+					 $reporting_data['email'] = $value->email;
+					$reporting_data['logo'] = $value->logo;
+					$reporting_data['address1'] = $value->address1;
+					$reporting_data['report_type'] = "Daily";
+					$reporting_data['report_email'] = $report_email;
+					$reporting_data['totalsum_email'] = number_format($sum + $sum1 + $sum2, 2);
+					$reporting_data['pdf_link'] = 'https://salequick.com/dailyreport/' . $last_date . '/' . $merchant_id;
+					// echo "<pre>";print_r($reporting_data);die;
+					// die;
+					// $data['msgData'] = $data;
+					$msg = $this->load->view('email/reporting', $reporting_data, true);
+					// if($reporting_data['totalsum_email'] > 0) {
+
+
+					$branch_info = array(
+						'merchant_id' => $merchant_id,
+						'type' => '1',
+						'date' => $last_date,
+						'email' => $email,
+						);
+
+						$id11 = $this->admin_model->insert_data("daily_report_email_1", $branch_info);
+
+						
+	
+$getQuery1 = $this->db->query("SELECT count(id) as id from daily_report_email where merchant_id ='" . $merchant_id . "' and date ='" . $last_date . "'  ");
+						$getEmail1 = $getQuery1->result_array();
+						//print_r($getEmail1); die();
+					
+						echo $id =$getEmail1[0]['id'];
+         if ($id<1) { 
+					if (empty($report_email)) {   
+						$this->email->from('info@salequick.com', 'SaleQuick');
+						$this->email->to($email);
+						//$this->email->to('sq.dev007@gmail.com');
+						$this->email->subject('Salequick Reporting');
+						$this->email->message($msg);
+						$getQuery_mail_count = $this->db->query("SELECT count(id) as id from daily_report_email where merchant_id ='" . $merchant_id . "' and date ='" . $last_date . "'  ");
+						$getEmail_count = $getQuery_mail_count->result_array();
+						 $id_count =$getEmail_count[0]['id'];
+         if ($id_count<1) { 
+						$branch_info = array(
+						'merchant_id' => $merchant_id,
+						'type' => '1',
+						'date' => $last_date,
+						'email' => $email,
+						);
+
+						$id11 = $this->admin_model->insert_data("daily_report_email", $branch_info);
+
+					 if(!empty($id11)){ 
+						$this->email->send();
+						//echo $id11;
+						}
+
+
+					}
+
+						
+
+					}
+
+                 }
+				}
+				
+			//}
+			
+		} }
+	}
+
+
+
+		public function email_report_monthly() {
+		$data = array();
+		// echo "this is the report";die;
+		$get_merchant_data = $this->admin_model->get_merchant_data_new_admin();
+		//echo "<pre>";print_r($get_merchant_data);die;
+		if (!empty($get_merchant_data)) { 
+			foreach ($get_merchant_data as $key => $value) {
+				// $merchant_id = $this->session->userdata('merchant_id');
+				 $merchant_id = $value->id;
+				 $report_type = $value->report_type; //die("oki"); 
+				$reportsType=explode(",",$report_type);
+                
+				$report_email =$value->report_email;
+				$email = $value->email;
+				
+			
+				   if (in_array("monthly", $reportsType)) {
 					$Currentdate = date("Y-m-d");    
 					// First day of the month.
 					$Starting_date=date('Y-m-01', strtotime($Currentdate));
@@ -2148,20 +1907,18 @@ $refund_data_online = $this->Inventory_graph_model->get_full_refund_online($star
 					// echo "<pre>";print_r($reporting_data);die;
 					// die;
 					// $data['msgData'] = $data;
-
-					//$msg = $this->load->view('email/reporting', $reporting_data, true);
-
+					$msg = $this->load->view('email/reporting', $reporting_data, true);
 					if (!empty($email) && empty($report_email)) { 
 						$this->email->from('info@salequick.com', 'SaleQuick');
 						//$this->email->to($email);
-						 $this->email->to("vaibhav.angad@gmail.com");
+						 $this->email->to('sq.dev007@gmail.com');
 						$this->email->subject('Salequick Reporting');
 						$this->email->message($msg);
 					    //$this->email->send();
 					} else {   
 						$this->email->from('info@salequick.com', 'SaleQuick');
 						//$this->email->to($report_email);
-						 $this->email->to("vaibhav.angad@gmail.com");
+						 $this->email->to('sq.dev007@gmail.com');
 						$this->email->subject('Salequick Reporting');
 						$this->email->message($msg);
 						//$this->email->send();
@@ -2177,4 +1934,7 @@ $refund_data_online = $this->Inventory_graph_model->get_full_refund_online($star
 
 		}
 	}
+
+
+
 }

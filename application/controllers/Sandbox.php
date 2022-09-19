@@ -262,7 +262,7 @@ public function card_payment(){
           $xml = simplexml_load_string($response, "SimpleXMLElement", LIBXML_NOCDATA);
                 $json = json_encode($xml);
                 $arrayy = json_decode($json,TRUE);
-                //echo 'shuaeb'; 
+              
           // print_r($arrayy);
           //die();
                 curl_close($ch);

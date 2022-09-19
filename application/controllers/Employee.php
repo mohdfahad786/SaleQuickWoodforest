@@ -447,7 +447,7 @@
     
 // print_r($data['item4']);
 
-//echo 'shuaeb'.'<br>';
+
 $totalsum = number_format($sum + $sum1 + $sum2,2);
 $totalsumr = number_format($sum_ref + $sum_ref1 + $sum_ref2,2);
 

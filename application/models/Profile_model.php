@@ -30,12 +30,31 @@ class Profile_model extends CI_Model {
  }
 
 
-function get_merchant_details($id = "")
-	{
+	function get_merchant_details($id = "") {
 		if($id != "")
 		{
 			$id = intval($id);
 			$this->db->where('id',$id);
+		}
+		$this->db->order_by("id", "desc");
+		$query = $this->db->get('merchant');
+		return $query->result();
+	}
+
+	function get_merchant_details_new($id = "") {
+		if($id != "") {
+			$id = intval($id);
+			$this->db->select('csv_Customer_name')->where('id',$id);
+		}
+		$this->db->order_by("id", "desc");
+		$query = $this->db->get('merchant');
+		return $query->result();
+	}
+
+	function get_merchant_details_batch($id = "") {
+		if($id != "") {
+			$id = intval($id);
+			$this->db->select('id,report_email,email,business_dba_name,mob_no,logo,address1,time_zone,batch_report_time')->where('id',$id);
 		}
 		$this->db->order_by("id", "desc");
 		$query = $this->db->get('merchant');

@@ -4,6 +4,7 @@
   }
   class Merchant extends CI_Controller {
     public function __construct() {
+     
       parent::__construct();
       $this->load->helper('form');
       $this->load->helper('url');
@@ -28,8 +29,8 @@
       {
         date_default_timezone_set('America/Chicago');
       }
-      // ini_set('display_errors', 1);
-     //    error_reporting(E_ALL);
+         // ini_set('display_errors', 1);
+         // error_reporting(E_ALL);
     }
     public function readallnotofication() {  
       if($merchantid=$this->input->post('merchantid') ) {
@@ -107,221 +108,556 @@
         // $this->load->view('merchant/notification',$data);
       }
     }
-  public function index() {
-    $data["title"] = "Merchant Panel";
-    $data["meta"] ='Dashboard';
-    
-    if( $this->session->userdata('employee_id') ) {
-        $merchant_id = $this->session->userdata('employee_id');
-    } else {
-        $merchant_id = $this->session->userdata('merchant_id');
-    }
-    
-    $today2 = date("Y");
-    $last_year = date("Y", strtotime("-1 year"));
-    $last_date = date("Y-m-d", strtotime("-29 days"));
-    $date = date("Y-m-d");
-    $start = $this->input->post('start');
-    $end = $this->input->post('end');
-    $employee = $this->input->post('employee');
-    //  $last_date1 = date("Y-m-d",strtotime("-29 days"));
-    //$date1 = date("Y-m-d");
-    if ($start == 'undefined') {
-      $last_date = date("Y-m-d", strtotime("-29 days"));
-      $date = date("Y-m-d");
-    } elseif ($start != '') {
-      $last_date = $start;
-      $date = $end;
-    } else {
-      $last_date = date("Y-m-d", strtotime("-29 days"));
-      $date = date("Y-m-d");
-    }
-    if ($employee == 'all') {
-      $sub_merchant_id = 0;
-    } elseif ($employee == 'merchant') {
-      $sub_merchant_id = 0;
-    } else {
-      $sub_merchant_id = $employee;
-    }
-    $getDashboard = $this->db->query("SELECT 
-           ( SELECT count(id) as NewTotalOrders from customer_payment_request where date_c = CURDATE() and merchant_id = '" . $merchant_id . "' ) as NewTotalOrders,  ( SELECT count(id) as NewTotalOrders_p from pos where date_c = CURDATE() and merchant_id = '" . $merchant_id . "' ) as NewTotalOrders_p,  ( SELECT count(id) as TotalOrders from customer_payment_request where status='confirm' and merchant_id = '" . $merchant_id . "' ) as TotalOrders, ( SELECT count(id) as TotalOrders_P from pos where status='confirm' and merchant_id = '" . $merchant_id . "' ) as TotalOrders_p, ( SELECT count(id) as TotalpendingOrders from customer_payment_request where status='pending'  and merchant_id = '" . $merchant_id . "') as TotalpendingOrders,
-                            (SELECT sum(amount) as TotalAmount from customer_payment_request where status='confirm' and merchant_id = '" . $merchant_id . "' and date_c >= '" . $last_date . "' and date_c <= '" . $date . "'  ) as TotalAmount ,
-                            (SELECT sum(amount) as TotalAmountRe from recurring_payment where status='confirm' and merchant_id = '" . $merchant_id . "' and date_c >= '" . $last_date . "' and date_c <= '" . $date . "') as TotalAmountRe ,
-                            (SELECT sum(amount) as TotalAmountPOS from pos where status='confirm' and merchant_id = '" . $merchant_id . "' and date_c >= '" . $last_date . "' and date_c <= '" . $date . "') as TotalAmountPOS,
-                            
-               (SELECT sum(amount) as Totaljan from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '01' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '01' and year = '" . $today2 . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '01' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totaljan   ,
-                            (SELECT sum(amount) as Totalfeb from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '02' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '02' and year = '" . $today2 . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '02' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totalfeb   ,
-                        (SELECT sum(amount) as Totalmarch from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '03' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '03' and year = '" . $today2 . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '03' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totalmarch   ,
-                         (SELECT sum(amount) as Totalaprl from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '04' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '04' and year = '" . $today2 . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '04' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totalaprl   ,
-                         (SELECT sum(amount) as Totalmay from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '05' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '05' and year = '" . $today2 . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '05' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totalmay   ,
-                          (SELECT sum(amount) as Totaljune from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '06' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '06' and year = '" . $today2 . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '06' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totaljune   ,
-                          (SELECT sum(amount) as Totaljuly from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '07' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '07' and year = '" . $today2 . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '07' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totaljuly   ,
-                            (SELECT sum(amount) as Totalaugust from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '08' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '08' and year = '" . $today2 . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '08' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totalaugust   ,
-                             (SELECT sum(amount) as Totalsep from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '09' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '09' and year = '" . $today2 . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '09' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totalsep   ,
-                            (SELECT sum(amount) as Totaloct from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '10' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '10' and year = '" . $today2 . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '10' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totaloct   ,
-                          (SELECT sum(amount) as Totalnov from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '11' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '11' and year = '" . $today2 . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '11' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totalnov   ,
-                           (SELECT sum(amount) as Totaldec from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '12' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '12' and year = '" . $today2 . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '12' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totaldec   ,
-                       
-        (SELECT avg(amount) as Totaljanf from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '01' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '01' and year = '" . $today2 . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '01' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totaljanf   ,
-                 (SELECT avg(amount) as Totalfebf from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '02' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '02' and year = '" . $today2 . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '02' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totalfebf   ,
-                   (SELECT avg(amount) as Totalmarchf from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '03' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '03' and year = '" . $today2 . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '03' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totalmarchf   ,
-                     (SELECT avg(amount) as Totalaprlf from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '04' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '04' and year = '" . $today2 . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '04' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totalaprlf   ,
-                      (SELECT avg(amount) as Totalmayf from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '05' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '05' and year = '" . $today2 . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '05' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totalmayf   ,
-                            (SELECT avg(amount) as Totaljunef from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '06' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '06' and year = '" . $today2 . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '06' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totaljunef   ,
-                           (SELECT avg(amount) as Totaljulyf from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '07' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '07' and year = '" . $today2 . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '07' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totaljulyf   ,
-                           (SELECT avg(amount) as Totalaugustf from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '08' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '08' and year = '" . $today2 . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '08' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totalaugustf   ,
-                          (SELECT avg(amount) as Totalsepf from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '09' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '09' and year = '" . $today2 . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '09' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totalsepf   ,
-                        (SELECT avg(amount) as Totaloctf from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '10' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '10' and year = '" . $today2 . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '10' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totaloctf   ,
-                       (SELECT avg(amount) as Totalnovf from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '11' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '11' and year = '" . $today2 . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '11' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totalnovf   ,
-                      (SELECT avg(amount) as Totaldecf from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '12' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '12' and year = '" . $today2 . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '12' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totaldecf   ,
-              
-        (SELECT sum(tax) as Totaljantax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '01' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,tax from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '01' and year = '" . $today2 . "' and status='confirm' union all SELECT month,tax from pos where merchant_id = '" . $merchant_id . "' and month = '01' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totaljantax   ,
-               (SELECT sum(tax) as Totalfebtax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '02' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,tax from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '02' and year = '" . $today2 . "' and status='confirm' union all SELECT month,tax from pos where merchant_id = '" . $merchant_id . "' and month = '02' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totalfebtax   ,
-               (SELECT sum(tax) as Totalmarchtax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '03' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,tax from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '03' and year = '" . $today2 . "' and status='confirm' union all SELECT month,tax from pos where merchant_id = '" . $merchant_id . "' and month = '03' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totalmarchtax   ,
-               (SELECT sum(tax) as Totalaprltax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '04' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,tax from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '04' and year = '" . $today2 . "' and status='confirm' union all SELECT month,tax from pos where merchant_id = '" . $merchant_id . "' and month = '04' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totalaprltax   ,
-              (SELECT sum(tax) as Totalmaytax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '05' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,tax from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '05' and year = '" . $today2 . "' and status='confirm' union all SELECT month,tax from pos where merchant_id = '" . $merchant_id . "' and month = '05' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totalmaytax   ,
-               (SELECT sum(tax) as Totaljunetax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '06' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,tax from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '06' and year = '" . $today2 . "' and status='confirm' union all SELECT month,tax from pos where merchant_id = '" . $merchant_id . "' and month = '06' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totaljunetax   ,
-               (SELECT sum(tax) as Totaljulytax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '07' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,tax from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '07' and year = '" . $today2 . "' and status='confirm' union all SELECT month,tax from pos where merchant_id = '" . $merchant_id . "' and month = '07' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totaljulytax   ,
-               (SELECT sum(tax) as Totalaugusttax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '08' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,tax from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '08' and year = '" . $today2 . "' and status='confirm' union all SELECT month,tax from pos where merchant_id = '" . $merchant_id . "' and month = '08' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totalaugusttax   ,
-               (SELECT sum(tax) as Totalseptax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '09' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,tax from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '09' and year = '" . $today2 . "' and status='confirm' union all SELECT month,tax from pos where merchant_id = '" . $merchant_id . "' and month = '09' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totalseptax   ,
-              (SELECT sum(tax) as Totalocttax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '10' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,tax from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '10' and year = '" . $today2 . "' and status='confirm' union all SELECT month,tax from pos where merchant_id = '" . $merchant_id . "' and month = '10' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totalocttax   ,
-               (SELECT sum(tax) as Totalnovtax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '11' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,tax from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '11' and year = '" . $today2 . "' and status='confirm' union all SELECT month,tax from pos where merchant_id = '" . $merchant_id . "' and month = '11' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totalnovtax   ,
-               (SELECT sum(tax) as Totaldectax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '12' and year = '" . $today2 . "' and status='confirm'   union all SELECT month,tax from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '12' and year = '" . $today2 . "' and status='confirm' union all SELECT month,tax from pos where merchant_id = '" . $merchant_id . "' and month = '12' and year = '" . $today2 . "' and status='confirm' )x group by month ) as Totaldectax   ,
-            
-      (SELECT sum(amount) as Totalbjan from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '01' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '01' and year = '" . $last_year . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '01' and year = '" . $last_year . "' and status='confirm' ) x group by month ) as Totalbjan   ,
-              (SELECT sum(amount) as Totalbfeb from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '02' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '02' and year = '" . $last_year . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '02' and year = '" . $last_year . "' and status='confirm' ) x group by month ) as Totalbfeb   ,
-                 (SELECT sum(amount) as Totalbmarch from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '03' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '03' and year = '" . $last_year . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '03' and year = '" . $last_year . "' and status='confirm' ) x group by month ) as Totalbmarch   ,
-                  (SELECT sum(amount) as Totalbaprl from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '04' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '04' and year = '" . $last_year . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '04' and year = '" . $last_year . "' and status='confirm' ) x group by month ) as Totalbaprl   ,
-                     (SELECT sum(amount) as Totalbmay from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '05' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '05' and year = '" . $last_year . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '05' and year = '" . $last_year . "' and status='confirm' ) x group by month ) as Totalbmay   ,
-                       (SELECT sum(amount) as Totalbjune from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '06' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '06' and year = '" . $last_year . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '06' and year = '" . $last_year . "' and status='confirm' ) x group by month ) as Totalbjune   ,
-                        (SELECT sum(amount) as Totalbjuly from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '07' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '07' and year = '" . $last_year . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '07' and year = '" . $last_year . "' and status='confirm' ) x group by month ) as Totalbjuly   ,
-                        (SELECT sum(amount) as Totalbaugust from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '08' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '08' and year = '" . $last_year . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '08' and year = '" . $last_year . "' and status='confirm' ) x group by month ) as Totalbaugust   ,
-                         (SELECT sum(amount) as Totalbsep from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '09' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '09' and year = '" . $last_year . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '09' and year = '" . $last_year . "' and status='confirm' ) x group by month ) as Totalbsep   ,
-                          (SELECT sum(amount) as Totalboct from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '10' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '10' and year = '" . $last_year . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '10' and year = '" . $last_year . "' and status='confirm' ) x group by month ) as Totalboct   ,
-                            (SELECT sum(amount) as Totalbnov from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '11' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '11' and year = '" . $last_year . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '11' and year = '" . $last_year . "' and status='confirm' ) x group by month ) as Totalbnov   ,
-      (SELECT sum(amount) as Totalbdec from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '12' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '12' and year = '" . $last_year . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '12' and year = '" . $last_year . "' and status='confirm' ) x group by month ) as Totalbdec ,
-               
-         
-             (SELECT avg(amount) as Totalbjanf from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '01' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '01' and year = '" . $last_year . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '01' and year = '" . $last_year . "' and status='confirm' )x group by month ) as Totalbjanf   ,
-                 (SELECT avg(amount) as Totalbfebf from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '02' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '02' and year = '" . $last_year . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '02' and year = '" . $last_year . "' and status='confirm' )x group by month ) as Totalbfebf   ,
-                   (SELECT avg(amount) as Totalbmarchf from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '03' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '03' and year = '" . $last_year . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '03' and year = '" . $last_year . "' and status='confirm' )x group by month ) as Totalbmarchf   ,
-                     (SELECT avg(amount) as Totalbaprlf from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '04' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '04' and year = '" . $last_year . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '04' and year = '" . $last_year . "' and status='confirm' )x group by month ) as Totalbaprlf   ,
-                      (SELECT avg(amount) as Totalbmayf from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '05' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '05' and year = '" . $last_year . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '05' and year = '" . $last_year . "' and status='confirm' )x group by month ) as Totalbmayf   ,
-                          (SELECT avg(amount) as Totalbjunef from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '06' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '06' and year = '" . $last_year . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '06' and year = '" . $last_year . "' and status='confirm' )x group by month ) as Totalbjunef   ,
-                           (SELECT avg(amount) as Totalbjulyf from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '07' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '07' and year = '" . $last_year . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '07' and year = '" . $last_year . "' and status='confirm' )x group by month ) as Totalbjulyf   ,
-                           (SELECT avg(amount) as Totalbaugustf from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '08' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '08' and year = '" . $last_year . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '08' and year = '" . $last_year . "' and status='confirm' )x group by month ) as Totalbaugustf   ,
-                          (SELECT avg(amount) as Totalbsepf from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '09' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '09' and year = '" . $last_year . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '09' and year = '" . $last_year . "' and status='confirm' )x group by month ) as Totalbsepf   ,
-                        (SELECT avg(amount) as Totalboctf from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '10' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '10' and year = '" . $last_year . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '10' and year = '" . $last_year . "' and status='confirm' )x group by month ) as Totalboctf   ,
-                       (SELECT avg(amount) as Totalbnovf from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '11' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '11' and year = '" . $last_year . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '11' and year = '" . $last_year . "' and status='confirm' )x group by month ) as Totalbnovf   ,
-                      (SELECT avg(amount) as Totalbdecf from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '12' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,amount from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '12' and year = '" . $last_year . "' and status='confirm' union all SELECT month,amount from pos where merchant_id = '" . $merchant_id . "' and month = '12' and year = '" . $last_year . "' and status='confirm' )x group by month ) as Totalbdecf   ,
-              
+
+    public function index_original() {
+        $data["title"] = "Merchant Panel";
+        $data["meta"] ='Dashboard';
         
-        (SELECT sum(tax) as Totalbjantax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '01' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,tax from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '01' and year = '" . $last_year . "' and status='confirm' union all SELECT month,tax from pos where merchant_id = '" . $merchant_id . "' and month = '01' and year = '" . $last_year . "' and status='confirm' )x group by month ) as Totalbjantax   ,
-               (SELECT sum(tax) as Totalbfebtax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '02' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,tax from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '02' and year = '" . $last_year . "' and status='confirm' union all SELECT month,tax from pos where merchant_id = '" . $merchant_id . "' and month = '02' and year = '" . $last_year . "' and status='confirm' )x group by month ) as Totalbfebtax   ,
-               (SELECT sum(tax) as Totalbmarchtax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '03' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,tax from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '03' and year = '" . $last_year . "' and status='confirm' union all SELECT month,tax from pos where merchant_id = '" . $merchant_id . "' and month = '03' and year = '" . $last_year . "' and status='confirm' )x group by month ) as Totalbmarchtax   ,
-               (SELECT sum(tax) as Totalbaprltax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '04' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,tax from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '04' and year = '" . $last_year . "' and status='confirm' union all SELECT month,tax from pos where merchant_id = '" . $merchant_id . "' and month = '04' and year = '" . $last_year . "' and status='confirm' )x group by month ) as Totalbaprltax   ,
-              (SELECT sum(tax) as Totalbmaytax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '05' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,tax from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '05' and year = '" . $last_year . "' and status='confirm' union all SELECT month,tax from pos where merchant_id = '" . $merchant_id . "' and month = '05' and year = '" . $last_year . "' and status='confirm' )x group by month ) as Totalbmaytax   ,
-               (SELECT sum(tax) as Totalbjunetax from ( SELECT month,tax from customer_payment_request where merchant_id  = '" . $merchant_id . "' and month = '06' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,tax from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '06' and year = '" . $last_year . "' and status='confirm' union all SELECT month,tax from pos where merchant_id = '" . $merchant_id . "' and month = '06' and year = '" . $last_year . "' and status='confirm' )x group by month ) as Totalbjunetax   ,
-               (SELECT sum(tax) as Totalbjulytax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '07' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,tax from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '07' and year = '" . $last_year . "' and status='confirm' union all SELECT month,tax from pos where merchant_id = '" . $merchant_id . "' and month = '07' and year = '" . $last_year . "' and status='confirm' )x group by month ) as Totalbjulytax   ,
-               (SELECT sum(tax) as Totalbaugusttax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '08' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,tax from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '08' and year = '" . $last_year . "' and status='confirm' union all SELECT month,tax from pos where merchant_id = '" . $merchant_id . "' and month = '08' and year = '" . $last_year . "' and status='confirm' )x group by month ) as Totalbaugusttax   ,
-               (SELECT sum(tax) as Totalbseptax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '09' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,tax from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '09' and year = '" . $last_year . "' and status='confirm' union all SELECT month,tax from pos where merchant_id = '" . $merchant_id . "' and month = '09' and year = '" . $last_year . "' and status='confirm' )x group by month ) as Totalbseptax   ,
-              (SELECT sum(tax) as Totalbocttax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '10' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,tax from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '10' and year = '" . $last_year . "' and status='confirm' union all SELECT month,tax from pos where merchant_id = '" . $merchant_id . "' and month = '10' and year = '" . $last_year . "' and status='confirm' )x group by month ) as Totalbocttax   ,
-               (SELECT sum(tax) as Totalbnovtax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '11' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,tax from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '11' and year = '" . $last_year . "' and status='confirm' union all SELECT month,tax from pos where merchant_id = '" . $merchant_id . "' and month = '11' and year = '" . $last_year . "' and status='confirm' )x group by month ) as Totalbnovtax   ,
-               (SELECT sum(tax) as Totalbdectax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $merchant_id . "' and month = '12' and year = '" . $last_year . "' and status='confirm'   union all SELECT month,tax from recurring_payment where merchant_id = '" . $merchant_id . "' and month = '12' and year = '" . $last_year . "' and status='confirm' union all SELECT month,tax from pos where merchant_id = '" . $merchant_id . "' and month = '12' and year = '" . $last_year . "' and status='confirm' )x group by month ) as Totalbdectax
-                
-                 ");
-    $getDashboardData = $getDashboard->result_array();
-    //print_r($getDashboardData);  die(); 
-    $data['getDashboardData'] = $getDashboardData;
+        if( $this->session->userdata('employee_id') ) {
+            $merchant_id = $this->session->userdata('employee_id');
+        } else {
+            $merchant_id = $this->session->userdata('merchant_id');
+        }
+        
+        $today2 = date("Y");
+        $last_year = date("Y", strtotime("-1 year"));
+        $last_date = date("Y-m-d", strtotime("-29 days"));
+        $date = date("Y-m-d");
+        $start = $this->input->post('start');
+        $end = $this->input->post('end');
+        $employee = $this->input->post('employee');
+        //  $last_date1 = date("Y-m-d",strtotime("-29 days"));
+        //$date1 = date("Y-m-d");
+        if ($start == 'undefined') {
+          $last_date = date("Y-m-d", strtotime("-29 days"));
+          $date = date("Y-m-d");
+        } elseif ($start != '') {
+          $last_date = $start;
+          $date = $end;
+        } else {
+          $last_date = date("Y-m-d", strtotime("-29 days"));
+          $date = date("Y-m-d");
+        }
+        if ($employee == 'all') {
+          $sub_merchant_id = 0;
+        } elseif ($employee == 'merchant') {
+          $sub_merchant_id = 0;
+        } else {
+          $sub_merchant_id = $employee;
+        }
+        $getDashboard = $this->db->query("SELECT 
+            ( SELECT count(id) as NewTotalOrders from customer_payment_request where date_c = CURDATE() and merchant_id = '" . $merchant_id . "' ) as NewTotalOrders,  ( SELECT count(id) as NewTotalOrders_p from pos where date_c = CURDATE() and merchant_id = '" . $merchant_id . "' ) as NewTotalOrders_p,  ( SELECT count(id) as TotalOrders from customer_payment_request where status='confirm' and merchant_id = '" . $merchant_id . "' ) as TotalOrders, ( SELECT count(id) as TotalOrders_P from pos where status='confirm' and merchant_id = '" . $merchant_id . "' ) as TotalOrders_p, ( SELECT count(id) as TotalpendingOrders from customer_payment_request where status='pending'  and merchant_id = '" . $merchant_id . "') as TotalpendingOrders,
+            (SELECT sum(amount) as TotalAmount from customer_payment_request where status='confirm' and merchant_id = '" . $merchant_id . "' and date_c >= '" . $last_date . "' and date_c <= '" . $date . "'  ) as TotalAmount ,
+            (SELECT sum(amount) as TotalAmountRe from recurring_payment where status='confirm' and merchant_id = '" . $merchant_id . "' and date_c >= '" . $last_date . "' and date_c <= '" . $date . "') as TotalAmountRe ,
+            (SELECT sum(amount) as TotalAmountPOS from pos where status='confirm' and merchant_id = '" . $merchant_id . "' and date_c >= '" . $last_date . "' and date_c <= '" . $date . "') as TotalAmountPOS
+        ");
+
+        //echo $this->db->last_query();die;
+        $getDashboardData = $getDashboard->result_array();
+        //print_r($getDashboardData);  die(); 
+        $data['getDashboardData'] = $getDashboardData;
+
+        $getSaleByYear = $this->db->query("SELECT * from merchant_year_graph where merchant_id = ".$merchant_id." order by id desc limit 0,1");
+        $getSaleByYearData = $getSaleByYear->result_array();
+        // echo '<pre>';print_r($getSaleByYearData);die;
+        $data['getSaleByYearData'] = $getSaleByYearData;
     
-    $DashboardCountData = $this->db->query("SELECT 
-    ( SELECT count(id) as TotalPOSConfirm from pos where status='confirm'AND date_c BETWEEN '$last_date' AND '$date' and merchant_id = $merchant_id ) as TotalPOSConfirm,
-( SELECT count(id) as TotalInvoiceConfirm from customer_payment_request where status='confirm' and date_c BETWEEN '$last_date' AND '$date' and merchant_id = $merchant_id ) as TotalInvoiceConfirm,
-( SELECT count(id) as TotalRecurringConfirm from recurring_payment where status='confirm' and date_c BETWEEN '$last_date' AND '$date' and merchant_id = $merchant_id ) as TotalRecurringConfirm,
-( SELECT count(id) as TotalInvoicePending from customer_payment_request where status='pending' and date_c BETWEEN '$last_date' AND '$date' and merchant_id = $merchant_id ) as TotalInvoicePending,
-( SELECT count(id) as TotalRecurringPending from recurring_payment where status='pending' and date_c BETWEEN '$last_date' AND '$date' and merchant_id = $merchant_id ) as TotalRecurringPending,
-( SELECT count(id) as TotalInvoicePendingDueOver from customer_payment_request where status='pending' and date_c BETWEEN '$last_date' AND '$date' and merchant_id = $merchant_id AND due_date< CURDATE()) as TotalInvoicePendingDueOver,
-( SELECT count(id) as TotalRecurringPendingDueOver from recurring_payment where status='pending' and date_c BETWEEN '$last_date' AND '$date' and merchant_id = $merchant_id AND due_date< CURDATE() ) as TotalRecurringPendingDueOver
-    "); 
-     //echo $this->db->last_query(); 
-     //print_r(); 
-     $DashboardCountData=$DashboardCountData->result_array();
+        $DashboardCountData = $this->db->query("SELECT 
+            ( SELECT count(id) as TotalPOSConfirm from pos where status='confirm'AND date_c BETWEEN '$last_date' AND '$date' and merchant_id = $merchant_id ) as TotalPOSConfirm,
+            ( SELECT count(id) as TotalInvoiceConfirm from customer_payment_request where status='confirm' and date_c BETWEEN '$last_date' AND '$date' and merchant_id = $merchant_id ) as TotalInvoiceConfirm,
+            ( SELECT count(id) as TotalRecurringConfirm from recurring_payment where status='confirm' and date_c BETWEEN '$last_date' AND '$date' and merchant_id = $merchant_id ) as TotalRecurringConfirm,
+            ( SELECT count(id) as TotalInvoicePending from customer_payment_request where status='pending' and date_c BETWEEN '$last_date' AND '$date' and merchant_id = $merchant_id ) as TotalInvoicePending,
+            ( SELECT count(id) as TotalRecurringPending from recurring_payment where status='pending' and date_c BETWEEN '$last_date' AND '$date' and merchant_id = $merchant_id ) as TotalRecurringPending,
+            ( SELECT count(id) as TotalInvoicePendingDueOver from customer_payment_request where status='pending' and date_c BETWEEN '$last_date' AND '$date' and merchant_id = $merchant_id AND due_date< CURDATE()) as TotalInvoicePendingDueOver,
+            ( SELECT count(id) as TotalRecurringPendingDueOver from recurring_payment where status='pending' and date_c BETWEEN '$last_date' AND '$date' and merchant_id = $merchant_id AND due_date< CURDATE() ) as TotalRecurringPendingDueOver
+        "); 
+        //echo $this->db->last_query(); 
+        //print_r(); 
+        $DashboardCountData=$DashboardCountData->result_array();
    
-         //print_r($DashboardCountData[0]['TotalPOSConfirm']);  die(); 
-     $widgets_data = array(
-    'NewTotalOrders'=>$DashboardCountData[0]['TotalPOSConfirm'], 
-    'TotalOrders'=>$DashboardCountData[0]['TotalInvoiceConfirm']+$DashboardCountData[0]['TotalRecurringConfirm'], 
-    'TotalpendingOrders'=>$DashboardCountData[0]['TotalInvoicePending']+$DashboardCountData[0]['TotalRecurringPending'], 
-    'TotalAmount'=>0, 
+        //print_r($DashboardCountData[0]['TotalPOSConfirm']);  die(); 
+        $widgets_data = array(
+            'NewTotalOrders'=>$DashboardCountData[0]['TotalPOSConfirm'], 
+            'TotalOrders'=>$DashboardCountData[0]['TotalInvoiceConfirm']+$DashboardCountData[0]['TotalRecurringConfirm'], 
+            'TotalpendingOrders'=>$DashboardCountData[0]['TotalInvoicePending']+$DashboardCountData[0]['TotalRecurringPending'], 
+            'TotalAmount'=>0, 
+            
+            'TotalLate' => $DashboardCountData[0]['TotalInvoicePendingDueOver']+$DashboardCountData[0]['TotalRecurringPendingDueOver'],
+        ); 
     
-    'TotalLate' => $DashboardCountData[0]['TotalInvoicePendingDueOver']+$DashboardCountData[0]['TotalRecurringPendingDueOver'],
-          ); 
+        $data['widgets_data'] = $widgets_data;
+        $data1 = array();
+        // $data['item'] = $this->admin_model->data_get_where_gg($last_date, $date,'confirm',$merchant_id,$employee,'customer_payment_request' );
+        $package_data = $this->admin_model->data_get_where_down("customer_payment_request", $date, $last_date, $merchant_id);
+        $mem = array();
+        $member = array();
+        foreach ($package_data as $each) {
+          $package['Amount'] = '$' . $each->amount;
+          $package['Tax'] = '$' . $each->tax;
+          $package['Card'] = Ucfirst($each->card_type);
+          if ($each->type = 'straight') {
+            $package['Type'] = 'Invoice';
+          } else {
+            $package['Type'] = $each->type;
+          }
+          $package['Date'] = $each->date_c;
+          $package['Reference'] = $each->reference;
+          $mem[] = $package;
+        }
+        $data['item'] = $mem;
+        $package_data1 = $this->admin_model->data_get_where_down("recurring_payment", $date, $last_date, $merchant_id);
+        $mem1 = array();
+        $member1 = array();
+        foreach ($package_data1 as $each) {
+          $package1['Amount'] = '$' . $each->amount;
+          $package1['Tax'] = '$' . $each->tax;
+          $package1['Card'] = Ucfirst($each->card_type);
+          if ($each->type = 'recurring') {
+            $package1['Type'] = 'INV';
+          } else {
+            $package1['Type'] = $each->type;
+          }
+          $package1['Date'] = $each->date_c;
+          $package1['Reference'] = $each->reference;
+          $mem1[] = $package1;
+        }
+        $data['item1'] = $mem1;
+        $package_data2 = $this->admin_model->data_get_where_down("pos", $date, $last_date, $merchant_id);
+        $mem2 = array();
+        $member2 = array();
+        foreach ($package_data2 as $each) {
+          if ($each->status == 'Chargeback_Confirm') {
+            $package2['Amount'] = '-$' . $each->amount;
+          } else {
+            $package2['Amount'] = '$' . $each->amount;
+          }
+          $package2['Tax'] = '$' . $each->tax;
+          $package2['Card'] = Ucfirst($each->card_type);
+          $package2['Type'] = strtoupper($each->type);
+          $package2['Date'] = $each->date_c;
+          $package2['Reference'] = $each->reference;
+          $mem2[] = $package2;
+        }
+        $data['item2'] = $mem2;
+        $data['item3'] = json_encode(array_merge($data['item'], $data['item1'], $data['item2']));
+        //  $data['highchart'] = $this->admin_model->get_details($merchant_id);
+        // echo json_encode($data['highchart']);
+        if ($this->input->post('start') != '') {
+          echo json_encode($data);
+          die();
+        } else {
+          // return $this->load->view('merchant/dashboard', $data);
+          return $this->load->view('merchant/label_dashboard', $data);
+        }
+    }
+
+    public function index() {
+        $data["title"] = "Merchant Panel";
+        $data["meta"] ='Dashboard';
+        $month = date("m");
+        $today2 = date("Y");
+        
+        
+        if( $this->session->userdata('employee_id') ) {
+            $merchant_id = $this->session->userdata('employee_id');
+            $p_merchant_id = $this->session->userdata('merchant_id');
+        } else {
+            $merchant_id = $this->session->userdata('merchant_id');
+             $p_merchant_id = $this->session->userdata('merchant_id');
+        }
+
+if($month=='01' ){
+         $amount = $this->db->query("SELECT sum(amount) as Totaljan from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '01' and year = '" . $today2 . "' and status='confirm'    union all SELECT month,amount from pos where merchant_id = '" . $p_merchant_id . "' and month = '01' and year = '" . $today2 . "' and status='confirm' )x group by month  ");
+          
+      $getamount = $amount->result_array();
+
+          $fee = $this->db->query("SELECT avg(amount) as Totaljanf from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '01' and year = '" . $today2 . "' and status='confirm'    union all SELECT month,amount from pos where merchant_id = '" . $p_merchant_id . "' and month = '01' and year = '" . $today2 . "' and status='confirm' )x group by month  ");
+
+         $getfee = $fee->result_array();
+
+            $tax = $this->db->query("SELECT sum(tax) as Totaljantax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '01' and year = '" . $today2 . "' and status='confirm'    union all SELECT month,tax from pos where merchant_id = '" . $p_merchant_id . "' and month = '01' and year = '" . $today2 . "' and status='confirm' )x group by month");
+
+           $gettax = $tax->result_array();
+          
+           $amount = $this->db->query("UPDATE merchant_year_graph SET Totaljan='".$getamount[0]['Totaljan']."' ,Totaljanf='".$getfee[0]['Totaljanf']."',Totaljantax='".$gettax[0]['Totaljantax']."' where merchant_id= '" . $p_merchant_id . "' ");
+
+          // echo $this->db->last_query();die;
+ }
+
+ else if($month=='02' ){
+         $amount = $this->db->query("SELECT sum(`amount`-`p_ref_amount`) as Totalfeb from ( SELECT month,amount,p_ref_amount from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '02' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1)    union all SELECT month,amount,p_ref_amount from pos where merchant_id = '" . $p_merchant_id . "' and month = '02' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1) )x group by month  ");
+          
+      $getamount = $amount->result_array();
+
+          $fee = $this->db->query("SELECT avg(amount) as Totalfebf from ( SELECT month,amount,p_ref_amount from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '02' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1)   union all SELECT month,amount,p_ref_amount from pos where merchant_id = '" . $p_merchant_id . "' and month = '02' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1) )x group by month  ");
+
+         $getfee = $fee->result_array();
+
+            $tax = $this->db->query("SELECT sum(tax) as Totalfebtax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '02' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1)    union all SELECT month,tax from pos where merchant_id = '" . $p_merchant_id . "' and month = '02' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1) )x group by month");
+
+           $gettax = $tax->result_array();
+          
+           $amount = $this->db->query("UPDATE merchant_year_graph SET Totalfeb='".$getamount[0]['Totalfeb']."' ,Totalfebf='".$getfee[0]['Totalfebf']."',Totalfebtax='".$gettax[0]['Totalfebtax']."' where merchant_id= '" . $p_merchant_id . "' ");
+
+          // echo $this->db->last_query();die;
+ }
+
+  else if($month=='04' ){
+
+
+            $amount = $this->db->query("SELECT sum(`amount`-`p_ref_amount`) as Totalaprl from ( SELECT month,amount,p_ref_amount from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '04' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1)    union all SELECT month,amount,p_ref_amount from pos where merchant_id = '" . $p_merchant_id . "' and month = '04' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1) )x group by month  ");
+          
+      $getamount = $amount->result_array();
+
+          $fee = $this->db->query("SELECT avg(amount) as Totalaprlf from ( SELECT month,amount,p_ref_amount from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '04' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1)   union all SELECT month,amount,p_ref_amount from pos where merchant_id = '" . $p_merchant_id . "' and month = '04' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1) )x group by month  ");
+
+         $getfee = $fee->result_array();
+
+            $tax = $this->db->query("SELECT sum(tax) as Totalaprltax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '04' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1)    union all SELECT month,tax from pos where merchant_id = '" . $p_merchant_id . "' and month = '04' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1) )x group by month");
+
+           $gettax = $tax->result_array();
+          
+           $amount = $this->db->query("UPDATE merchant_year_graph SET Totalaprl='".$getamount[0]['Totalaprl']."' ,Totalaprlf='".$getfee[0]['Totalaprlf']."',Totalaprltax='".$gettax[0]['Totalaprltax']."' where merchant_id= '" . $p_merchant_id . "' ");
+ }
+
+   else if($month=='05' ){
+
+////////////////////////////////
+      $amount = $this->db->query("SELECT sum(`amount`-`p_ref_amount`) as Totalaprl from ( SELECT month,amount,p_ref_amount from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '04' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1)    union all SELECT month,amount,p_ref_amount from pos where merchant_id = '" . $p_merchant_id . "' and month = '04' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1) )x group by month  ");
+          
+      $getamount = $amount->result_array();
+
+          $fee = $this->db->query("SELECT avg(amount) as Totalaprlf from ( SELECT month,amount,p_ref_amount from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '04' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1)   union all SELECT month,amount,p_ref_amount from pos where merchant_id = '" . $p_merchant_id . "' and month = '04' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1) )x group by month  ");
+
+         $getfee = $fee->result_array();
+
+            $tax = $this->db->query("SELECT sum(tax) as Totalaprltax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '04' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1)    union all SELECT month,tax from pos where merchant_id = '" . $p_merchant_id . "' and month = '04' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1) )x group by month");
+
+           $gettax = $tax->result_array();
+          
+           $amount = $this->db->query("UPDATE merchant_year_graph SET Totalaprl='".$getamount[0]['Totalaprl']."' ,Totalaprlf='".$getfee[0]['Totalaprlf']."',Totalaprltax='".$gettax[0]['Totalaprltax']."' where merchant_id= '" . $p_merchant_id . "' ");
+
+//////////////////////////////////////    
+
+            $amount = $this->db->query("SELECT sum(`amount`-`p_ref_amount`) as Totalmay from ( SELECT month,amount,p_ref_amount from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '05' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1)    union all SELECT month,amount,p_ref_amount from pos where merchant_id = '" . $p_merchant_id . "' and month = '05' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1) )x group by month  ");
+          
+      $getamount = $amount->result_array();
+
+          $fee = $this->db->query("SELECT avg(amount) as Totalmayf from ( SELECT month,amount,p_ref_amount from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '05' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1)   union all SELECT month,amount,p_ref_amount from pos where merchant_id = '" . $p_merchant_id . "' and month = '05' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1) )x group by month  ");
+
+         $getfee = $fee->result_array();
+
+            $tax = $this->db->query("SELECT sum(tax) as Totalmaytax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '05' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1)    union all SELECT month,tax from pos where merchant_id = '" . $p_merchant_id . "' and month = '05' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1) )x group by month");
+
+           $gettax = $tax->result_array();
+          
+           $amount = $this->db->query("UPDATE merchant_year_graph SET Totalmay='".$getamount[0]['Totalmay']."' ,Totalmayf='".$getfee[0]['Totalmayf']."',Totalmaytax='".$gettax[0]['Totalmaytax']."' where merchant_id= '" . $p_merchant_id . "' ");
+ }
+
+ else if($month=='06' ){
+
+////////////////////////////////
+     
+
+            $amount = $this->db->query("SELECT sum(`amount`-`p_ref_amount`) as Totalmay from ( SELECT month,amount,p_ref_amount from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '05' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1)    union all SELECT month,amount,p_ref_amount from pos where merchant_id = '" . $p_merchant_id . "' and month = '05' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1) )x group by month  ");
+          
+      $getamount = $amount->result_array();
+
+          $fee = $this->db->query("SELECT avg(amount) as Totalmayf from ( SELECT month,amount,p_ref_amount from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '05' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1)   union all SELECT month,amount,p_ref_amount from pos where merchant_id = '" . $p_merchant_id . "' and month = '05' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1) )x group by month  ");
+
+         $getfee = $fee->result_array();
+
+            $tax = $this->db->query("SELECT sum(tax) as Totalmaytax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '05' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1)    union all SELECT month,tax from pos where merchant_id = '" . $p_merchant_id . "' and month = '05' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1) )x group by month");
+
+           $gettax = $tax->result_array();
+          
+           $amount = $this->db->query("UPDATE merchant_year_graph SET Totalmay='".$getamount[0]['Totalmay']."' ,Totalmayf='".$getfee[0]['Totalmayf']."',Totalmaytax='".$gettax[0]['Totalmaytax']."' where merchant_id= '" . $p_merchant_id . "' ");
+
+
+           //////////////////////////
+
+            $amount = $this->db->query("SELECT sum(`amount`-`p_ref_amount`) as Totaljune from ( SELECT month,amount,p_ref_amount from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '06' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1)    union all SELECT month,amount,p_ref_amount from pos where merchant_id = '" . $p_merchant_id . "' and month = '06' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1) )x group by month  ");
+          
+      $getamount = $amount->result_array();
+
+          $fee = $this->db->query("SELECT avg(amount) as Totaljunef from ( SELECT month,amount,p_ref_amount from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '06' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1)   union all SELECT month,amount,p_ref_amount from pos where merchant_id = '" . $p_merchant_id . "' and month = '06' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1) )x group by month  ");
+
+         $getfee = $fee->result_array();
+
+            $tax = $this->db->query("SELECT sum(tax) as Totaljunetax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '06' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1)    union all SELECT month,tax from pos where merchant_id = '" . $p_merchant_id . "' and month = '06' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1) )x group by month");
+
+           $gettax = $tax->result_array();
+          
+           $amount = $this->db->query("UPDATE merchant_year_graph SET Totaljune='".$getamount[0]['Totaljune']."' ,Totaljunef='".$getfee[0]['Totaljunef']."',Totaljunetax='".$gettax[0]['Totaljunetax']."' where merchant_id= '" . $p_merchant_id . "' ");
+
+
+ }
+
+  else if($month=='07' ){
+
+////////////////////////////////
+     
+
+         
+
+            $amount = $this->db->query("SELECT sum(`amount`-`p_ref_amount`) as Totaljune from ( SELECT month,amount,p_ref_amount from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '06' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1)    union all SELECT month,amount,p_ref_amount from pos where merchant_id = '" . $p_merchant_id . "' and month = '06' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1) )x group by month  ");
+          
+      $getamount = $amount->result_array();
+
+          $fee = $this->db->query("SELECT avg(amount) as Totaljunef from ( SELECT month,amount,p_ref_amount from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '06' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1)   union all SELECT month,amount,p_ref_amount from pos where merchant_id = '" . $p_merchant_id . "' and month = '06' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1) )x group by month  ");
+
+         $getfee = $fee->result_array();
+
+            $tax = $this->db->query("SELECT sum(tax) as Totaljunetax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '06' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1)    union all SELECT month,tax from pos where merchant_id = '" . $p_merchant_id . "' and month = '06' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1) )x group by month");
+
+           $gettax = $tax->result_array();
+          
+           $amount = $this->db->query("UPDATE merchant_year_graph SET Totaljune='".$getamount[0]['Totaljune']."' ,Totaljunef='".$getfee[0]['Totaljunef']."',Totaljunetax='".$gettax[0]['Totaljunetax']."' where merchant_id= '" . $p_merchant_id . "' ");
+
+             //////////////////////////
+
+              $amount = $this->db->query("SELECT sum(`amount`-`p_ref_amount`) as Totaljuly from ( SELECT month,amount,p_ref_amount from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '07' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1)    union all SELECT month,amount,p_ref_amount from pos where merchant_id = '" . $p_merchant_id . "' and month = '07' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1) )x group by month  ");
+          
+      $getamount = $amount->result_array();
+
+          $fee = $this->db->query("SELECT avg(amount) as Totaljulyf from ( SELECT month,amount,p_ref_amount from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '07' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1)   union all SELECT month,amount,p_ref_amount from pos where merchant_id = '" . $p_merchant_id . "' and month = '07' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1) )x group by month  ");
+
+         $getfee = $fee->result_array();
+
+            $tax = $this->db->query("SELECT sum(tax) as Totaljulytax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '07' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1)    union all SELECT month,tax from pos where merchant_id = '" . $p_merchant_id . "' and month = '07' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1) )x group by month");
+
+           $gettax = $tax->result_array();
+          
+           $amount = $this->db->query("UPDATE merchant_year_graph SET Totaljuly='".$getamount[0]['Totaljuly']."' ,Totaljulyf='".$getfee[0]['Totaljulyf']."',Totaljulytax='".$gettax[0]['Totaljulytax']."' where merchant_id= '" . $p_merchant_id . "' ");
+
+
+         
+
+
+ }
+
+else if($month=='08' ){
+
+////////////////////////////////
+     
+
+           
+         
+
+            $amount = $this->db->query("SELECT sum(`amount`-`p_ref_amount`) as Totalaugust from ( SELECT month,amount,p_ref_amount from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '08' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1)    union all SELECT month,amount,p_ref_amount from pos where merchant_id = '" . $p_merchant_id . "' and month = '08' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1) )x group by month  ");
+          
+      $getamount = $amount->result_array();
+
+          $fee = $this->db->query("SELECT avg(amount) as Totalaugustf from ( SELECT month,amount,p_ref_amount from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '08' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1)   union all SELECT month,amount,p_ref_amount from pos where merchant_id = '" . $p_merchant_id . "' and month = '08' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1) )x group by month  ");
+
+         $getfee = $fee->result_array();
+
+            $tax = $this->db->query("SELECT sum(tax) as Totalaugusttax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '08' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1)    union all SELECT month,tax from pos where merchant_id = '" . $p_merchant_id . "' and month = '08' and year = '" . $today2 . "' and (status='confirm' or partial_refund=1) )x group by month");
+
+           $gettax = $tax->result_array();
+          
+           $amount = $this->db->query("UPDATE merchant_year_graph SET Totalaugust='".$getamount[0]['Totalaugust']."' ,Totalaugustf='".$getfee[0]['Totalaugustf']."',Totalaugusttax='".$gettax[0]['Totalaugusttax']."' where merchant_id= '" . $p_merchant_id . "' ");
+
+
+ }
+
+else if($month=='09' ){
+         $amount = $this->db->query("SELECT sum(amount) as Totalsep from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '09' and year = '" . $today2 . "' and status='confirm'    union all SELECT month,amount from pos where merchant_id = '" . $p_merchant_id . "' and month = '09' and year = '" . $today2 . "' and status='confirm' )x group by month  ");
+          
+      $getamount = $amount->result_array();
+
+          $fee = $this->db->query("SELECT avg(amount) as Totalsepf from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '09' and year = '" . $today2 . "' and status='confirm'    union all SELECT month,amount from pos where merchant_id = '" . $p_merchant_id . "' and month = '09' and year = '" . $today2 . "' and status='confirm' )x group by month ");
+
+         $getfee = $fee->result_array();
+
+           $tax = $this->db->query("SELECT sum(tax) as Totalseptax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '09' and year = '" . $today2 . "' and status='confirm'    union all SELECT month,tax from pos where merchant_id = '" . $p_merchant_id . "' and month = '09' and year = '" . $today2 . "' and status='confirm' )x group by month");
+
+           $gettax = $tax->result_array();
+          
+           $amount = $this->db->query("UPDATE merchant_year_graph SET Totalsep='".$getamount[0]['Totalsep']."' ,Totalsepf='".$getfee[0]['Totalsepf']."',Totalseptax='".$gettax[0]['Totalseptax']."'   where merchant_id= '" . $p_merchant_id . "' ");
+
+
+}
+
+else if($month=='10' ){
+         $amount = $this->db->query("SELECT sum(amount) as Totaloct from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '10' and year = '" . $today2 . "' and status='confirm'    union all SELECT month,amount from pos where merchant_id = '" . $p_merchant_id . "' and month = '10' and year = '" . $today2 . "' and status='confirm' )x group by month  ");
+          
+      $getamount = $amount->result_array();
+
+          $fee = $this->db->query("SELECT avg(amount) as Totaloctf from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '10' and year = '" . $today2 . "' and status='confirm'    union all SELECT month,amount from pos where merchant_id = '" . $p_merchant_id . "' and month = '10' and year = '" . $today2 . "' and status='confirm' )x group by month ");
+
+         $getfee = $fee->result_array();
+
+           $tax = $this->db->query("SELECT sum(tax) as Totalocttax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '10' and year = '" . $today2 . "' and status='confirm'    union all SELECT month,tax from pos where merchant_id = '" . $p_merchant_id . "' and month = '10' and year = '" . $today2 . "' and status='confirm' )x group by month");
+
+           $gettax = $tax->result_array();
+          
+           $amount = $this->db->query("UPDATE merchant_year_graph SET Totaloct='".$getamount[0]['Totaloct']."' ,Totaloctf='".$getfee[0]['Totaloctf']."',Totalocttax='".$gettax[0]['Totalocttax']."'   where merchant_id= '" . $p_merchant_id . "' ");
+
+
+}
+else if($month=='11'){
+         $amount = $this->db->query("SELECT sum(amount) as Totalnov from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '11' and year = '" . $today2 . "' and status='confirm'    union all SELECT month,amount from pos where merchant_id = '" . $p_merchant_id . "' and month = '11' and year = '" . $today2 . "' and status='confirm' )x group by month  ");
+          
+      $getamount = $amount->result_array();
+
+          $fee = $this->db->query("SELECT avg(amount) as Totalnovf from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '11' and year = '" . $today2 . "' and status='confirm'    union all SELECT month,amount from pos where merchant_id = '" . $p_merchant_id . "' and month = '11' and year = '" . $today2 . "' and status='confirm' )x group by month ");
+
+         $getfee = $fee->result_array();
+
+           $tax = $this->db->query("SELECT sum(tax) as Totalnovtax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '11' and year = '" . $today2 . "' and status='confirm'    union all SELECT month,tax from pos where merchant_id = '" . $p_merchant_id . "' and month = '11' and year = '" . $today2 . "' and status='confirm' )x group by month");
+
+           $gettax = $tax->result_array();
+          
+           $amount = $this->db->query("UPDATE merchant_year_graph SET Totalnov='".$getamount[0]['Totalnov']."' ,Totalnovf='".$getfee[0]['Totalnovf']."',Totalnovtax='".$gettax[0]['Totalnovtax']."'   where merchant_id= '" . $p_merchant_id . "' ");
+
+
+}
+else if($month=='12'){
+
+  //
+   $amount = $this->db->query("SELECT sum(amount) as Totalnov from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '11' and year = '" . $today2 . "' and status='confirm'    union all SELECT month,amount from pos where merchant_id = '" . $p_merchant_id . "' and month = '11' and year = '" . $today2 . "' and status='confirm' )x group by month  ");
+          
+      $getamount = $amount->result_array();
+
+          $fee = $this->db->query("SELECT avg(amount) as Totalnovf from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '11' and year = '" . $today2 . "' and status='confirm'    union all SELECT month,amount from pos where merchant_id = '" . $p_merchant_id . "' and month = '11' and year = '" . $today2 . "' and status='confirm' )x group by month ");
+
+         $getfee = $fee->result_array();
+
+           $tax = $this->db->query("SELECT sum(tax) as Totalnovtax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '11' and year = '" . $today2 . "' and status='confirm'    union all SELECT month,tax from pos where merchant_id = '" . $p_merchant_id . "' and month = '11' and year = '" . $today2 . "' and status='confirm' )x group by month");
+
+           $gettax = $tax->result_array();
+          
+           $amount = $this->db->query("UPDATE merchant_year_graph SET Totalnov='".$getamount[0]['Totalnov']."' ,Totalnovf='".$getfee[0]['Totalnovf']."',Totalnovtax='".$gettax[0]['Totalnovtax']."'   where merchant_id= '" . $p_merchant_id . "' ");
+           //
+         $amount = $this->db->query("SELECT sum(amount) as Totaldec from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '12' and year = '" . $today2 . "' and status='confirm'    union all SELECT month,amount from pos where merchant_id = '" . $p_merchant_id . "' and month = '12' and year = '" . $today2 . "' and status='confirm' )x group by month  ");
+          
+      $getamount = $amount->result_array();
+
+          $fee = $this->db->query("SELECT avg(amount) as Totaldecf from ( SELECT month,amount from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '12' and year = '" . $today2 . "' and status='confirm'    union all SELECT month,amount from pos where merchant_id = '" . $p_merchant_id . "' and month = '12' and year = '" . $today2 . "' and status='confirm' )x group by month ");
+
+         $getfee = $fee->result_array();
+
+           $tax = $this->db->query("SELECT sum(tax) as Totaldectax from ( SELECT month,tax from customer_payment_request where merchant_id = '" . $p_merchant_id . "' and month = '12' and year = '" . $today2 . "' and status='confirm'    union all SELECT month,tax from pos where merchant_id = '" . $p_merchant_id . "' and month = '12' and year = '" . $today2 . "' and status='confirm' )x group by month");
+
+           $gettax = $tax->result_array();
+          
+           $amount = $this->db->query("UPDATE merchant_year_graph SET Totaldec='".$getamount[0]['Totaldec']."' ,Totaldecf='".$getfee[0]['Totaldecf']."',Totaldectax='".$gettax[0]['Totaldectax']."'   where merchant_id= '" . $p_merchant_id . "' ");
+
+
+}
+
+        $getSaleByYear = $this->db->query("SELECT * from merchant_year_graph where merchant_id = ".$p_merchant_id." order by id desc limit 0,1");
+        $getSaleByYearData = $getSaleByYear->result_array();
+        // echo '<pre>';print_r($getSaleByYearData);die;
+        $data['getSaleByYearData'] = $getSaleByYearData;
     
-     $data['widgets_data'] = $widgets_data;
-    $data1 = array();
-    // $data['item'] = $this->admin_model->data_get_where_gg($last_date, $date,'confirm',$merchant_id,$employee,'customer_payment_request' );
-    $package_data = $this->admin_model->data_get_where_down("customer_payment_request", $date, $last_date, $merchant_id);
-    $mem = array();
-    $member = array();
-    foreach ($package_data as $each) {
-      $package['Amount'] = '$' . $each->amount;
-      $package['Tax'] = '$' . $each->tax;
-      $package['Card'] = Ucfirst($each->card_type);
-      if ($each->type = 'straight') {
-        $package['Type'] = 'Invoice';
-      } else {
-        $package['Type'] = $each->type;
-      }
-      $package['Date'] = $each->date_c;
-      $package['Reference'] = $each->reference;
-      $mem[] = $package;
+        return $this->load->view('merchant/label_dashboard', $data);
     }
-    $data['item'] = $mem;
-    $package_data1 = $this->admin_model->data_get_where_down("recurring_payment", $date, $last_date, $merchant_id);
-    $mem1 = array();
-    $member1 = array();
-    foreach ($package_data1 as $each) {
-      $package1['Amount'] = '$' . $each->amount;
-      $package1['Tax'] = '$' . $each->tax;
-      $package1['Card'] = Ucfirst($each->card_type);
-      if ($each->type = 'recurring') {
-        $package1['Type'] = 'INV';
-      } else {
-        $package1['Type'] = $each->type;
-      }
-      $package1['Date'] = $each->date_c;
-      $package1['Reference'] = $each->reference;
-      $mem1[] = $package1;
+
+    public function getGraphData() {
+        // echo '<pre>';print_r($_POST);die;
+        $response = array();
+        $user = array();
+
+        if( $this->session->userdata('employee_id') ) {
+            $merchant_id = $this->session->userdata('employee_id');
+        } else {
+            $merchant_id = $this->session->userdata('merchant_id');
+        }
+        
+        $date_c = date("Y-m-d", strtotime($_POST['start']));
+        $date_cc = date('Y-m-d', strtotime($this->input->post('end') . ' +1 day'));
+        $employee = $_POST['employee'];
+        $date = date("Y-m-d");
+        $last_date = date("Y-m-d", strtotime("-29 days"));
+        // $last_date = date('Y-m-d', strtotime($this->input->post('end') . ' +1 day'));
+
+       if($_POST['employee'] == 'all') {
+            $stmt = $this->db->query("SELECT id,merchant_id,invoice_no ,sum(`amount`-`p_ref_amount`) as amount,sum(tax) as tax,avg(amount) as fee,  name,date_c from ( SELECT id,merchant_id,invoice_no,amount,p_ref_amount,tax,fee,name,date_c from customer_payment_request where date_c >= '".$date_c."' and date_c <= '".$date_cc."' and (status='confirm' or partial_refund=1) and merchant_id= '".$merchant_id."' union all SELECT id,merchant_id,invoice_no,amount,p_ref_amount,tax,fee,name,date_c from pos where date_c >= '".$date_c."' and date_c <= '".$date_cc."' and (status='confirm' or partial_refund=1) and merchant_id= '".$merchant_id."'  ) x group by date_c");
+    
+        } else {
+            $stmt = $this->db->query("SELECT id,merchant_id,invoice_no ,sum(`amount`-`p_ref_amount`) as amount,sum(tax) as tax,avg(amount) as fee,name,date_c from ( SELECT id,merchant_id,invoice_no,amount,p_ref_amount,tax,fee,name,date_c from customer_payment_request where date_c >= '".$date_c."' and date_c <= '".$date_cc."' and (status='confirm' or partial_refund=1) and sub_merchant_id='".$employee."' and merchant_id= '".$merchant_id."' union all SELECT id,merchant_id,invoice_no,amount,p_ref_amount,tax,fee,name,date_c from pos where date_c >= '".$date_c."' and date_c <= '".$date_cc."' and (status='confirm' or partial_refund=1) and sub_merchant_id='".$employee."' and merchant_id= '".$merchant_id."'  ) x group by date_c");
+        }
+        // echo $this->db->last_query();die;
+
+        if ($stmt->num_rows() > 0) {
+            foreach ($stmt->result_array() as $result) {
+                $temp = array(
+                    'date'              => $result['date_c'],
+                    'amount'            => $result['amount'],
+                    'clicks'            => !empty($result['tax']) ? $result['tax'] : '0.00',
+                    'cost'              => number_format($result['fee'],2),
+                    'tax'               => !empty($result['tax']) ? $result['tax'] : '0.00',
+                    'converted_people'  => !empty($result['tax']) ? $result['tax'] : '0.00',
+                    'revenue'           => !empty($result['tax']) ? $result['tax'] : '0.00',
+                    'linkcost'          => !empty($result['tax']) ? $result['tax'] : '0.00'
+                );
+                array_push($user, $temp);
+            }
+
+        } else {
+            $user = array();
+            $temp = array(
+                'date'              => $date_c,
+                'amount'            => "0",
+                'clicks'            => "0",
+                'cost'              => "0",
+                'tax'               => "0",
+                'converted_people'  => "0",
+                'revenue'           => "0",
+                'linkcost'          => "0"
+            );
+            array_push($user, $temp);
+        }
+        $responseData['saleData'] = $user;
+
+        if ($employee == 'all') {
+            $sub_merchant_id = $merchant_id;
+        } else {
+            $sub_merchant_id = $employee;
+        }
+        $getDashboard = $this->db->query("SELECT 
+            ( SELECT count(id) as NewTotalOrders from customer_payment_request where date_c = CURDATE() and merchant_id = '" . $sub_merchant_id . "' and date_c >= '" . $date_c . "' and date_c <= '" . $date_cc . "' ) as NewTotalOrders,
+            ( SELECT count(id) as NewTotalOrders_p from pos where date_c = CURDATE() and merchant_id = '" . $sub_merchant_id . "' and date_c >= '" . $date_c . "' and date_c <= '" . $date_cc . "' ) as NewTotalOrders_p,
+            ( SELECT count(id) as TotalOrders from customer_payment_request where status='confirm' and merchant_id = '" . $sub_merchant_id . "' and date_c >= '" . $date_c . "' and date_c <= '" . $date_cc . "' ) as TotalOrders,
+            ( SELECT count(id) as TotalOrders_P from pos where status='confirm' and merchant_id = '" . $sub_merchant_id . "' and date_c >= '" . $date_c . "' and date_c <= '" . $date_cc . "' ) as TotalOrders_p,
+            ( SELECT count(id) as TotalpendingOrders from customer_payment_request where status='pending'  and merchant_id = '" . $sub_merchant_id . "' and date_c >= '" . $date_c . "' and date_c <= '" . $date_cc . "' ) as TotalpendingOrders,
+            (SELECT sum(amount) as TotalAmount from customer_payment_request where status='confirm' and payment_type='straight' and merchant_id = '" . $sub_merchant_id . "' and date_c >= '" . $date_c . "' and date_c <= '" . $date_cc . "'  ) as TotalAmount ,
+            (SELECT sum(amount) as TotalAmountRe from customer_payment_request where status='confirm' and payment_type='recurring' and merchant_id = '" . $sub_merchant_id . "' and date_c >= '" . $date_c . "' and date_c <= '" . $date_cc . "') as TotalAmountRe ,
+            (SELECT sum(amount) as TotalAmountPOS from pos where status='confirm' and merchant_id = '" . $sub_merchant_id . "' and date_c >= '" . $date_c . "' and date_c <= '" . $date_cc . "') as TotalAmountPOS
+        ");
+        $getDashboardData = $getDashboard->result_array();
+        $responseData['getDashboardData'] = $getDashboardData;
+        
+        $DashboardCountData = $this->db->query("SELECT 
+            ( SELECT count(id) as TotalPOSConfirm from pos where status='confirm'AND date_c BETWEEN '$date_c' AND '$date_cc' and merchant_id = $sub_merchant_id ) as TotalPOSConfirm,
+            ( SELECT count(id) as TotalInvoiceConfirm from customer_payment_request where status='confirm' and date_c BETWEEN '$date_c' AND '$date_cc' and merchant_id = $sub_merchant_id ) as TotalInvoiceConfirm,
+            ( SELECT count(id) as TotalRecurringConfirm from recurring_payment where status='confirm' and date_c BETWEEN '$date_c' AND '$date_cc' and merchant_id = $sub_merchant_id ) as TotalRecurringConfirm,
+            ( SELECT count(id) as TotalInvoicePending from customer_payment_request where status='pending' and date_c BETWEEN '$date_c' AND '$date_cc' and merchant_id = $sub_merchant_id ) as TotalInvoicePending,
+            ( SELECT count(id) as TotalRecurringPending from recurring_payment where status='pending' and date_c BETWEEN '$date_c' AND '$date_cc' and merchant_id = $sub_merchant_id ) as TotalRecurringPending,
+            ( SELECT count(id) as TotalInvoicePendingDueOver from customer_payment_request where status='pending' and date_c BETWEEN '$date_c' AND '$date_cc' and merchant_id = $sub_merchant_id AND due_date< CURDATE()) as TotalInvoicePendingDueOver,
+            ( SELECT count(id) as TotalRecurringPendingDueOver from recurring_payment where status='pending' and date_c BETWEEN '$date_c' AND '$date_cc' and merchant_id = $sub_merchant_id AND due_date< CURDATE() ) as TotalRecurringPendingDueOver
+        "); 
+        //echo $this->db->last_query(); 
+        //print_r(); 
+        $DashboardCountData=$DashboardCountData->result_array();
+        // $responseData['DashboardCountData'] = $DashboardCountData;
+   
+        //print_r($DashboardCountData[0]['TotalPOSConfirm']);  die(); 
+        $widgets_data = array(
+            'NewTotalOrders' => $DashboardCountData[0]['TotalPOSConfirm'], 
+            'TotalOrders' => $DashboardCountData[0]['TotalInvoiceConfirm']+$DashboardCountData[0]['TotalRecurringConfirm'], 
+            'TotalpendingOrders' => $DashboardCountData[0]['TotalInvoicePending']+$DashboardCountData[0]['TotalRecurringPending'], 
+            'TotalAmount' => 0,
+            'TotalLate' => $DashboardCountData[0]['TotalInvoicePendingDueOver']+$DashboardCountData[0]['TotalRecurringPendingDueOver'],
+        );
+        $responseData['widgets_data'] = $widgets_data;
+
+        $response = $responseData;
+        echo json_encode($response);
     }
-    $data['item1'] = $mem1;
-    $package_data2 = $this->admin_model->data_get_where_down("pos", $date, $last_date, $merchant_id);
-    $mem2 = array();
-    $member2 = array();
-    foreach ($package_data2 as $each) {
-      if ($each->status == 'Chargeback_Confirm') {
-        $package2['Amount'] = '-$' . $each->amount;
-      } else {
-        $package2['Amount'] = '$' . $each->amount;
-      }
-      $package2['Tax'] = '$' . $each->tax;
-      $package2['Card'] = Ucfirst($each->card_type);
-      $package2['Type'] = strtoupper($each->type);
-      $package2['Date'] = $each->date_c;
-      $package2['Reference'] = $each->reference;
-      $mem2[] = $package2;
-    }
-    $data['item2'] = $mem2;
-    $data['item3'] = json_encode(array_merge($data['item'], $data['item1'], $data['item2']));
-    //  $data['highchart'] = $this->admin_model->get_details($merchant_id);
-    // echo json_encode($data['highchart']);
-    if ($this->input->post('start') != '') {
-      echo json_encode($data);
-      die();
-    } else {
-      // return $this->load->view('merchant/dashboard', $data);
-      return $this->load->view('merchant/label_dashboard', $data);
-    }
-  }
+
   public function index2() {
      // print_r( $this->session->userdata());
     $data["title"] = "Merchant Panel";
@@ -1050,15 +1386,25 @@
     $data['meta'] = "Add New Employee";
     $data['loc'] = "add_employee";
     $data['action'] = "Add New Employee";
+
+        // echo '<pre>';print_r($data);die;
     if (isset($_POST['submit'])) {
+
       $this->form_validation->set_rules('email', 'Email Address', 'required|valid_email|is_unique[merchant.email]');
       // $this->form_validation->set_rules('mobile', 'Mobile No', 'required|numeric|regex_match[/^[0-9]{10}$/]|is_unique[merchant.mob_no]');
       $this->form_validation->set_rules('mobile', 'Mobile No', 'required|is_unique[merchant.mob_no]');
       $email = $this->input->post('email') ? $this->input->post('email') : "";
       $name = $this->input->post('name') ? $this->input->post('name') : "";
+      $employee_pin = $this->input->post('employee_pin') ? $this->input->post('employee_pin') : "";
       $mobile = $this->input->post('mobile') ? $this->input->post('mobile') : "";
       $password1 = $this->input->post('password') ? $this->input->post('password') : "";
       $password = $this->my_encrypt($password1, 'e');
+      if(isset($_POST['emp_refund'])) {
+        $emp_refund = '1';
+      } else {
+        $emp_refund = '0';
+      }
+      // echo $emp_refund;die;
       $view_permissions = $this->input->post('view_permissions') ? $this->input->post('view_permissions') : '0' . "";
       $edit_permissions = $this->input->post('edit_permissions') ? $this->input->post('edit_permissions') : '0' . "";
       $create_pay_permissions = $this->input->post('create_pay_permissions') ? $this->input->post('create_pay_permissions') : '0' . "";
@@ -1092,6 +1438,7 @@
         $today2 = date("Y-m-d");
         $data = Array(
           'name' => $name,
+          'employee_pin' => $employee_pin,
           'email' => $email,
           'mob_no' => $mobile,
           'user_type' => 'employee',
@@ -1103,10 +1450,15 @@
           'view_menu_permissions'=>$view_menu_permissions,
           'status' => 'active',
           'date_c' => $today2,
+          'emp_refund' => $emp_refund,
         );
+
+
         $this->db->where('email',$email); 
         $this->db->where('user_type ','employee'); 
         $getresultdata=$this->db->get('merchant')->row_array();
+        //echo '<pre>';print_r($getresultdata);die;
+        
         if(count($getresultdata) <= '0'){
           $id = $this->admin_model->insert_data("merchant", $data);
         }
@@ -1115,8 +1467,25 @@
       }
     } else {
       // $this->load->view("merchant/add_employee", $data);
+      $emp_pin=$this->getDigit();  
+      $data['emp_pin']=$emp_pin;
       $this->load->view("merchant/add_employee_dash", $data);
     }
+  }
+  public function getDigit(){
+    $emp_pin=random_int(1000, 9999);
+    $merchant_id = $this->session->userdata('merchant_id');
+    
+    
+        $query=$this->db->query("SELECT employee_pin from merchant where employee_pin=".$emp_pin." and id=".$merchant_id)->result_array();
+        //echo $this->db->last_query();
+        $emp_pinDb=$query[0]['employee_pin'];
+        if($emp_pinDb!=$emp_pin){
+            return $emp_pin;
+        }
+        else{
+          $this->getDigit();
+        }
   }
   public function edit_employee() {
     $data['meta'] = "Edit Employee Details";
@@ -1128,7 +1497,9 @@
       die;
     }
     $branch = $this->admin_model->get_employee_details($bct_id);
+    // echo '<pre>';print_r($branch);die;
     if ($this->input->post('submit')) {
+      // echo '<pre>';print_r($_POST);die;
       //$this->form_validation->set_rules('email', 'Email Address', 'required|valid_email|is_unique[merchant.email]');
       $this->form_validation->set_rules('mobile', 'Mobile No', 'required|numeric|regex_match[/^[0-9]{10}$/]|is_unique[merchant.mob_no]');
       $id = $this->input->post('bct_id') ? $this->input->post('bct_id') : "";
@@ -1138,6 +1509,11 @@
       $password = $this->input->post('password') ? $this->input->post('password') : "";
       $status = $this->input->post('status') ? $this->input->post('status') : "";
       $cpsw = $this->input->post('cpsw') ? $this->input->post('cpsw') : "";
+      if(isset($_POST['emp_refund'])) {
+        $emp_refund = '1';
+      } else {
+        $emp_refund = '0';
+      }
       $view_permissions = $this->input->post('view_permissions') ? $this->input->post('view_permissions') : '0' . "";
       $edit_permissions = $this->input->post('edit_permissions') ? $this->input->post('edit_permissions') : '0' . "";
       $create_pay_permissions = $this->input->post('create_pay_permissions') ? $this->input->post('create_pay_permissions') : '0' . "";
@@ -1161,6 +1537,9 @@
             $view_menu_permissions .= $this->input->post('ItemsManagement') ? $this->input->post('ItemsManagement').',' : "";  
       $view_menu_permissions .= $this->input->post('Reports') ? $this->input->post('Reports').',' : "";  
       $view_menu_permissions .= $this->input->post('Settings') ? $this->input->post('Settings') : "";
+
+      $update_emp_pin .= $this->input->post('update_emp_pin') ? $this->input->post('update_emp_pin') : "";
+      $employee_pin .= $this->input->post('employee_pin') ? $this->input->post('employee_pin') : "";
       
       $password1 = $this->my_encrypt($cpsw, 'e');
       if ($cpsw != '') {
@@ -1168,32 +1547,58 @@
       } else {
         $psw1 = $password;
       }
-      $data = array(
-        'name' => $name,
-        // 'email' => $email,
-        'mob_no' => $mobile,
-        'password' => $psw1,
-        'view_permissions' => $view_permissions,
-        'edit_permissions' => $edit_permissions,
-        'create_pay_permissions' => $create_pay_permissions,
-        'view_menu_permissions'=>$view_menu_permissions,
-        'status' => $status,
-      );
-      $this->admin_model->update_data('merchant', $data, array('id' => $id));
+      // $data = array(
+      //   'name' => $name,
+      //   'mob_no' => $mobile,
+      //   'password' => $psw1,
+      //   'view_permissions' => $view_permissions,
+      //   'edit_permissions' => $edit_permissions,
+      //   'create_pay_permissions' => $create_pay_permissions,
+      //   'view_menu_permissions'=>$view_menu_permissions,
+      //   'status' => $status,
+      //   'emp_refund' => $emp_refund,
+      // );
+
+      if($update_emp_pin == 'yes') {
+        $up_data['employee_pin'] = $employee_pin;
+      }
+      $up_data['name'] = $name;
+      $up_data['mob_no'] = $mobile;
+      $up_data['password'] = $psw1;
+      $up_data['view_permissions'] = $view_permissions;
+      $up_data['edit_permissions'] = $edit_permissions;
+      $up_data['create_pay_permissions'] = $create_pay_permissions;
+      $up_data['view_menu_permissions'] = $view_menu_permissions;
+      $up_data['status'] = $status;
+      $up_data['emp_refund'] = $emp_refund;
+
+      $this->admin_model->update_data('merchant', $up_data, array('id' => $id));
       $this->session->set_userdata("mymsg", "Data Has Been Updated.");
       redirect(base_url() . 'merchant/all_employee');
     } else {
       foreach ($branch as $sub) {
+        if(!empty($sub->employee_pin)) {
+            $data['employee_pin'] = $sub->employee_pin;
+            $data['update_emp_pin'] = 'no';
+
+        } else {
+            $emp_pin=$this->getDigit();
+            $data['employee_pin'] = $emp_pin;
+            $data['update_emp_pin'] = 'yes';
+        }
+
         $data['bct_id'] = $sub->id;
         $data['email'] = $sub->email;
         $data['name'] = $sub->name;
         $data['mobile'] = $sub->mob_no;
         $data['password'] = $sub->password;
+        
         $data['status'] = $sub->status;
         $data['view_permissions'] = $sub->view_permissions;
         $data['edit_permissions'] = $sub->edit_permissions;
         $data['create_pay_permissions'] = $sub->create_pay_permissions;
         $data['view_menu_permissions'] = $sub->view_menu_permissions;
+        $data['emp_refund'] = $sub->emp_refund;
         break;
       }
     }
@@ -1218,10 +1623,12 @@
         $package['view_permissions'] = $each->view_permissions;
         $package['edit_permissions'] = $each->edit_permissions;
         $package['create_pay_permissions'] = $each->create_pay_permissions;
+        $package['show_inventory'] = $each->updateInventoryPermission;
         $package['status'] = $each->status;
         $mem[] = $package;
       }
       $data['mem'] = $mem;
+      // echo '<pre>';print_r($data);die;
       // $data['msg'] = "<h3>" . $this->session->userdata('mymsg') . "</h3>";
       // $this->session->unset_userdata('mymsg');
       $this->load->view('merchant/all_employee_dash', $data);
@@ -1255,6 +1662,23 @@
       $this->load->view("merchant/block", $data);
     }
   }
+
+  public function updateShowInvStatus() {
+    if(isset($_POST)) {
+      $ShowInv=$_POST['ShowInv'];
+      $id=$_POST['id']; 
+      if($ShowInv=='true') { 
+        $data = array('updateInventoryPermission' => 1);
+        $up=$this->admin_model->update_data('merchant', $data, array('id' => $id));
+        echo '200';
+      }else if($ShowInv=='false') { 
+        $data = array('updateInventoryPermission' =>0);
+        $up=$this->admin_model->update_data('merchant', $data, array('id' => $id));
+        echo '200';
+      }
+    }
+  }
+
   public function employee_delete($id) {
     $this->admin_model->delete_by_id($id, 'merchant');
     echo json_encode(array("status" => TRUE));
@@ -1430,7 +1854,7 @@
       $merchant_id = $this->session->userdata('merchant_id'); 
       $mearchent = $this->admin_model->data_get_where_serch("merchant", array("id" => $merchant_id)); 
       $data["mearchent"] = json_decode(json_encode($mearchent[0]), true);
-      $this->load->view("merchant/after_signup", $data);
+      $this->load->view("merchant/after_signup_dash", $data);
     }
   }
   public function edit_user() {
@@ -1771,19 +2195,19 @@
         $data['action'] = "Send Request";
         if (isset($_POST['submit'])) {
           $merchant_id = $this->session->userdata('merchant_id');
-          $this->form_validation->set_rules('amount', 'amount', 'required');
+          $this->form_validation->set_rules('amount', 'Amount', 'required');
           $this->form_validation->set_rules('name', 'Name', 'required');
-          $this->form_validation->set_rules('email', 'Email', 'required');
+          // $this->form_validation->set_rules('email', 'Email', 'required');
           //$this->form_validation->set_rules('reverence', 'Reference', 'required');
-          $this->form_validation->set_rules('mobile', 'Phone Number', 'required');
-          $this->form_validation->set_rules('due_date', 'Due  Date', 'required');
+          // $this->form_validation->set_rules('mobile', 'Phone Number', 'required');
+          $this->form_validation->set_rules('due_date', 'Due Date', 'required');
           $this->form_validation->set_rules('title', 'Title', 'required');
           $this->form_validation->set_rules('Item_Name[]', 'Item Name', 'required');
           $this->form_validation->set_rules('Quantity[]', 'Quantity', 'required');
           $this->form_validation->set_rules('Price[]', 'Price', 'required');
           
           if ($this->form_validation->run() == FALSE) {
-            $this->session->set_flashdata('error','<div class="alert alert-danger text-center">Name, Email,Phone Number, Due  Date,Title , Item Name, Quantity, Price Fields Are Required..</div>'); 
+            $this->session->set_flashdata('error','<div class="alert alert-danger text-center">Name, Due Date, Title, Item Name, Quantity & Price Fields Are Required.</div>');
           
             redirect(base_url().'merchant/add_straight_request'); 
           } else {
@@ -1847,7 +2271,8 @@
            // $invoice_no_1 = 'INV' . strtoupper($names) . date("ymdhisu");
             $invoice_no_1= 'INV' .  date("ymdhisu");
             $invoice_no = str_replace("000000", "", $invoice_no_1);
-            $today1 = date("ymdhisu");
+            $today1_1 = date("ymdhisu");
+            $today1 = str_replace("000000", "", $today1_1);
             $url = base_url().'payment/PY' . $today1 . '/' . $merchant_id;
             $today2 = date("Y-m-d");
             $p_date = date('F j, Y', strtotime($today2));
@@ -1972,12 +2397,17 @@
             if (!empty($mobile_no)) {
               $sms_reciever = $mobile_no;
               //$sms_message = trim(" Hello '".$name."' . ('".$getDashboardData_m[0]['business_dba_name']."') is requesting  payment from you.  ('".$amount."')('".$p_date."') $url ");
-              $sms_message = trim(" Hello '" . $name . "' . ('" . $getDashboardData_m[0]['business_dba_name'] . "') is requesting  payment from you.  ('" . $amount . "') $url ");
+              //$sms_message = trim(" '" . $getDashboardData_m[0]['business_dba_name'] . "' is requesting  payment .  '".$url."' ");
+
+               $sms_message = trim(" " . $getDashboardData_m[0]['business_dba_name'] . " is Requesting  Payment. ".$url." ");
+
+              //$sms_message = trim('Payment Url : '.$url);
               $from = '+18325324983'; //trial account twilio number
               // $to = '+'.$sms_reciever; //sms recipient number
               $mob = str_replace(array('(', ')', '-', ' '), '', $sms_reciever);
               $to = '+1' . $mob;
               $response = $this->twilio->sms($from, $to, $sms_message);
+              //print_r($response); die();
             }
             $MailTo = $email;
             $MailSubject = 'Invoice from '.$getDashboardData_m[0]['business_dba_name'];
@@ -2095,7 +2525,7 @@
         $this->load->view("merchant/block", $data);
       }
     }
-      public function simple_invoice() {
+      public function simple_invoice2() {
       $data = array();
       //echo '<pre>';print_r($_POST);die();
       $merchant_id = $this->session->userdata('merchant_id');
@@ -2180,7 +2610,8 @@
             //$invoice_no_1= 'INV' . strtoupper($names) . date("ymdhisu");
             $invoice_no_1= 'INV' .  date("ymdhisu");
             $invoice_no = str_replace("000000", "", $invoice_no_1);
-            $today1 = date("ymdhisu");
+            $today1_1 = date("ymdhisu");
+            $today1 = str_replace("000000", "", $today1_1);
             $url = base_url().'spayment/PY' . $today1 . '/' . $merchant_id;
             $today2 = date("Y-m-d");
             $p_date = date('F j, Y', strtotime($today2));
@@ -2284,7 +2715,10 @@
             if (!empty($mobile_no)) {
               $sms_reciever = $mobile_no;
               //$sms_message = trim(" Hello '".$name."' . ('".$getDashboardData_m[0]['business_dba_name']."') is requesting  payment from you.  ('".$amount."')('".$p_date."') $url ");
-              $sms_message = trim(" Hello '" . $name . "' . ('" . $getDashboardData_m[0]['business_dba_name'] . "') is requesting  payment from you.  ('" . $amount . "') $url ");
+              //$sms_message = trim(" Hello '" . $name . "' . ('" . $getDashboardData_m[0]['business_dba_name'] . "') is requesting  payment from you.  ('" . $amount . "') $url ");
+              $sms_message = trim(" " . $getDashboardData_m[0]['business_dba_name'] . " is Requesting  Payment . ".$url." ");
+
+              //$sms_message = trim('Payment Url : '.$url);
               $from = '+18325324983'; //trial account twilio number
               // $to = '+'.$sms_reciever; //sms recipient number
               $mob = str_replace(array('(', ')', '-', ' '), '', $sms_reciever);
@@ -2336,6 +2770,280 @@
         $this->load->view("merchant/block", $data);
       }
     }
+ public function simple_invoice() {
+      $data = array();
+      // echo '<pre>';print_r($_FILES);die();
+      $merchant_id = $this->session->userdata('merchant_id');
+      $merchant_name = $this->session->userdata('merchant_name');
+      $t_fee = $this->session->userdata('t_fee');
+      $merchantdetails = $this->admin_model->s_fee("merchant", $merchant_id);
+      $s_fee = $merchantdetails['0']['s_fee']; 
+      $t_fee = $this->session->userdata('t_fee');
+      $fee_invoice = $merchantdetails['0']['invoice'];
+      $fee_swap = $merchantdetails['0']['f_swap_Invoice'];
+      $fee_email = $merchantdetails['0']['text_email'];
+      $names = substr($merchant_name, 0, 3);
+      $getDashboard = $this->db->query("SELECT   ( SELECT count(id) as TotalOrders from customer_payment_request where   merchant_id = '" . $merchant_id . "' ) as TotalOrders ");
+      $getDashboardData = $getDashboard->result_array();
+      $getDashboardNum = $getDashboard->num_rows();
+      $data['getDashboardNum'] = $getDashboardNum;
+      if ($getDashboardData == false) {
+        $data['getDashboardData'] = '0';
+        $inv = '1';
+      } else {
+        $data['getDashboardData'] = $getDashboardData;
+        $inv1 = $getDashboardData[0]['TotalOrders'];
+        $inv = $inv1 + 1;
+      }
+      $merchant_status = $this->session->userdata('merchant_status'); 
+      $Activate_Details = $this->session->userdata('Activate_Details');
+      if ($merchant_status == 'active') {
+        $data['meta'] = "Simple Invoice Request";
+        $data['loc'] = "simple_invoice";
+        $data['action'] = "Send Request";
+        if (isset($_POST['submit'])) {
+          $merchant_id = $this->session->userdata('merchant_id');
+          //$this->form_validation->set_rules('amount', 'amount', 'required');
+          $this->form_validation->set_rules('name', 'Name', 'required');
+          //$this->form_validation->set_rules('email', 'Email', 'required');
+        //  $this->form_validation->set_rules('mobile', 'Phone Number', 'required');
+          //$this->form_validation->set_rules('due_date', 'Due  Date', 'required');
+        
+          
+          if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('error','<div class="alert alert-danger text-center">Name, Email,Phone Number, Due  Date, Price Fields Are Required..</div>'); 
+          
+                        //echo 'ss'; die();
+            //redirect(base_url().'merchant/simple_invoice'); 
+          } else {
+            $amount_ss = htmlspecialchars($this->input->post('s_amount') ? $this->input->post('s_amount') : "");
+            $full_amount = htmlspecialchars($this->input->post('full_amount') ? $this->input->post('full_amount') : "");
+            if($full_amount !=''){
+              $amount_ss =  $full_amount;
+            }
+            else
+            {
+                $amount_ss =  $amount_ss;
+            }
+            
+            $b = str_replace(",","",$amount_ss);
+                        $a = number_format($b,2);
+                        $amount = str_replace(",","",$a);
+            $detail = htmlspecialchars($this->input->post('s_detail') ? $this->input->post('s_detail') : "");
+            $name = htmlspecialchars($this->input->post('name') ? $this->input->post('name') : "");
+            $email_id = htmlspecialchars($this->input->post('s_email') ? $this->input->post('s_email') : "");
+            $mobile_no = htmlspecialchars($this->input->post('s_mobile') ? $this->input->post('s_mobile') : "");
+            $sub_amount = htmlspecialchars($this->input->post('amount') ? $this->input->post('amount') : "");
+            $total_tax = htmlspecialchars($this->input->post('total_tax') ? $this->input->post('total_tax') : '0' . "");
+                        $other_charges = $this->input->post('other_charges_s') ? $this->input->post('other_charges_s') : "";
+            $other_charges_title = $this->input->post('other_charges_title') ? $this->input->post('other_charges_title') : "";
+            
+            if (!empty($this->session->userdata('subuser_id'))) {
+              $sub_merchant_id = $this->session->userdata('subuser_id');
+            } else {
+              $sub_merchant_id = '0';
+            }
+            $fee = ($amount / 100) * $fee_invoice;
+            $fee_swap = ($fee_swap != '') ? $fee_swap : 0;
+            $fee_email = ($fee_email != '') ? $fee_email : 0;
+            $fee = $fee + $fee_swap + $fee_email;
+            
+            $recurring_type = 'false';
+            $recurring_count = '0';
+            $due_date = $this->input->post('s_due_date') ? $this->input->post('s_due_date') : "";
+            $recurring_payment = 'stop';
+            //$invoice_no_1= 'INV' . strtoupper($names) . date("ymdhisu");
+            $invoice_no_1= 'INV' .  date("ymdhisu");
+            $invoice_no = str_replace("000000", "", $invoice_no_1);
+            $today1_1 = date("ymdhisu");
+            $today1 = str_replace("000000", "", $today1_1);
+            $url = base_url().'spayment/PY' . $today1 . '/' . $merchant_id;
+            $today2 = date("Y-m-d");
+            $p_date = date('F j, Y', strtotime($today2));
+            $year = date("Y");
+            $month = date("m");
+            $time11 = date("H");
+            if ($time11 == '00') {
+              $time1 = '01';
+            } else {
+              $time1 = date("H");
+            }
+            $day1 = date("N");
+            $today3 = date("Y-m-d H:i:s");
+            $amountaa = $sub_amount + $fee;
+            $unique = "PY" . $today1;
+
+            $myfile=$_FILES['attached_file']['name'];
+            if($myfile!="") {
+                $new_name = date().time().$_FILES['attached_file']['name'];
+                $config['file_name']            = $new_name; 
+                $config['upload_path']          = './uploads/attachment/';
+                $config['allowed_types']        = 'gif|jpg|png|jpeg|bmp|ico|jpeg|ps|psd|svg|tif|odp|pps|ppt|pptx|doc|pdf|odt|docx';
+                $config['max_size']             = 1000;
+                $config['max_width']            = 3024;
+                $config['max_height']           = 3068;
+                $this->load->library('upload', $config);
+                if ($this->upload->do_upload('attached_file')) {
+                    $data = array('upload_data' => $this->upload->data());
+                    // $this->load->view('upload_success', $data);
+                    $uploadedFileName=$data['upload_data']['file_name']; 
+                }
+            } else {
+                $uploadedFileName="";
+            }
+            $attachment=$uploadedFileName;
+
+            $data = array(
+              'name' => $name,
+              'other_charges' => $other_charges,
+              'otherChargesName' => $other_charges_title,
+              'invoice_no' => $invoice_no,
+              'sub_total' => $sub_amount,
+              'tax' => $total_tax,
+              'fee' => $fee,
+              's_fee' => $s_fee,
+              'invoice_type' => 'simple',
+              'email_id' => $email_id,
+              'mobile_no' => $mobile_no,
+              'amount' => $amount,
+              'detail' => $detail,
+              'url' => $url,
+              'payment_type' => 'straight',
+              'recurring_type' => $recurring_type,
+              'recurring_count' => $recurring_count,
+              'recurring_count_paid' => '0',
+              'recurring_count_remain' => $recurring_count,
+              'due_date' => $due_date,            
+              'merchant_id' => $merchant_id,
+              'sub_merchant_id' => $sub_merchant_id,
+              'payment_id' => $unique,
+              'recurring_payment' => $recurring_payment,
+              'year' => $year,
+              'month' => $month,
+              'time1' => $time1,
+              'day1' => $day1,
+              'status' => 'pending',
+              'attachment'=>$attachment,
+              'date_c' => $today2
+            );
+           // print_r($data); die();
+            $id = $this->admin_model->insert_data("customer_payment_request", $data);
+            
+            $getDashboard_m = $this->db->query(" SELECT business_name,logo,address1,business_dba_name,business_number,color,late_fee,late_fee_status,late_grace_period FROM merchant WHERE id = '" . $merchant_id . "' ");
+            $getDashboardData_m = $getDashboard_m->result_array();
+            $data['getDashboardData_m'] = $getDashboardData_m;
+            $data['business_name'] = $getDashboardData_m[0]['business_name'];
+            $data['address1'] = $getDashboardData_m[0]['address1'];
+            $data['business_dba_name'] = $getDashboardData_m[0]['business_dba_name'];
+            $data['logo'] = $getDashboardData_m[0]['logo'];
+            $data['business_number'] = $getDashboardData_m[0]['business_number'];
+            $data['color'] = $getDashboardData_m[0]['color'];
+            $data['late_grace_period'] = $getDashboardData_m[0]['late_grace_period'];
+            $data['late_fee_status'] = $getDashboardData_m[0]['late_fee_status'];
+            $data['late_fee'] = $getDashboardData_m[0]['late_fee'];
+            $data['payment_type'] = 'straight';
+            $data['recurring_type'] = $recurring_type;
+            $data['no_of_invoice'] = 1;
+            $data['recurring_count'] = $recurring_count ? $recurring_count : '&infin;';
+             
+            $data['msgData'] = $data;
+     
+     //Satrt QuickBook sync
+             $bct_id2 = $this->session->userdata('merchant_id');
+               $query_qb_setting = "SELECT * From tbl_qbonline_setting WHERE merchant_id = $bct_id2 and status='1' and inv_status='1' ";
+        $result_setting = $this->db->query($query_qb_setting)->result();
+        $intuit_realm_id = trim($result_setting[0]->realm_id);
+        
+                            if(!empty($intuit_realm_id)){
+                    $Qurl ="https://salequick.com/quickbook/get_invoice_detail_live";
+                    $qbdata =array(
+                    'id' => $id,
+                    'merchant_id' => $bct_id2
+                    
+                    );
+                    
+                    $ch = curl_init();
+                    curl_setopt($ch,CURLOPT_URL, $Qurl);
+                    curl_setopt($ch, CURLOPT_POST, true);
+                    curl_setopt($ch,CURLOPT_POSTFIELDS, $qbdata);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+                    $result = curl_exec($ch);
+                    curl_close($ch);
+                    $result = json_decode($result,true);
+                    //print_r($result);
+                    curl_close($ch);
+                    }
+                     //End QuickBook sync
+
+            // echo "<pre>";print_r($data);die;
+            //Send Mail Code
+            $msg = $this->load->view('email/simple_invoice', $data, true);
+            $email = $email_id;
+            if (!empty($mobile_no)) {
+              $sms_reciever = $mobile_no;
+              //$sms_message = trim(" Hello '".$name."' . ('".$getDashboardData_m[0]['business_dba_name']."') is requesting  payment from you.  ('".$amount."')('".$p_date."') $url ");
+
+             // $sms_message = trim(" Hello '" . $name . "' . ('" . $getDashboardData_m[0]['business_dba_name'] . "') is requesting  payment from you.  ('" . $amount . "') $url ");
+
+          //  $sms_message = trim(" '" . $getDashboardData_m[0]['business_dba_name'] . "' is requesting  payment .  '".$url."' ");
+
+              $sms_message = trim(" " . $getDashboardData_m[0]['business_dba_name'] . " is Requesting  Payment .".$url." ");
+
+
+              //$sms_message = trim('Payment Url : '.$url);
+
+              $from = '+18325324983'; //trial account twilio number
+              // $to = '+'.$sms_reciever; //sms recipient number
+              $mob = str_replace(array('(', ')', '-', ' '), '', $sms_reciever);
+              $to = '+1' . $mob;
+              $response = $this->twilio->sms($from, $to, $sms_message);
+            }
+            $MailTo = $email;
+            $MailSubject = 'Salequick Simple Invoice from '.$getDashboardData_m[0]['business_dba_name'];
+            if (!empty($email)) {
+              $this->email->from('info@salequick.com', $getDashboardData_m[0]['business_dba_name']);
+              $this->email->to($MailTo);
+              $this->email->subject($MailSubject);
+              $this->email->message($msg);
+              $this->email->send();
+            }
+            $this->session->set_userdata("mymsg", "New payment request add successfully.");
+            // redirect("merchant/all_straight_request");
+            redirect("pos/all_customer_request");
+          }
+        } else {
+          $this->load->view("merchant/add_straight_request_dash", $data);
+        }
+      } elseif ($merchant_status == 'block') {
+        $data['meta'] = "Your Account Is Block";
+        $data['loc'] = "";
+        $data['resend'] = "";
+        $this->load->view("merchant/block", $data);
+      } elseif ($merchant_status == 'confirm') {
+        $data['meta'] = "Your Account Is Not Active";
+        $data['loc'] = "";
+        $data['resend'] = "";
+        $this->load->view("merchant/block", $data);
+      } elseif ($merchant_status == "Activate_Details") {
+        $urlafterSign = base_url().'merchant/after_signup';
+        $data['meta'] = "Please Activate Your Account <a href='" . $urlafterSign . "'>Activate Link</a>";
+        $data['loc'] = "";
+        $data['resend'] = "";
+        $this->load->view("merchant/blockactive", $data);
+      } elseif ($merchant_status == "Waiting_For_Approval") {
+        $urlafterSign = base_url().'merchant/after_signup';
+        $data['meta'] = "Waiting For Admin Approval, <a href='" . $urlafterSign . "'>Activate Link</a>";
+        $data['loc'] = "";
+        $data['resend'] = "";
+        $this->load->view("merchant/blockactive", $data);
+      } else {
+        $data['meta'] = "Your Email Is Not Confirm First Confirm Email";
+        $data['loc'] = "resend";
+        $data['resend'] = "resend";
+        $this->load->view("merchant/block", $data);
+      }
+    }
+
   public function autocallfunction()
   {
         $getallRecurringRecord = $this->db->query("SELECT  * FROM customer_payment_request WHERE  payment_type='recurring' AND ( recurring_payment='start' OR recurring_payment='stop' ) AND recurring_type!='' AND recurring_count_remain >0  AND recurring_pay_type='1' AND  status='pending'   ");
@@ -2441,7 +3149,7 @@
       $json = json_encode($xml);
       $arrayy = json_decode($json,TRUE);
       //print_r($arrayy);   die(); 
-      //echo 'shuaeb'; 
+       
       curl_close($ch);
           if($arrayy['Response']['ExpressResponseMessage']=='Approved' or $arrayy['Response']['ExpressResponseMessage']=='Declined')  
           {
@@ -2896,881 +3604,12 @@
            $recurring_count=-1; 
          }   
          // echo $recurring_count;  die();
-        if($paytype=='1' && 3 > 7)    //   condition break 
-        {
-            
-          // echo "Helllo  Its Auto Pay Mode";  die(); 
-           //echo $recurring_count;  die(); 
-           //$soapUrl = "https://transaction.elementexpress.com/"; // asmx URL of WSDL live 
-           $soapUrl = "https://certtransaction.elementexpress.com/"; // asmx URL of WSDL   sandbox 
-           $getQuery_a = $this->db->query("SELECT * from merchant where id ='".$merchant_id."'  ");
-           $getEmail_a = $getQuery_a->result_array();
-           $data['$getEmail_a'] = $getEmail_a;
-           if(count($getEmail_a))
-           {
-             $merchant_email = $getEmail_a[0]['email'];
-           }
-          // print_r($getEmail_a);  die("Auto");
-          if(!empty($getEmail_a[0]['account_id_cnp']) and !empty($getEmail_a[0]['acceptor_id_cnp']) and !empty($getEmail_a[0]['account_token_cnp']) and !empty($getEmail_a[0]['application_id_cnp']) and !empty($getEmail_a[0]['terminal_id']))
-          {     //if($account_id && $acceptor_id && $account_token && $application_id && $terminal_id)
-            
-            $account_id = $getEmail_a[0]['account_id_cnp']; 
-            $acceptor_id = $getEmail_a[0]['acceptor_id_cnp'];
-            $account_token = $getEmail_a[0]['account_token_cnp']; 
-            $application_id = $getEmail_a[0]['application_id_cnp'];
-            $terminal_id = $getEmail_a[0]['terminal_id'];
-            // $account_id = 1196211; 
-            // $acceptor_id = 4445029890514;
-            // $account_token = D737D32F8674BF81780A6F259DE66080F984048E249A9DB4DA01C93DC6F733A2F2535101; 
-            // $application_id = 9726;
-            // $terminal_id = '4374N000101';
-             
-            
-            
-            $xml_post_string = "<HealthCheck xmlns='https://transaction.elementexpress.com'><Credentials><AccountID>".$account_id."</AccountID><AccountToken>".$account_token."</AccountToken><AcceptorID>".$acceptor_id."</AcceptorID></Credentials><Application><ApplicationID>".$application_id."</ApplicationID><ApplicationVersion>1.1</ApplicationVersion><ApplicationName>SaleQuick</ApplicationName></Application></HealthCheck>";   // data from the form, e.g. some ID number
-            $headers = array(
-              "Content-type: text/xml;charset=\"utf-8\"",
-              "Accept: text/xml",
-              "Cache-Control: no-cache",
-              "Pragma: no-cache",
-              "SOAPAction: https://transaction.elementexpress.com/",
-              "Content-length: ".strlen($xml_post_string),
-            ); //SOAPAction: your op URL 
-             // print_r($xml_post_string);  die(); 
-            //die("end");
-            $url = $soapUrl;
-            //print_r($url); die("ok"); 
-            // PHP cURL  for https connection with auth
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            #curl_setopt($ch, CURLOPT_USERPWD, $soapUser.":".$soapPassword); // username and password - declared at the top of the doc
-            curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $xml_post_string); // the SOAP request
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            $response = curl_exec($ch);  
-            
-            $xml = simplexml_load_string($response, "SimpleXMLElement", LIBXML_NOCDATA);
-            $json = json_encode($xml);
-            $array = json_decode($json,TRUE);
-            //print_r($array); die("ok");
-            curl_close($ch);
-            //die("okok");
-            $TicketNumber =  (rand(100000,999999));
-            if ($array['Response']['ExpressResponseMessage']='ONLINE') {
-              $xml_post_string = "<CreditCardSale xmlns='https://transaction.elementexpress.com'><Credentials><AccountID>".$account_id."</AccountID><AccountToken>".$account_token."</AccountToken>
-                 <AcceptorID>".$acceptor_id."</AcceptorID></Credentials><Application><ApplicationID>".$application_id."</ApplicationID><ApplicationVersion>1.1</ApplicationVersion>
-                 <ApplicationName>SaleQuick</ApplicationName></Application><Transaction><TransactionAmount>".$amount."</TransactionAmount><ReferenceNumber>".$payment_id."</ReferenceNumber>
-                 <TicketNumber>".$TicketNumber."</TicketNumber><MarketCode>3</MarketCode></Transaction><Terminal><TerminalID>".$terminal_id."</TerminalID><CardPresentCode>3</CardPresentCode><CardholderPresentCode>7</CardholderPresentCode>
-                 <CardInputCode>4</CardInputCode><CVVPresenceCode>1</CVVPresenceCode><TerminalCapabilityCode>5</TerminalCapabilityCode><TerminalEnvironmentCode>6</TerminalEnvironmentCode><MotoECICode>7</MotoECICode>
-                 </Terminal><Card><CardNumber>".$card_no."</CardNumber><ExpirationMonth>".$expiry_month."</ExpirationMonth><ExpirationYear>".$expiry_year."</ExpirationYear><CVV>".$cvv."</CVV></Card><Address><BillingZipcode>".$zip."</BillingZipcode>
-                  <BillingAddress1>".$address."</BillingAddress1></Address></CreditCardSale>";   // data from the form, e.g. some ID number
-      
-                  $headers = array(
-                    "Content-type: text/xml;charset=\"utf-8\"",
-                    "Accept: text/xml",
-                    "Cache-Control: no-cache",
-                    "Pragma: no-cache",
-                    "SOAPAction: https://transaction.elementexpress.com/", 
-                    "Content-length: ".strlen($xml_post_string),
-                  ); //SOAPAction: your op URL
-                $url = $soapUrl;
-                
-                // PHP cURL  for https connection with auth
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-                curl_setopt($ch, CURLOPT_URL, $url);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                #curl_setopt($ch, CURLOPT_USERPWD, $soapUser.":".$soapPassword);
-                // username and password - declared at the top of the doc
-                curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
-                curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-                curl_setopt($ch, CURLOPT_POST, true);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $xml_post_string); // the SOAP request
-                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-                // converting
-                $response = curl_exec($ch); 
-                $xml = simplexml_load_string($response, "SimpleXMLElement", LIBXML_NOCDATA);
-                $json = json_encode($xml);
-                $arrayy = json_decode($json,TRUE);
-                //    print_r($arrayy);
-                //  die();
-                curl_close($ch);
-                if($arrayy['Response']['ExpressResponseMessage']=='Approved' or $arrayy['Response']['ExpressResponseMessage']=='Declined')   
-                {   
-                  $card_a_no = $arrayy['Response']['Card']['CardNumberMasked'];
-                  $trans_a_no = $arrayy['Response']['Transaction']['TransactionID'];
-                  $card_a_type = $arrayy['Response']['Card']['CardLogo'];
-           
-                  //print_r($card_a_type);  die(); 
-                  $message_a =  $arrayy['Response']['Transaction']['TransactionStatus']; 
-                  $message_complete =  $arrayy['Response']['ExpressResponseMessage']; 
-                  $AVSResponseCode = $arrayy['Response']['Card']['AVSResponseCode'];
-                  $CVVResponseCode = $arrayy['Response']['Card']['CVVResponseCode'];
-                  
-                  if($AVSResponseCode=='A')
-                  {
-           
-                    $address_status = 'Address match';
-           
-                    $zip_status = 'Zip does not match';
-           
-                  }
-       
-              
-       
-                  elseif($AVSResponseCode=='G')
-           
-                  {
-           
-                    $address_status = 'Global non-AVS participant';
-           
-                    $zip_status = 'Global non-AVS participant';
-           
-                  }
-           
-                  elseif($AVSResponseCode=='N')
-           
-                  {
-           
-                    $address_status = 'Address  not match';
-           
-                    $zip_status = 'Zip  not match';
-           
-                  }
-           
-                  elseif($AVSResponseCode=='R')
-           
-                  {
-           
-                    $address_status = 'Retry, system unavailable or timed out';
-           
-                    $zip_status = 'Retry, system unavailable or timed out';
-           
-                  }
-           
-                  elseif($AVSResponseCode=='S')
-           
-                  {
-           
-                    $address_status = 'Service not supported: Issuer does not support AVS and Visa';
-           
-                    $zip_status = 'Service not supported: Issuer does not support AVS and Visa';
-           
-                  }
-           
-                  elseif($AVSResponseCode=='U')
-           
-                  {
-           
-                    $address_status = 'Unavailable: Address information not verified for domestic transactions';
-           
-                    $zip_status = 'Unavailable: Address information not verified for domestic transactions';
-           
-                  }
-           
-                  elseif($AVSResponseCode=='W')
-           
-                  {
-       
-                    $address_status = 'Address does not match';
-           
-                    $zip_status = 'Zip matches';
-           
-                  }
-           
-                  elseif($AVSResponseCode=='X')
-           
-                  {
-           
-                    $address_status = 'Address match';
-           
-                    $zip_status = 'Zip matches';
-           
-                  }
-           
-                  elseif($AVSResponseCode=='Y')
-           
-                  {
-           
-                    $address_status = 'address match';
-           
-                    $zip_status = 'zip match';
-           
-                  }
-           
-                  elseif($AVSResponseCode=='Z')
-           
-                  {
-           
-                    $address_status = 'Address does not match';
-           
-                    $zip_status = 'zip match';
-           
-                  }
-           
-                  elseif($AVSResponseCode=='E')
-           
-                  {
-           
-                    $address_status = 'AVS service not supported';
-           
-                    $zip_status = 'AVS service not supported';
-           
-                  }
-           
-                  elseif($AVSResponseCode=='D')
-           
-                  {
-           
-                    $address_status = 'Address match (International)';
-           
-                    $zip_status = 'Zip  match (International)';
-           
-                  }
-           
-                  elseif($AVSResponseCode=='M')
-           
-                  {
-           
-                    $address_status = 'Address match (International)';
-           
-                    $zip_status = 'Zip  match (International)';
-           
-                  }
-           
-                  elseif($AVSResponseCode=='P')
-           
-                  {
-           
-                    $address_status = 'Address not verified because of incompatible formats';
-           
-                    $zip_status = 'Zip matches';
-           
-                  }
-           
-                  elseif($AVSResponseCode=='N')
-           
-                  {
-           
-                    $address_status = 'Address  not match';
-           
-                    $zip_status = 'Zip not matches';
-           
-                  }
-           
-           
-           
-                  if($CVVResponseCode=='M')
-           
-                  {
-           
-                    $cvv_status = 'Match';
-           
-                    
-           
-                  }
-                  
-                  elseif($CVVResponseCode=='P')
-           
-                  {
-           
-                    $cvv_status = 'Not Processed';
-           
-                  }
-           
-                  elseif($CVVResponseCode=='N')
-           
-                  {
-           
-                    $cvv_status = 'No Match';
-           
-                  }
-           
-           
-           
-                  elseif($CVVResponseCode=='S')
-           
-                  {
-           
-                    $cvv_status = 'CVV value should be on the card, but the merchant has indicated that it is not present (Visa & Discover)';
-           
-                  }
-           
-                  elseif($CVVResponseCode=='U')
-           
-                  {
-           
-                    $cvv_status = 'Issuer not certified for CVV processing';
-           
-                  }
-                  if($arrayy['Response']['Card']['CVVResponseCode']!='M')
-                  {
-                      $id='CVV-Number-Error';
-                      redirect('payment_error/'.$id);
-                  }
-                   //print_r($cvv_status);  die(); 
-                  $today2 = date("Y-m-d H:i:s");
-                  if($message_complete=='Declined')
-                    {
-                    $staus = 'declined';
-                    }
-                    //elseif($message_a=='Approved' or $message_a=='Duplicate') 
-                  elseif($message_complete=='Approved') 
-                    {
-                    $staus = 'confirm'; 
-                }
-                else 
-                {
-                $staus = 'pending';  
-                }
-                $day1 = date("N");
-                $today2_a = date("Y-m-d");
-                $year = date("Y");
-                $month = date("m");
-                $time11 = date("H");
-                if($time11=='00'){
-                  $time1 = '01';
-                }else{
-                  $time1 = date("H");
-                }
-                 
-             
-              
-              $today1 = date("ymdhisu");
-              $url = base_url().'rpayment/PY' . $today1 . '/' . $merchant_id;
-              $today2 = date("Y-m-d");
-              $year = date("Y");
-              $month = date("m");
-              $today3 = date("Y-m-d H:i:s");
-              $unique = "PY" . $today1;
-              $time11 = date("H");
-              if ($time11 == '00') {
-                $time1 = '01';
-              } else {
-                $time1 = date("H");
-              }
-              $day1 = date("N");
-              $amountaa = $sub_amount + $fee;
-              $paid = 1;
-              if($recurring_count >0)
-              {
-                $remain = $recurring_count - 1;
-              }
-              else
-              {
-                $remain=1; 
-                $recurring_count= -1;   
-              }
-              if($remain <= 0) 
-              {
-                $recurring_payment='complete'; 
-              }
-              else{
-                $recurring_payment='start'; 
-              }
-                 
-              $recurring_pay_start_date=date($recurring_pay_start_date); 
-                switch($recurring_type)
-                {
-                  case 'daily':
-                    $recurring_next_pay_date=Date('Y-m-d', strtotime("+1 days", strtotime($recurring_pay_start_date)));
-                  break;
-                  case 'weekly':
-                    $recurring_next_pay_date=Date('Y-m-d', strtotime("+7 days", strtotime($recurring_pay_start_date)));
-                  break;
-                  case 'biweekly':
-                     $recurring_next_pay_date=date('Y-m-d', strtotime('+14 days', strtotime($recurring_pay_start_date)));
-                  break;
-                  case 'monthly':
-                    $recurring_next_pay_date=date('Y-m-d', strtotime('+1 month', strtotime($recurring_pay_start_date)));
-                  break;
-                  case 'quarterly':
-                    $recurring_next_pay_date=date('Y-m-d', strtotime('+3 month', strtotime($recurring_pay_start_date)));
-                  break;
-                  case 'yearly':
-                  $recurring_next_pay_date=date('Y-m-d', strtotime('+12 month', strtotime($recurring_pay_start_date)));
-                  break;
-                  default :
-                    $recurring_next_pay_date=Date('Y-m-d', strtotime("+1 days", strtotime($recurring_pay_start_date)));
-                  break; 
-                  
-                }
-                
-              $data1 = Array(
-                'reference' => $reference,
-                'name' => $name,
-                'other_charges' => $other_charges,
-                'otherChargesName' => $other_charges_title,
-                'invoice_no' => $invoice_no,
-                'email_id' => $email_id,
-                'mobile_no' => $mobile_no,
-                'amount' => $amount,
-                'sub_total' => $sub_amount,
-                'tax' => $total_tax,
-                'fee' => $fee,
-                's_fee' => $fee_swap,
-                // 'title' => $title,
-                'detail' => $remark,
-                'note' => $note,
-                'url' => $url,
-                'payment_type' => 'recurring',
-                'recurring_type' => $recurring_type,
-                'recurring_count' => $recurring_count,
-                // 'due_date' => $due_date,
-                'merchant_id' => $merchant_id,
-                'sub_merchant_id' => $sub_merchant_id,
-                'payment_id' => $unique,
-                'recurring_payment' => $recurring_payment,
-                'recurring_pay_start_date' => $recurring_pay_start_date,
-                'recurring_next_pay_date' => $recurring_next_pay_date,
-                'recurring_pay_type' => $paytype,
-                'status' => $staus,                
-                'year' => $year,
-                'month' => $month,
-                'time1' => $time1,
-                'day1' => $day1,
-                'date_c' => $today2_a,
-                'payment_date' => $today2,
-                'recurring_count_paid' => $paid,
-                'recurring_count_remain' => $remain,
-                'transaction_id' => $trans_a_no,
-                'message' =>  $message_a,
-                'card_type' =>  $card_a_type,
-                'card_no' =>  $card_a_no,
-                'sign' =>  "",
-                'address' =>  $address,
-                'name_card' =>  $name_card,
-                'l_name' => "",
-                'address_status' =>  $address_status,
-                'zip_status' =>  $zip_status,
-                'cvv_status' =>  $cvv_status,
-                'ip_a' => $_SERVER['REMOTE_ADDR'],
-                'order_type' => 'a'
-              );
-                
-              $id1 = $this->admin_model->insert_data("customer_payment_request", $data1);
-                ///first insertion /
-              $data['resend'] = "";
-              $item_name = json_encode($this->input->post('Item_Name'));
-              $quantity = json_encode($this->input->post('Quantity'));
-              $price = json_encode($this->input->post('Price'));
-              $tax = json_encode($this->input->post('Tax_Amount'));
-              $tax_id = json_encode($this->input->post('Tax'));
-              $tax_per = json_encode($this->input->post('Tax_Per'));
-              $total_amount = json_encode($this->input->post('Total_Amount'));
-              $item_Detail_1 = array(
-                "p_id" => $id1,
-                "item_name" => ($item_name), 
-                "quantity" => ($quantity),
-                "price" => ($price),
-                "tax" => ($tax),
-                "tax_id" => ($tax_id),
-                "tax_per" => ($tax_per),
-                "total_amount" => ($total_amount),
-    
-              );
-              //print_r($item_Detail_1);  die(); 
-              $this->admin_model->insert_data("order_item", $item_Detail_1);
-              /*if($remain  >0 && $recurring_payment=='start') 
-              {
-                $recurring_pay_start_date=date($recurring_pay_start_date); 
-                switch($recurring_type)
-                {
-                  case 'daily':
-                    $recurring_next_pay_date=Date('Y-m-d', strtotime("+1 days", strtotime($recurring_pay_start_date)));
-                  break;
-                  case 'weekly':
-                    $recurring_next_pay_date=Date('Y-m-d', strtotime("+7 days", strtotime($recurring_pay_start_date)));
-                  break;
-                  case 'biweekly':
-                     $recurring_next_pay_date=date('Y-m-d', strtotime('+14 days', strtotime($recurring_pay_start_date)));
-                  break;
-                  case 'monthly':
-                    $recurring_next_pay_date=date('Y-m-d', strtotime('+1 month', strtotime($recurring_pay_start_date)));
-                  break;
-                  case 'quarterly':
-                    $recurring_next_pay_date=date('Y-m-d', strtotime('+3 month', strtotime($recurring_pay_start_date)));
-                  break;
-                  case 'yearly':
-                  $recurring_next_pay_date=date('Y-m-d', strtotime('+12 month', strtotime($recurring_pay_start_date)));
-                  break;
-                  default :
-                    $recurring_next_pay_date=Date('Y-m-d', strtotime("+1 days", strtotime($recurring_pay_start_date)));
-                  break; 
-                  
-                }
-                $dfg = date("Ymdhisu");
-                $url2 = base_url().'rpayment/PY' . $dfg . '/' . $merchant_id;
-                $unique2 = "PY" . $dfg;
-                 
-                $data2 = Array(
-                  'reference' => $reference,
-                  'name' => $name,
-                  'invoice_no' => $invoice_no,
-                  'email_id' => $email_id,
-                  'mobile_no' => $mobile_no,
-                  'amount' => $amount,
-                  'sub_total' => $sub_amount,
-                  'tax' => $total_tax,
-                  'fee' => $fee,
-                  's_fee' => $fee_swap,
-                  // 'title' => $title,
-                  'detail' => $remark,
-                  'note' => $note,
-                  'url' => $url2,
-                  'payment_type' => 'recurring',
-                  'recurring_type' => $recurring_type,
-                  'recurring_count' => $recurring_count,
-                  // 'due_date' => $due_date,
-                  'merchant_id' => $merchant_id,
-                  'sub_merchant_id' => $sub_merchant_id,
-                  'payment_id' => $unique2,
-                  'recurring_payment' => $recurring_payment,
-                  'recurring_pay_start_date' => $recurring_pay_start_date,
-                  'recurring_next_pay_date' => $recurring_next_pay_date,
-                  'recurring_pay_type' => $paytype,
-                  
-                  'add_date' => $today3,
-                  'status' => 'pending',
-                  'year' => $year,
-                  'month' => $month,
-                  'time1' => $time1,
-                  'day1' => $day1,
-                  'date_c' => $today2_a,
-                  'payment_date' => $today2,
-                  'recurring_count_paid' => $paid,
-                  'recurring_count_remain' => $remain, 
-                  'transaction_id' => "",
-                  'message' =>  "",
-                  'card_type' =>  $card_a_type,
-                  'card_no' =>  $card_a_no,
-                  'sign' =>  "",
-                  'address' =>  $address,
-                  'name_card' =>  $name_card,
-                  'l_name' => "",
-                  'address_status' =>  $address_status,
-                  'zip_status' =>  $zip_status,
-                  'cvv_status' =>  $cvv_status,
-                  'ip_a' => $_SERVER['REMOTE_ADDR'],
-                  'order_type' => 'a'
-                );
-                //print_r($data2);   die(); 
-                   $id2 = $this->admin_model->insert_data("customer_payment_request", $data2);
-                  $data['resend'] = "";
-                  $item_name = json_encode($this->input->post('Item_Name'));
-                  $quantity = json_encode($this->input->post('Quantity'));
-                  $price = json_encode($this->input->post('Price'));
-                  $tax = json_encode($this->input->post('Tax_Amount'));
-                  $tax_id = json_encode($this->input->post('Tax'));
-                  $tax_per = json_encode($this->input->post('Tax_Per'));
-                  $total_amount = json_encode($this->input->post('Total_Amount'));
-                  $item_Detail_1 = array(
-                    "p_id" => $id2,
-                    "item_name" => ($item_name), 
-                    "quantity" => ($quantity),
-                    "price" => ($price),
-                    "tax" => ($tax),
-                    "tax_id" => ($tax_id),
-                    "tax_per" => ($tax_per),
-                    "total_amount" => ($total_amount),
-        
-                  );
-                  $getDashboard_m = $this->db->query(" SELECT business_name,logo,address1,business_dba_name,business_number,color FROM merchant WHERE id = '" . $merchant_id . "' ");
-                  $getDashboardData_m = $getDashboard_m->result_array();
-                  //print_r($getDashboardData_m); die();  
-                  $data2['getDashboardData_m'] = $getDashboardData_m;
-                  $data2['business_name'] = $getDashboardData_m[0]['business_name'];
-                  $data2['address1'] = $getDashboardData_m[0]['address1'];
-                  $data2['business_dba_name'] = $getDashboardData_m[0]['business_dba_name'];
-                  $data2['logo'] = $getDashboardData_m[0]['logo'];
-                  $data2['business_number'] = $getDashboardData_m[0]['business_number'];
-                  $data2['color'] = $getDashboardData_m[0]['color'];
-                  $this->admin_model->insert_data("order_item", $item_Detail_1);
-                  $item = $this->admin_model->data_get_where_1("order_item", array("p_id" => $id2));
-                  $data2['item_detail'] = $item_Detail_1;  
-                        
-                  $data['msgData'] = $data2;
-                   $msg = $this->load->view('email/invoice', $data, true);
-          
-                  
-                   
-                   $MailSubject = 'Payment  Invoice';
-                   $header = "From:Salequick<info@salequick.com >\r\n" .
-                     "MIME-Version: 1.0" . "\r\n" .
-                     "Content-type: text/html; charset=UTF-8" . "\r\n";
-          
-                   if(!empty($email_id)){ 
-            
-                   $this->email->from('info@salequick.com', 'SaleQuick Receipt');
-              
-                   $this->email->to($email_id);
-              
-                   $this->email->subject($MailSubject);
-              
-                   $this->email->message($msg);
-              
-                   $this->email->send();
-              
-                   }
-                   
-              }  */ 
-               
-              $this->session->set_flashdata('pmsg', '<div class="alert alert-success text-center">  Payment  Complete </div>');
-              $this->db->where('status','confirm'); 
-              $this->db->where('id',$id1); 
-              $data['getEmail']=$getEmail=$this->db->get('customer_payment_request')->result_array();
-              $data['getEmail1']=$getEmail_a; 
-              
-              $email = $email_id; 
-              $amount = $amount;
-              $sub_total = $sub_amount;
-              $tax = $total_tax; 
-              $originalDate = $today2_a;
-              $merchant_email=$getEmail_a[0]['email'];
-              $newDate = date("F d,Y", strtotime($originalDate)); 
-              //Email Process
-              $data['email'] = $email_id;
-              $data['color'] = $getEmail_a[0]['color'];
-              $data['amount'] = $amount;
-              $data['sub_total'] = $sub_amount;
-              $data['tax'] = $total_tax; 
-              $data['originalDate'] = $today2_a;
-              $data['card_a_no'] = $card_a_no;
-              $data['trans_a_no'] = $trans_a_no;
-              $data['card_a_type'] = $card_a_type;
-              $data['message_a'] = $message_a;
-              $data['late_fee_status'] = $merchantdetails[0]['late_fee_status'];
-              $data['late_fee'] = $getEmail[0]['late_fee'];
-              $data['payment_type'] = 'recurring';
-              $data['recurring_type'] = $recurring_type;
-              $data['no_of_invoice'] = $getEmail[0]['no_of_invoice'];
-              $data['recurring_count'] = $recurring_count ? $recurring_count : '&infin;';
-              $data['msgData'] = $data;
-              $msg = $this->load->view('email/new_receipt', $data, true);
-              //echo $msg;  die(); 
-              $merchnat_msg = $this->load->view('email/merchnat_receipt', $data, true);
-          
-               $email = $email; 
-       
-               $MailSubject = ' Receipt from '.$getEmail_a[0]['business_dba_name']; 
-               $MailSubject2= ' Receipt to '.$getEmail[0]['name']?$getEmail[0]['name']:$getEmail[0]['email_id'];
-       
-              if(!empty($email)){ 
-       
-                  $this->email->from('info@salequick.com', $getEmail_a[0]['business_dba_name']);
-       
-                  $this->email->to($email);
-       
-                  $this->email->subject($MailSubject);
-       
-                  $this->email->message($msg);
-       
-                  $this->email->send();
-       
-              }
-                 
-              if(!empty($merchant_email)){ 
-       
-                $this->email->from('info@salequick.com', $getEmail_a[0]['business_dba_name']);
-       
-                $this->email->to($merchant_email);
-       
-                  $this->email->subject($MailSubject2);
-       
-                $this->email->message($merchnat_msg);
-       
-                  $this->email->send();
-       
-              }
-       
-              
-              if(3 > 4) {
-                $url=$getEmail[0]['url']; 
-                //$purl = str_replace('payment', 'reciept', $url);
-                $purl = str_replace('rpayment', 'reciept', $url);
-                if(!empty($mobile_no)){ 
-                  //$sms_sender = trim($this->input->post('sms_sender'));
-                  $sms_reciever = $getEmail[0]['mobile_no'];
-                  //$sms_message = trim('Payment Receipt : '.$purl);
-                  $sms_message = trim(' Receipt from '.$getEmail_a[0]['business_dba_name'].' : '.$purl);
-                  $from = '+18325324983'; //trial account twilio number
-                  // $to = '+'.$sms_reciever; //sms recipient number
-                  $mob = str_replace(array( '(', ')','-',' ' ), '', $sms_reciever);
-                  $to = '+1'.$mob; 
-                  $response = $this->twilio->sms($from, $to,$sms_message);
-                }
-              }
-              $savecard=0; 
-              if($savecard == '0'  )   //  card Save Condition
-              {
-                   // Start create Token
-                $soapUrl1 = "https://certservices.elementexpress.com/";
-                $referenceNumber =  (rand(1000,9999));
-                 $xml_post_string = "<PaymentAccountCreateWithTransID xmlns='https://services.elementexpress.com'>
-            
-                  <Credentials>
-            
-                    <AccountID>".$account_id."</AccountID>
-            
-                    <AccountToken>".$account_token."</AccountToken>
-            
-                    <AcceptorID>".$acceptor_id."</AcceptorID>
-            
-                  </Credentials>
-            
-                  <Application>
-            
-                    <ApplicationID>".$application_id."</ApplicationID>
-            
-                    <ApplicationVersion>2.2</ApplicationVersion>
-            
-                    <ApplicationName>SaleQuick</ApplicationName>
-            
-                  </Application>
-            
-                  <PaymentAccount>
-            
-                    <PaymentAccountType>0</PaymentAccountType>
-            
-                    <PaymentAccountReferenceNumber>".$referenceNumber."</PaymentAccountReferenceNumber>
-            
-                  </PaymentAccount>
-            
-                  <Transaction>
-            
-                    <TransactionID>".$trans_a_no."</TransactionID>
-            
-                  </Transaction>
-            
-                  </PaymentAccountCreateWithTransID>";   // data from the form, e.g. some ID number
-            
-                  $headers = array(
-                    "Content-type: text/xml;charset=\"utf-8\"",
-                    "Accept: text/xml",
-                    "Method:POST"
-                  ); //SOAPAction: your op URL
-            
-                  $url = $soapUrl1;
-                  // PHP cURL  for https connection with auth
-                  $ch = curl_init();
-                  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-                  curl_setopt($ch, CURLOPT_URL, $url);
-                  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                  #curl_setopt($ch, CURLOPT_USERPWD, $soapUser.":".$soapPassword); // username and password - declared at the top of the doc
-                  curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
-                  curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-                  curl_setopt($ch, CURLOPT_POST, true);
-                  curl_setopt($ch, CURLOPT_POSTFIELDS, $xml_post_string); // the SOAP request
-                  curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-                  // converting
-                  $response = curl_exec($ch); 
-                  $xml = simplexml_load_string($response, "SimpleXMLElement", LIBXML_NOCDATA);
-                  $json = json_encode($xml);
-                  $arrrayy = json_decode($json,TRUE);
-                  // print_r($arrrayy); die(); 
-                  //print_r($arrayy['Response']['PaymentAccount']['PaymentAccountReferenceNumber']);
-                  curl_close($ch);
-                  $tokenId=$arrrayy['Response']['PaymentAccount']['PaymentAccountID']; 
-                  $mob = str_replace(array( '(', ')','-',' ' ), '', $phone);
-                  $my_toke = array(
-                    'name' => $name,
-            
-                    'mobile' => $mob,
-            
-                    // 'email' => $email,
-            
-                    'card_type' => $card_a_type,
-            
-                    'card_expiry_month'=>$expiry_month,
-            
-                    'card_expiry_year'=>$expiry_year,
-            
-                    'card_no' => $card_a_no,
-                    // 'transaction_id'=>$trans_a_no,
-                    
-                    'token' => $tokenId,
-            
-                    );
-                    $gettoken=$this->db->query("SELECT * FROM token WHERE card_expiry_year='$expiry_year' AND card_expiry_month='$expiry_month' AND card_no='$card_a_no'  AND card_type='$card_a_type' AND mobile='$mob' ")->result_array();
-                    if(count($gettoken) <= 0)
-                    {
-                      $this->db->insert('token',$my_toke);
-                    }
-              }
-              /// print_r($my_toke);  die(); 
-             // $this->db->insert('token',$my_toke);
-              //print_r($response); die();
-              $TransactionTime = $arrayy['Response']['ExpressTransactionTime'];
-              $TransactionDate = $arrayy['Response']['ExpressTransactionDate']; 
-              //print_r($arrayy);  die(); 
-              $Amount = $arrayy['Response']['Transaction']['ApprovedAmount'];
-              $Address = $arrayy['Response']['Address']['BillingAddress1'];
-      
-              $Ttime=substr($TransactionTime,0,2).':'.substr($TransactionTime,2,2).':'.substr($TransactionTime,4,2); 
-              $Tdate=substr($TransactionDate,0,4).'-'.substr($TransactionDate,4,2).'-'.substr($TransactionDate,6,2);  
-              //die(); //2019-07-04 12:05:41
-              $rt=$Tdate.' '.$Ttime;
-              $transaction_date=date($rt); 
-             
-              $save_notificationdata = array(
-              'merchant_id'=>$merchant_id,
-              'name' => $name,
-              'mobile' => $phone,
-              'email' => $email,
-              'card_type' => $card_a_type,
-              'card_expiry_month'=>$expiry_month,
-              'card_expiry_year'=>$expiry_year,
-              'card_no' => $card_a_no,
-              'amount'  =>$Amount,
-              'address' =>$Address,
-              'transaction_id'=>$trans_a_no,
-              'transaction_date'=>$transaction_date,
-              'notification_type' => 'payment',
-              'invoice_no'=>$invoice_no,
-              'status'   =>'unread'
-              );
-              //print_r($save_notificationdata); die(); 
-               $this->db->insert('notification',$save_notificationdata);
-              
-               $this->session->set_userdata("succss", '<div class="alert alert-danger text-center"> New payment Add Successfully</div>');
-               //redirect("merchant/add_customer_request");
-              // redirect(base_url('merchant/add_customer_request'));
-              //$this->session->set_userdata("mymsg", "New payment Request Add Successfully.");
-              // redirect("merchant/add_customer_request");
-              redirect(base_url("pos/all_customer_request_recurring"));
-              //die("Aprove here"); 
-            }
-            else
-            {
-                $id=$arrayy['Response']['ExpressResponseMessage'];
-                $this->session->set_flashdata("error", '<div class="alert alert-danger text-center">'.$id.'</div>');
-                redirect(base_url("merchant/add_customer_request"));
-            }
-            }
-            else{
-               $id=$array['Response']['ExpressResponseMessage'];
-               $this->session->set_flashdata("error", '<div class="alert alert-danger text-center">'.$id.'</div>');
-               redirect(base_url("merchant/add_customer_request"));
-       
-            }
-            
-          }
-          else{
-              $id='CNP-Credential-Not-available';
-              $this->session->set_flashdata("error", '<div class="alert alert-danger text-center">'.$id.'</div>');
-              redirect(base_url("merchant/add_customer_request"));
-            }
-        }
-        else if($paytype=='0' ||  $paytype=='1')
+      if($paytype=='0' ||  $paytype=='1')
          {  
                   //echo $recurring_count;  die(); 
-                  //print_r($merchant_id);  die("manual");  
-                  
-                  $today1 = date("Ymdhisu");
+
+                  $today1_1 = date("ymdhisu");
+                  $today1 = str_replace("000000", "", $today1_1);
                   $url = base_url().'rpayment/PY' . $today1 . '/' . $merchant_id;
                   $today2 = date("Y-m-d");
                   $year = date("Y");
@@ -3929,16 +3768,23 @@
             }
             if (!empty($mobile_no)) {
               $sms_reciever = $mobile_no;
-              $sms_message = "Hello ".$name." from ".$getDashboardData_m[0]['business_dba_name']."  is requesting  ".$amount."  payment from you <a href='".$url."'>CONTINUE TO PAYMENT</a>";
+             // $sms_message = "Hello ".$name." from ".$getDashboardData_m[0]['business_dba_name']."  is requesting  ".$amount."  payment from you <a href='".$url."'>CONTINUE TO PAYMENT</a>";
+            $sms_message = trim(" " . $getDashboardData_m[0]['business_dba_name'] . " is Requesting  Payment.  ".$url." ");
+
+
+             // $sms_message = trim('Payment Url : '.$url);
               $from = '+18325324983'; //trial account twilio number
               $mob = str_replace(array('(', ')', '-', ' '), '', $sms_reciever);
               $to = '+1' . $mob;
-              $this->twilio->sms($from, $to, $sms_message);
+              $response=$this->twilio->sms($from, $to, $sms_message);
+              //print_r($response->HttpStatus);
+          //print_r($response->TwilioRestResponse['ResponseXml']['SMSMessage']['Status'] );
             }
           }
         
           $this->session->set_userdata("mymsg", " New payment request add successfully.");
           // redirect("merchant/all_customer_request");
+
           redirect("pos/all_customer_request_recurring"); 
         }
       }
@@ -4135,7 +3981,6 @@
           'merchant_id' => $merchant_id,
           'status' => 'pending',
           'date_c' => $today2,
-          'add_date' => $today3,
         );
         $id = $this->admin_model->insert_data("payment_request", $data);
         $this->session->set_userdata("mymsg", "New payment Request Add Successfully.");
@@ -4906,7 +4751,8 @@
             //$sms_sender = trim($this->input->post('sms_sender'));
             $sms_reciever = $getEmail[0]['mobile_no'];
             //$sms_message = trim('Payment Receipt : '.$purl);
-                    $sms_message = trim(' Receipt from '.$getEmail1[0]['business_dba_name'].' : '.$purl);
+                    //$sms_message = trim(' Receipt from '.$getEmail1[0]['business_dba_name'].' : '.$purl);
+                    $sms_message = trim('Payment Receipt : '.$purl);
             $from = '+18325324983'; //trial account twilio number
             // $to = '+'.$sms_reciever; //sms recipient number
             $mob = str_replace(array( '(', ')','-',' ' ), '', $sms_reciever);
@@ -5021,7 +4867,12 @@
           if (!empty($mobile_no)) {
             $sms_reciever = $mobile_no;
             //$sms_message = trim(" Hello '".$name."' . ('".$getDashboardData_m[0]['business_dba_name']."') is requesting  payment from you.  ('".$amount."')('".$p_date."') $url ");
-            $sms_message = trim(" Hello '" .$name . "' . ('" . $getDashboardData_m[0]['business_dba_name'] . "') is requesting  payment from you.  ('" . $amount . "') $url ");
+
+            //$sms_message = trim(" Hello '" .$name . "' . ('" . $getDashboardData_m[0]['business_dba_name'] . "') is requesting  payment from you.  ('" . $amount . "') $url ");
+            $sms_message = trim(" " . $getDashboardData_m[0]['business_dba_name'] . " is requesting  payment . ".$url." ");
+
+
+            //$sms_message = trim('Payment Url : '.$url);
             $from = '+18325324983'; //trial account twilio number
             // $to = '+'.$sms_reciever; //sms recipient number
             $mob = str_replace(array('(', ')', '-', ' '), '', $sms_reciever);
@@ -5483,8 +5334,8 @@
       $sub_merchant_id = $this->session->userdata('subuser_id');
       $merchant_id = $this->session->userdata('merchant_id');
       $package = $this->profile_model->get_merchant_details($this->session->userdata('merchant_id'));
-      // print_r($this->session->userdata('merchant_id'));die;
       if ($this->input->post('mysubmit')) {  
+        // echo '<pre>';print_r($_POST);die;
         if (!empty($sub_merchant_id)) {    
           $id = $this->input->post('pak_id') ? $this->input->post('pak_id') : "";
           // $csv_Customer_name = $this->input->post('csv_Customer_name') ? $this->input->post('csv_Customer_name') : "";
@@ -5551,7 +5402,7 @@
             // redirect(base_url('merchant/general_settings'));
             //       }
         } else {
-                  $id = $this->input->post('pak_id') ? $this->input->post('pak_id') : "";
+          $id = $this->input->post('pak_id') ? $this->input->post('pak_id') : "";
           $csv_Customer_name = $this->input->post('csv_Customer_name') ? $this->input->post('csv_Customer_name') : "";
           
           $opsw = $this->input->post('old_pswd') ? trim($this->input->post('old_pswd')) : "";
@@ -5567,9 +5418,25 @@
           $ecom_transaction_mode = $this->input->post('ecom_transaction_mode') ? $this->input->post('ecom_transaction_mode') : "";
           
           $time_zone = $this->input->post('time_zone') ? $this->input->post('time_zone') : "";
+          $tax_option = $this->input->post('tax_option') ? $this->input->post('tax_option') : "";
+          $emp_access = $this->input->post('emp_access') ? $this->input->post('emp_access') : "";
+
+          if( ($tax_option == '') || ($tax_option == 0) ) {
+            $tax_option = '0';
+          } else {
+            $tax_option = $tax_option;
+          }
+
+          if( ($emp_access == '') || ($emp_access == 0) ) {
+            $emp_access = '0';
+          } else {
+            $emp_access = $emp_access;
+          }
+          // echo $tax_option;die;
+          //$batch_report_time = $this->input->post('batch_report_time') ? $this->input->post('batch_report_time') : "";
           $this->session->unset_userdata('time_zone');
           $this->session->set_userdata('time_zone', $time_zone);
-            $report_type = $this->input->post('report_type') ? $this->input->post('report_type') : array();
+          $report_type = $this->input->post('report_type') ? $this->input->post('report_type') : array();
             
           $report_type=implode(",",$report_type); 
                       
@@ -5612,8 +5479,10 @@
               'report_type' => $report_type,
               'report_email' => $report_email,
               'csv_Customer_name' => $csv_Customer_name,
-              'time_zone'    =>$time_zone,
-              'ecom_transaction_mode'    =>$ecom_transaction_mode 
+              'time_zone' => $time_zone,
+              'tax_option' => $tax_option,
+              'emp_access' => $emp_access,
+              'ecom_transaction_mode' => $ecom_transaction_mode 
             );  
               $m=$this->admin_model->update_data('merchant', $package_info, array('id' => $package[0]->id));
               
@@ -5637,6 +5506,7 @@
           $data['mypic'] = $pak->logo;
           $data['mob_no'] = $pak->o_phone;
           $data['business_dba_name'] = $pak->business_dba_name;
+          $data['batch_report_time'] = $pak->batch_report_time;
           //  business info 
           $data['city'] = $pak->city;
           $data['zip'] = $pak->zip;
@@ -5664,6 +5534,8 @@
           $data['report_email'] = !empty($pak->report_email) ? $pak->report_email : '';
           $data['notification_email'] = !empty($pak->notification_email) ? $pak->notification_email : '';
           $data['ecom_transaction_mode'] = $pak->ecom_transaction_mode;
+          $data['tax_option'] = $pak->tax_option;
+          $data['emp_access'] = $pak->emp_access;
           
           break;
         }
@@ -5750,12 +5622,26 @@
             $purl=" '" . $business_dba_name . "' POS Invoice No :: '" . $invoice_no . "' Your Amount ::'" . $data['amount'] . "' Payment date :: '" . $data['originalDate'] . "' Transaction id ::'" . $data['trans_a_no'] . "' Card type :: '" . $data['card_a_type'] . "' ";
           }
           if(!empty($phone)){
-            $sms_message = trim(' Receipt from '.$getEmail1[0]['business_dba_name'].' : '.$purl);
+                      $getEmail[0]['pos_type'];
+        if( $getEmail[0]['pos_type']==1){
+        $purll = 'https://salequick.com/adv_pos_reciept/' . $invoice_no . '/' . $merchantid;
+        }
+        else
+        {
+        $purll = 'https://salequick.com/pos_reciept/' . $invoice_no . '/' . $merchantid;
+        }
+ 
+       // $sms_message = trim(' Receipt from '.$getEmail1[0]['business_dba_name'].' : '.$purll);
+       $sms_message = trim(" Payment  Receipt: $purll");
+          
             $from = '+18325324983'; //trial account twilio number
-            // $to = '+'.$sms_reciever; //sms recipient number
-            // $mob = str_replace(array( '(', ')','-',' ' ), '', $sms_reciever);
-            // $to = '+1'.$mob;
-            $this->twilio->sms($from, $phone,$sms_message);
+             $to = '+'.$phone; //sms recipient number
+             $mob = str_replace(array( '(', ')','-',' ' ), '', $phone);
+              $to = '+1'.$mob;
+           // $this->twilio->sms($from, $phone,$sms_message);
+             $response_2 = $this->twilio->sms($from, $to, $sms_message);
+                     
+             $response_2->HttpStatus;
             $package_info = array(
               're_mobile_no' => $phone_formated
             );
@@ -6115,5 +6001,184 @@
         }
         echo $late_fee_mail_status;
     }
+
+    public function tip_setting_original() {
+        $merchant_id = $this->session->userdata('merchant_id');
+        
+        if ($_POST) {
+            // echo '<pre>';print_r($_POST);die;
+            $tip = $this->input->post('tip') ? 1 : 0;
+            $tip_val_1 = $this->input->post('tip_val_1') ? $this->input->post('tip_val_1') : "";
+            $tip_val_2 = $this->input->post('tip_val_2') ? $this->input->post('tip_val_2') : "";
+            $tip_val_3 = $this->input->post('tip_val_3') ? $this->input->post('tip_val_3') : "";
+            $tip_val_4 = $this->input->post('tip_val_4') ? $this->input->post('tip_val_4') : "";
+
+            $updata = array(
+                'tip' => $tip,
+                'tip_val_1' => $tip_val_1,
+                'tip_val_2' => $tip_val_2,
+                'tip_val_3' => $tip_val_3,
+                'tip_val_4' => $tip_val_4,
+            );
+            $this->db->where('id', $merchant_id);
+            $this->db->update('merchant', $updata);
+            $this->session->set_flashdata('success', 'Tip settings updated successfully.');
+            redirect(base_url('merchant/tip_setting'));
+
+        } else {
+            $package = $this->db->select('tip,tip_val_1,tip_val_2,tip_val_3,tip_val_4')->where('id', $merchant_id)->get('merchant')->row();
+            $data['tip'] = $package->tip;
+            $data['tip_val_1'] = $package->tip_val_1;
+            $data['tip_val_2'] = $package->tip_val_2;
+            $data['tip_val_3'] = $package->tip_val_3;
+            $data['tip_val_4'] = $package->tip_val_4;
+        }
+        // echo '<pre>';print_r($data);die;
+        $data['meta'] = 'Tip Settings';
+        $this->load->view('merchant/tip_setting', $data);
+    }
+
+    public function tip_setting() {
+        $merchant_id = $this->session->userdata('merchant_id');
+        
+        if ($_POST) {
+            // echo '<pre>';print_r($_POST);die;
+            $tip = $this->input->post('tip') ? 1 : 0;
+            $tip_type = $this->input->post('tip_type') ? $this->input->post('tip_type') : "";
+            $tip_val_1 = $this->input->post('tip_val_1') ? $this->input->post('tip_val_1') : "";
+            $tip_val_2 = $this->input->post('tip_val_2') ? $this->input->post('tip_val_2') : "";
+            $tip_val_3 = $this->input->post('tip_val_3') ? $this->input->post('tip_val_3') : "";
+            $tip_val_4 = $this->input->post('tip_val_4') ? $this->input->post('tip_val_4') : "";
+
+            $updata = array(
+                'tip' => $tip,
+                'tip_type' => $tip_type,
+                'tip_val_1' => $tip_val_1,
+                'tip_val_2' => $tip_val_2,
+                'tip_val_3' => $tip_val_3,
+                'tip_val_4' => $tip_val_4,
+            );
+            $this->db->where('id', $merchant_id);
+            $this->db->update('merchant', $updata);
+            $this->session->set_flashdata('success', 'Tip settings updated successfully.');
+            redirect(base_url('merchant/tip_setting'));
+
+        } else {
+            $package = $this->db->select('tip,tip_type,tip_val_1,tip_val_2,tip_val_3,tip_val_4')->where('id', $merchant_id)->get('merchant')->row();
+            $data['tip'] = $package->tip;
+            $data['tip_type'] = $package->tip_type;
+            $data['tip_val_1'] = $package->tip_val_1;
+            $data['tip_val_2'] = $package->tip_val_2;
+            $data['tip_val_3'] = $package->tip_val_3;
+            $data['tip_val_4'] = $package->tip_val_4;
+        }
+        // echo '<pre>';print_r($data);die;
+        $data['meta'] = 'Tip Settings';
+        $this->load->view('merchant/tip_setting', $data);
+    }
+
+    public function link_pay() {
+        if( $this->session->userdata('employee_id') ) {
+            $merchant_id = $this->session->userdata('employee_id');
+        } else {
+            $merchant_id = $this->session->userdata('merchant_id');
+        }
+
+        $getMarchentlogo = $this->db->query("SELECT id,merchant_key,business_name,isBilling,isReferenceRequired from merchant where id = '".$merchant_id."' ");
+        $getMarchentLogoo = $getMarchentlogo->result_array();
+        $data['id'] = $getMarchentLogoo[0]['id'];
+        $data['merchant_key'] = $getMarchentLogoo[0]['merchant_key'];
+        $data['business_name'] = $getMarchentLogoo[0]['business_name'];
+        $data['isBilling'] = $getMarchentLogoo[0]['isBilling'];
+        $data['isReferenceRequired'] = $getMarchentLogoo[0]['isReferenceRequired'];
+        $data['meta'] = 'Link Pay';
+
+        $this->load->view('merchant/link_pay', $data);
+    }
+
+    public function updateLinkPayBillingStatus() {
+        // echo $_POST['isBilling'];die;
+        $isBilling = $_POST['isBilling'];
+        $merchant_id = $this->session->userdata('merchant_id');
+
+        $updatedata=array('isBilling'=>$isBilling); 
+        $this->db->where('id',$merchant_id); 
+        
+        if($this->db->update('merchant',$updatedata)) {
+            echo 200;die;
+        } else {
+            echo 500;die;
+        }
+    }
+
+    public function updateLinkPayReferenceRequired() {
+        // echo $_POST['isReferenceRequired'];die;
+        $isReferenceRequired = $_POST['isReferenceRequired'];
+        $merchant_id = $this->session->userdata('merchant_id');
+
+        $updatedata=array('isReferenceRequired'=>$isReferenceRequired);
+        $this->db->where('id',$merchant_id); 
+        // echo $this->db->last_query();die;
+        
+        if($this->db->update('merchant',$updatedata)) {
+            echo 200;die;
+        } else {
+            echo 500;die;
+        }
+    }
+
+    public function notification_setting() {
+        $sub_merchant_id = $this->session->userdata('subuser_id');
+        $merchant_id = $this->session->userdata('merchant_id');
+        $package = $this->profile_model->get_merchant_details($this->session->userdata('merchant_id'));
+
+        if ($this->input->post('mysubmit')) {
+            // echo '<pre>';print_r($_POST);die;
+            $id = $this->input->post('merchant_id') ? $this->input->post('merchant_id') : "";
+            $mail_notify = $this->input->post('mail_notify') ? 1 : 0;
+            $sms_notify = $this->input->post('sms_notify') ? 1 : 0;
+            $push_notify = $this->input->post('push_notify') ? 1 : 0;
+
+            $package_info = array(
+                'mail_notify' => $mail_notify,
+                'sms_notify' => $sms_notify,
+                'push_notify' => $push_notify,
+            );
+            // echo '<pre>';print_r($package_info);die;
+
+            if (!empty($sub_merchant_id)) {
+                $this->admin_model->update_data('merchant', $package_info, array('id' => $sub_merchant_id));
+            } else {
+                $this->admin_model->update_data('merchant', $package_info, array('id' => $merchant_id));
+            }
+            $this->session->set_flashdata('success', '<strong>Success!</strong> Notification setting updated successfully');
+            redirect(base_url('merchant/notification_setting'));
+        
+        } else {
+            foreach ($package as $val) {
+                $data['merchant_id'] = $val->id;
+                $data['mail_notify'] = $val->mail_notify;
+                $data['sms_notify'] = $val->sms_notify;
+                $data['push_notify'] = $val->push_notify;
+                break;
+            }
+        }
+        
+        $data['meta'] = 'Notification Setting';
+        $this->load->view('merchant/notification_setting', $data);
+    }
+
+    public function test_otp_mail() {
+        $otp_data = array();
+        $MailTo = 'amir.proget@gmail.com';
+        $msg = $this->load->view('email/otp_mail', $otp_data, true);
+        $MailSubject = 'Admin OTP for Andrew';
+        $this->email->from('info@salequick.com', 'OTP Mail');
+        $this->email->to($MailTo);
+        $this->email->subject($MailSubject);
+        $this->email->message($msg);
+        $this->email->send();
+    }
+
 }
 ?>

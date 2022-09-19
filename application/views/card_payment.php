@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo base_url();?>new_assets/css/jquery-ui.css">
     <link rel="stylesheet" type="text/css" href="<?php echo base_url('new_assets/css/sweetalert.css'); ?>">
-    <link rel="stylesheet" type="text/css" href="https://salequick.com/demo_new/front/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://salequick.com/front/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
@@ -468,7 +468,7 @@
                                         <div class="mycl-wrapper responsive-cols flex-row">
                                             <div style="margin-left: 8px;">
                                                 <div class="card-type-logo">
-                                                    <img src="https://salequick.com/demo_new/new_assets/img/cardtypelogo.png">
+                                                    <img src="https://salequick.com/new_assets/img/cardtypelogo.png">
                                                 </div>
                                             </div>
                                         </div>
@@ -504,7 +504,7 @@
                                             <!-- <div class="flex-col"> -->
                                             <div style="padding-right: 10px;">
                                                 <div class="card-type-logo">
-                                                    <img src="https://salequick.com/demo_new/new_assets/img/cardtypelogo.png">
+                                                    <img src="https://salequick.com/new_assets/img/cardtypelogo.png">
                                                 </div>
                                             </div>
                                         </div>
@@ -513,7 +513,7 @@
                                 </div>
                             </div>
                             <div class="card-inner-boxes">
-                                <div class="card-box  new-card-box" data-cardno="----" data-mm="--" data-yy="--" data-src="https://salequick.com/demo_new/new_assets/img/cardtypelogo.png" data-chn="-" style="text-align: -webkit-center !important;">
+                                <div class="card-box  new-card-box" data-cardno="----" data-mm="--" data-yy="--" data-src="https://salequick.com/new_assets/img/cardtypelogo.png" data-chn="-" style="text-align: -webkit-center !important;">
                                     <input type="radio" value="newcard" name="card_selection_radio" <?php  if(count($token_data) <= '0') { echo  "checked";  } ?> >
                                     <div class="card__box">
                                         <!-- <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 100 100" xml:space="preserve">
@@ -649,7 +649,7 @@
                                           }
                                         ?>
 
-                                        <div id="card_<?php echo $value['id']; ?>" class="card-box get_card_box" data-cardno="<?php echo substr($cardNumber,strlen($cardNumber) - 4 ,4)?>" data-mm="<?php echo strtoupper($value['card_expiry_month']); ?>" data-yy="<?php echo strtoupper($value['card_expiry_year']); ?>" data-src="https://salequick.com/demo_new/new_assets/img/<?php echo $card_image; ?>" data-chn="<?php echo strtoupper($value['name']); ?>">
+                                        <div id="card_<?php echo $value['id']; ?>" class="card-box get_card_box" data-cardno="<?php echo substr($cardNumber,strlen($cardNumber) - 4 ,4)?>" data-mm="<?php echo strtoupper($value['card_expiry_month']); ?>" data-yy="<?php echo strtoupper($value['card_expiry_year']); ?>" data-src="https://salequick.com/new_assets/img/<?php echo $card_image; ?>" data-chn="<?php echo strtoupper($value['name']); ?>">
                                             <input type="radio"  name="card_selection_radio" value="<?php echo $value['token']; ?> " <?php if($i=='1') echo 'checked'; ?>>
                                             <div class="card__box" style="display: flex;">
                                                 <div class="card__type">
@@ -965,7 +965,7 @@
             } else {
                 //console.log('else');
                 var card_img = '<img src="https://salequick.com/new_assets/img/card/no_card.png" style="width: 35px;">';
-                var card_img2 = '<img src="https://salequick.com/demo_new/new_assets/img/cardtypelogo.png" style="width: 48px;height: 30px;">';
+                var card_img2 = '<img src="https://salequick.com/new_assets/img/cardtypelogo.png" style="width: 48px;height: 30px;">';
                 //var card_img2 = '';
             }
             document.querySelector('.card_type').innerHTML = card_img;

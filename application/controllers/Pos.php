@@ -13,15 +13,15 @@ ini_set('memory_limit','2048M');
 			$this->load->model('Inventory_model');
 			$this->load->model('Inventory_graph_model');
 			$this->load->model('Home_model');
+			$this->load->model('acceptcard_model');
 			$this->load->library('email');
-			 $this->load->helper('pdf_helper');
+			$this->load->library('twilio');
+			$this->load->helper('pdf_helper');
 			$this->load->model('customers_model', 'customers');
 			if($this->session->userdata('time_zone')) {
 				$time_Zone=$this->session->userdata('time_zone') ? $this->session->userdata('time_zone') :'America/Chicago';
 				date_default_timezone_set($time_Zone);
-			}
-			else
-			{
+			} else {
 				date_default_timezone_set('America/Chicago');
 			}
 			//ini_set('display_errors', 1);
@@ -111,8 +111,9 @@ ini_set('memory_limit','2048M');
 						$repeiptmethod = 'no-receipt';
 					}
 					$each->add_date=$this->dateTimeConvertTimeZone($each->add_date);
+					$new_add_date=$this->dateTimeConvertTimeZone($each->new_add_date);
 					$each->due_date=$this->dateTimeConvertTimeZone($each->due_date);
-					$each->payment_date=$this->dateTimeConvertTimeZone($each->payment_date);
+					$payment_date=$this->dateTimeConvertTimeZone($each->payment_date);
 					$each->date_c=$this->dateTimeConvertTimeZone($each->date_c);
 					$package['id'] = $each->id;
 					$package['refund_row_id'] = "";
@@ -127,7 +128,17 @@ ini_set('memory_limit','2048M');
 					$package['status'] = $each->status;
 					$package['payment_type'] = $each->payment_type;
 					$package['due_date'] = $each->due_date;
-					$package['payment_date'] = $each->payment_date;
+
+					if(!empty($each->new_add_date))
+					{
+                      $package['payment_date'] = $new_add_date;
+					}
+					else
+					{
+						$package['payment_date'] = $payment_date;
+					}
+
+					
 					$package['transaction_id'] = $each->transaction_id;
 					$package['date_c'] = $each->date_c;
 					$package['card_no'] = $each->card_no;
@@ -724,7 +735,6 @@ ini_set('memory_limit','2048M');
 		}
 
 		public function add_pos() {
-
 			$merchant_id = $this->session->userdata('merchant_id');
 			$data['meta'] = "Point Of Sale";
 			$data['loc'] = "add_pos";
@@ -732,6 +742,10 @@ ini_set('memory_limit','2048M');
 			$getDashboard = $this->db->query("SELECT ( SELECT sum(percentage) as TotalTax from tax where status='active' and merchant_id = '" . $merchant_id . "' ) as TotalTax");
 			$getDashboardData = $getDashboard->result_array();
 			$data['getDashboardData'] = $getDashboardData;
+
+			$data_tax = $this->db->query("SELECT tax_option from merchant where id = '" . $merchant_id . "'")->row();
+			// echo '<pre>';print_r($data_tax->tax_option);die;
+			$data['tax_option'] = $data_tax->tax_option;
 
 			$merchant_status = $this->session->userdata('merchant_status');
 			$Activate_Details = $this->session->userdata('Activate_Details');
@@ -782,7 +796,11 @@ ini_set('memory_limit','2048M');
 				// 	//}
 				// }
 				$data['meta'] = "Virtual Terminal";
-				$this->load->view('merchant/pos_dash', $data);
+				if($merchant_id = '413') {
+					$this->load->view('merchant/pos_dash_test', $data);
+				} else {
+					$this->load->view('merchant/pos_dash', $data);
+				}
 
 			} elseif ($merchant_status == 'block') {
 				$data['meta'] = "Your Account Is Block";
@@ -812,7 +830,6 @@ ini_set('memory_limit','2048M');
 				$data['resend'] = "resend";
 				$this->load->view("merchant/block", $data);
 			}
-
 		}
 
 		public function refund() {
@@ -915,6 +932,7 @@ ini_set('memory_limit','2048M');
 				);
 				$branch_inf = array(
 					'status' => 'Chargeback_Confirm',
+					'date_r' => $date_c,
 				);
 				// $id1 = $this->admin_model->insert_data("refund", $branch_info);
 				// $this->admin_model->update_data('customer_payment_request',$branch_inf , array('id' => $id));
@@ -1241,6 +1259,7 @@ ini_set('memory_limit','2048M');
 		   	$branch_inf = array(
 
 			   'status' => 'Chargeback_Confirm',
+			   'date_r' => $date_c,
 
 		   	);
 		   	//print_r($arraya['Response']['ExpressResponseMessage']);  die(); 
@@ -1424,8 +1443,25 @@ ini_set('memory_limit','2048M');
 		   	$merchant_id = $this->session->userdata('merchant_id');
 		   	if($merchant_id && isset($_POST)) { 
 			   
+				$invoice_no=$this->input->post('invoice_no')?$this->input->post('invoice_no'):""; 
+		       $transaction_id=$this->input->post('transaction_id')?$this->input->post('transaction_id'):"";
+
+		       $getQuery_merchant = $this->db->query("SELECT merchant_id,sub_merchant_id from pos where invoice_no ='".$invoice_no."' and transaction_id ='".$transaction_id."'  ");
+
+                $getQuery_merchant_det = $getQuery_merchant->result_array();
+                $paymnet_merchant = $getQuery_merchant_det[0]['merchant_id'];
+                $paymnet_sub_merchant = $getQuery_merchant_det[0]['sub_merchant_id'];
+
+                if($paymnet_sub_merchant!=0)
+                {
+             $paymnet_merchant_id =$paymnet_sub_merchant;
+                }
+            else
+            {
+            $paymnet_merchant_id =$paymnet_merchant ;
+            }
 				$Row_id=$_POST['id']; 
-				$getQuery_a = $this->db->query("SELECT * from merchant where id ='" . $merchant_id . "'  ");
+				$getQuery_a = $this->db->query("SELECT * from merchant where id ='" . $paymnet_merchant_id . "'  ");
 				$getEmail_a = $getQuery_a->result_array();
 				$data['$getEmail_a'] = $getEmail_a;  
 				//$merchant_id = $getEmail_a[0]['id'];
@@ -1517,15 +1553,24 @@ ini_set('memory_limit','2048M');
 							   if($requested_amount <= $ResponceArray->payment_list[0]->refundable_amount_in_cents)
 							   {
 								   
-								   $transaction_date=substr($ResponceArray->payment_list[0]->device_time_stamp,0,8);
+								  // $transaction_date=substr($ResponceArray->payment_list[0]->device_time_stamp,0,8);
+
+								  $transaction_date= date("Ymd");  
 								   $transaction_time=substr($ResponceArray->payment_list[0]->device_time_stamp,8,6);
 								   $original_transaction_id=$ResponceArray->payment_list[0]->transaction_guid;
 								   $transaction_timezone=$ResponceArray->payment_list[0]->device_time_zone;
-								   
+
+
+								   $aa= "{\n\t\t\"transaction\":\n\t\t{\n\t\t\"version\":\"$version\",\n\t    \"client_transaction_id\":\"$GUID\",\n\t\t\"transaction_code\":\"credit_refund\",\n\t\t\"transaction_date\":\"$transaction_date\",\n\t\t\"transaction_time\":\"$transaction_time\",\n\t\t\"original_transaction_id\":\"$original_transaction_id\",\n\t\t\"transaction_timezone\":\"$transaction_timezone\",\n\t\t\"transaction_amount\":\"$requested_amount\",\n\t\t\"currency_code\":\"USD\",\n\t\t\"pos_capability\":\"keyed_entry,track1,track2,contactless_msr,contactless_emv,contact_emv\",\n\t\t\"pos_type\":\"mobile\"\n\t\t}\n}";
+
+								  // print_r($aa); die();   
+
+								 
 										   $purl3=$url_cr.'/wsapi/Authorization/'; 
 										   $curl3 = curl_init();
 
-										   curl_setopt_array($curl3, array(
+
+										 curl_setopt_array($curl3, array(
 										   CURLOPT_URL => $purl3,
 										   CURLOPT_RETURNTRANSFER => true,
 										   CURLOPT_ENCODING => "",
@@ -1533,7 +1578,11 @@ ini_set('memory_limit','2048M');
 										   CURLOPT_TIMEOUT => 30,
 										   CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 										   CURLOPT_CUSTOMREQUEST => "POST",
-										   CURLOPT_POSTFIELDS => "{\n\t\t\"transaction\":\n\t\t{\n\t\t\"version\":\"$version\",\n\t\t\"chain_id\":\"$chainID\",\n\t\t\"store_id\":\"$storeID\",\n\t\t\"terminal_id\":\"$terminalID\",\n\t    \"client_transaction_id\":\"$GUID\",\n\t\t\"transaction_code\":\"credit_refund\",\n\t\t\"transaction_date\":\"$transaction_date\",\n\t\t\"transaction_time\":\"$transaction_time\",\n\t\t\"original_transaction_id\":\"$original_transaction_id\",\n\t\t\"transaction_timezone\":\"$transaction_timezone\",\n\t\t\"transaction_amount\":\"$requested_amount\",\n\t\t\"currency_code\":\"USD\",\n\t\t\"pos_entry_mode\":\"contactless_emv\",\n\t\t\"pos_capability\":\"keyed_entry,track1,track2,contactless_msr,contactless_emv,contact_emv\",\n\t\t\"pos_type\":\"mobile\"\n\t\t}\n}",
+										   
+
+
+ CURLOPT_POSTFIELDS =>"{\n\t\t\"transaction\":\n\t\t{\n\t\t\"version\":\"$version\",\n\t    \"client_transaction_id\":\"$GUID\",\n\t\t\"transaction_code\":\"credit_refund\",\n\t\t\"transaction_date\":\"$transaction_date\",\n\t\t\"transaction_time\":\"$transaction_time\",\n\t\t\"original_transaction_id\":\"$original_transaction_id\",\n\t\t\"transaction_timezone\":\"$transaction_timezone\",\n\t\t\"transaction_amount\":\"$requested_amount\",\n\t\t\"currency_code\":\"USD\",\n\t\t\"pos_capability\":\"keyed_entry,track1,track2,contactless_msr,contactless_emv,contact_emv\",\n\t\t\"pos_type\":\"mobile\"\n\t\t}\n}"
+										   ,
 										   CURLOPT_HTTPHEADER => array(
 											   "Accept: */*",
 											   //"X-Roam-Key:$session_token",
@@ -1545,6 +1594,7 @@ ini_set('memory_limit','2048M');
 											   "Cache-Control: no-cache",
 											 ),
 										   ));
+										
 
 										   $refund_response = curl_exec($curl3);
 										   $err = curl_error($curl3);
@@ -1555,9 +1605,12 @@ ini_set('memory_limit','2048M');
 											   $Error="cURL Error #:" . $err;
 											   $this->session->set_flashdata('error',$Error);
 										   } else {
-											     //echo $refund_response;
-											     //die();
+											    
 												$refund_ResponceArray=json_decode($refund_response);
+												//echo $refund_response;
+												//echo $refund_response;
+											     //die();
+												$show_error= $refund_ResponceArray->transaction->clerk_display;
 												if($refund_ResponceArray->transaction->clerk_display =='Approved')
 												{
 														  
@@ -1589,7 +1642,10 @@ ini_set('memory_limit','2048M');
 													   'status' => 'confirm',
 													   'c_type' => 'CP'
 												   );
-												   $branch_inf = array('status' => 'Chargeback_Confirm');
+												   $branch_inf = array(
+												   	'status' => 'Chargeback_Confirm',
+												   	 'date_r' => $date_c,
+												);
 												   //print_r($arraya['Response']['ExpressResponseMessage']);  die(); 
 												   
 												   $id1 = $this->admin_model->insert_data("refund", $branch_info);
@@ -1662,7 +1718,7 @@ ini_set('memory_limit','2048M');
 												}
 												else
 												{
-												   $this->session->set_flashdata('msg','Somthing went Worng...');
+												   $this->session->set_flashdata('msg',$show_error);
 												}
 
 										   }
@@ -1670,7 +1726,7 @@ ini_set('memory_limit','2048M');
 							   }
 							   else
 							   {
-								   $this->session->set_flashdata('msg','Requested Amount  are  large to Refundable amount');
+								   $this->session->set_flashdata('msg','Requested Amount exceeds the original refundable amount. Please enter a smaller amount');
 							   }
 							  }
 							  else{
@@ -1694,6 +1750,8 @@ ini_set('memory_limit','2048M');
 			   redirect(base_url().'pos/all_pos');
 		   }
 	   	}
+
+
 
 	public function refund_cp_pos_copy() {
 		//print_r(($_POST)); die();
@@ -1809,7 +1867,7 @@ ini_set('memory_limit','2048M');
 
 			$expiry_month = $this->input->post('expiry_month') ? $this->input->post('expiry_month') : "";
 			$expiry_year = $this->input->post('expiry_year') ? $this->input->post('expiry_year') : "";
-			$payment_id_1 = "POS_" . date("Ymdhisu");
+			$payment_id_1 = "POS_" . date("ymdhisu");
 			$payment_id = str_replace("000000", "", $payment_id_1);
 			// xml post structure
 
@@ -1994,7 +2052,6 @@ ini_set('memory_limit','2048M');
 							'merchant_id' => $merchant_id,
 							'sub_merchant_id' => $sub_merchant_id,
 							'invoice_no' => $payment_id,
-							'cvv' => $cvv,
 							'name' => $name,
 							'mobile_no' => $mobile_no,
 							'discount' => '0',
@@ -2002,7 +2059,6 @@ ini_set('memory_limit','2048M');
 							'email_id' => $email_id,
 							'card_no' => $card_a_no,
 							'address' => $address,
-							'card_no1' => $card_no,
 							'expiry_month' => $expiry_month,
 							'expiry_year' => $expiry_year,
 							'year' => $year,
@@ -2122,6 +2178,26 @@ ini_set('memory_limit','2048M');
 
 
 						$this->email->send();
+
+						$purl = base_url() . 'pos_reciept/' . $payment_id . '/' . $merchant_id;     
+						if(!empty($mobile_no))
+									 {
+
+									$sms_reciever = $mobile_no;
+									$sms_message = trim('Payment Receipt : '.$purl);
+
+									$from = '+18325324983'; //trial account twilio number
+
+									$mob = str_replace(array( '(', ')','-',' ' ), '', $sms_reciever);
+
+									 $to = '+1'.$mob;
+
+									 $response_sms = $this->twilio->sms($from, $to,$sms_message);
+
+									}
+						//print_r($response_sms);
+						//die();
+
 						$this->session->set_flashdata('success', 'Payment successfully done. We send the receipt on the option you choose.');
 						redirect(base_url() . 'pos/confirm_payment/' . $id);					
 						//redirect(base_url() . 'pos/all_pos');
@@ -2430,6 +2506,7 @@ ini_set('memory_limit','2048M');
 			$package['name'] = $each->name;
 			$package['title'] = $each->title;
 			$package['sku'] = $each->sku;
+			$package['barcode_data'] = $each->barcode_data;
 			$package['price'] = $each->price;
 			$package['tax'] = $each->tax;
 			$package['description'] = $each->description;
@@ -3258,7 +3335,8 @@ ini_set('memory_limit','2048M');
 				if(!empty($PayYear) && !empty($PayMonth) && !empty($PayDay) &&  !empty($PayHours) && !empty($PayMinut) &&!empty( $PaySecond)){
 				$payDateTime=$PayYear.'-'.$PayMonth.'-'.$PayDay.' '.$PayHours.':'.$PayMinut.':'.$PaySecond;  
 				
-			    $TransactiondateTime=$this->dateTimeConvertTimeZone($payDateTime); 
+			    //$TransactiondateTime=$this->dateTimeConvertTimeZone($payDateTime);
+			    $TransactiondateTime=$this->dateTimeConvertTimeZone($each->add_date); 
 				}
 				else {
 			$TransactiondateTime=$this->dateTimeConvertTimeZone($each->add_date);
@@ -4733,7 +4811,8 @@ ini_set('memory_limit','2048M');
 		$pdf->output();
 		ob_end_flush();
 	}
-	public function all_customer_request_recurring() {
+		
+	public function all_customer_request_recurring_old() {
 		$data = array();
 		$merchant_id = $this->session->userdata('merchant_id');
 		$data["meta"] = "Recurring Invoice";
@@ -4747,6 +4826,8 @@ ini_set('memory_limit','2048M');
 			$data["status"] = $_POST['status']; 
 		} else {
 			$package_data = $this->admin_model->get_full_details_payment_admin('customer_payment_request');
+
+			
 		}
 		$mem = array();
 		$member = array();
@@ -4784,12 +4865,23 @@ ini_set('memory_limit','2048M');
 			$package['recurring_payment'] = $each->recurring_payment;
 			$mem[] = $package;
 		}
-  		array_multisort(array_column($mem, 'recurring_pay_start_date'), SORT_DESC, $mem);
+  		// array_multisort(array_column($mem, 'recurring_pay_start_date'), SORT_DESC, $mem);
+  		array_multisort(array_column($mem, 'id'), SORT_DESC, $mem);
 		$data['mem'] = $mem;
 		// $data['msg'] = "<h3>" . $this->session->userdata('mymsg') . "</h3>";
 		// $this->session->unset_userdata('mymsg');
+		//print_r($data);die;
+		
+		
 		$this->load->view('merchant/all_customer_request_recurring_dash', $data);
 		// $this->load->view('merchant/all_customer_request_recurring', $data);
+	}
+
+	public function all_customer_request_recurring() {
+		$data = array();
+		$data["meta"] = "Recurring Invoice";
+		// print_r($data);die;
+		$this->load->view('merchant/recurring_list', $data);
 	}
 
 	public  function  invoice_details($invoice_no) {
@@ -5995,6 +6087,25 @@ ini_set('memory_limit','2048M');
 		header('Cache-Control: max-age=0');
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 		$objWriter->save('php://output');
+	}
+
+	public function search_card_details() {
+		// print_r($_POST);die;
+		$merchant_id = $this->session->userdata('merchant_id');
+		$CardNo = $this->input->post('CardNo');
+		$ChoppedCardNo = substr($CardNo, -4);
+		$NameOnCard = $this->input->post('NameOnCard');
+
+		$query = $this->db->query("select distinct expiry_month, expiry_year, cvv, name, SUBSTRING(card_no, -4) as card_no from pos WHERE payment_type = 'web' AND merchant_id = ".$merchant_id." AND SUBSTRING(card_no, -4) = '".$ChoppedCardNo."' AND name = '".$NameOnCard."'");
+		$result = $query->result_array();
+
+		foreach ($result as $row) {
+			$response[] = array(
+				"value" => $row['expiry_month'].','.$row['expiry_year'].','.$row['cvv'],
+				"label" => $row['name'].' ('.$row['card_no'].')'
+			);
+		}
+	  	echo json_encode($response);
 	}
 
 }

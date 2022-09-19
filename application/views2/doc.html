@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>SaleQuick: api</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+ 
+    <style>
+        body {
+            overflow: hidden;
+        }
+        p{
+            text-align: justify;
+        }
+        
+        .api-design .navbar-brand {
+            height: auto;
+        }
+        
+        .api-design .navbar-default {
+            background-color: #2085ed;
+            border-color: #2085ed;
+        }
+        
+        .api-design .btn-default {
+            color: #fff !important;
+            border-radius: 40px;
+            border: 0;
+            padding: 15px 15px;
+            background: #000;
+        }
+        
+        .api-design .navbar-nav {
+            margin-top: 15px;
+            margin-right: 0px;
+        }
+        
+        .api-design .navbar-default .navbar-nav > li > a {
+            color: #fff;
+        }
+        
+        .main-wrap .left-sidebar {
+            width: 270px;
+            height: 100vh;
+            background: #fff;
+            box-shadow: 0px 0px 6px -1px #a1a1a1;
+            position: fixed;
+            top: 81px;
+            
+        }
+        .main-wrap .left-sidebar li a:hover,.main-wrap .left-sidebar li.active a:hover,.main-wrap .left-sidebar li a:focus,.main-wrap .left-sidebar li.active a{
+                background: #2085ed;
+                color: #fff;
+        }
+        .main-wrap .nav-tabs > li > a {
+            border-radius: 0px;
+            margin:0;
+            border:0;
+        }
+        .main-wrap .nav-tabs {
+            border-bottom: 0;
+        }
+        .main-wrap .left-sidebar h4{
+            padding-left: 15px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .main-wrap .content-section {
+            width: calc(100% - 270px);
+            margin-left: 270px;
+            padding: 5px 50px 15px 42px;
+            position: relative;
+            top: 81px;
+        }
+        
+        .main-wrap .tab-pane {
+            height: 85vh;
+            overflow-y: auto;
+            padding: 0px 40px 0 0;
+        }
+        
+        .main-wrap .nav-tabs > li {
+            float: left;
+            margin-bottom: 0;
+            width: 100%;
+            border-bottom: 1px solid #ececec;
+            padding: 0px 0px;
+        }
+        
+        .main-wrap .nav-tabs > li.active > a,
+        .main-wrap .nav-tabs > li.active > a:focus,
+        .main-wrap .nav-tabs > li.active > a:hover {
+            border: 0;
+        }
+        .navbar-default .navbar-toggle {
+            border-color: #000;
+            background: #000;
+            color: #fff;
+            border-radius: 0;
+        }
+        .navbar-default .navbar-toggle .icon-bar {
+            background-color: #fff;
+        }
+        .navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover {
+            background-color: #474747;
+        }
+        @media only screen and (max-width:768px) {
+            .navbar-brand img
+            {
+                width:185px;
+            }
+            .navbar-toggle
+            {
+                margin-top: 15px;
+            }
+            
+            .main-wrap .content-section {
+                width: 100%;
+                margin-left: 0;
+                padding: 20px;
+            }
+            .main-wrap .tab-pane {
+                height: auto;
+                overflow-y: auto;
+                padding: 0;
+            }
+            .main-wrap .left-sidebar {
+                width: 100%;
+                height: auto;
+                padding: 10px 10px 0 10px;
+                position: relative;
+
+            }
+            body {
+                overflow: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="api-design">
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#"><img src="images/logo.png"></a>
+                </div>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#">Getting Started</a></li>
+                        <li><a href="#">API Reference</a></li>
+                        <li><a href="#" class="btn btn-default">Create a sandbox reference</a></li>
+                    </ul>
+                </div>
+                <!-- /.navbar-collapse -->
+            </div>
+            <!-- /.container-fluid -->
+        </nav>
+    </header>
+    <div class="main-wrap">
+        <div class="left-sidebar">
+            <h4>Developer Guide</h4>
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#intro" aria-controls="intro" role="tab" data-toggle="tab">Introduction</a></li>
+                <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
+                <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages</a></li>
+                <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
+            </ul>
+        </div>
+        <div class="tab-content content-section">
+            <div role="tabpanel" class="tab-pane active" id="intro">
+                <h2>Getting started</h2>
+                <p></p>
+                <h4>Introduction</h4>
+                <p>The Repeat Payments Network (RPN) makes collecting invoice payments easy by sending text message pay-links. The API is organized around REST and has predictable, resource-oriented URLs, and uses HTTP response codes to indicate API errors. We use built-in HTTP features, like HTTP authentication and HTTP verbs, which are understood by off-the-shelf HTTP clients. We support cross-origin resource sharing, allowing you to interact securely with our API from a client-side web application (though you should never expose your secret API key in any public website's client-side code). JSON is returned by all API responses, including errors, although our API libraries convert responses to appropriate language-specific objects. To make the API as explorable as possible, accounts have test mode and live mode API keys. Use the appropriate key to perform a live or test transaction. Additionally, you can also 'switch' the payment gateway between test and production modes. Requests made with the payment gateway in test mode never hit the payment processing networks and incur no charge. The RPN API is a wrapper around multiple payment gateways and compatible with all of the major payment processors, and enables customers to quickly pay for open invoices using their mobile wallet such as Apple Pay, or by inputting credit/debit card information.</p>
+                <h5>There are three key parts to an integration with the API - you can do one, two or all three of them:</h5>
+                <ul>
+                    <li>Generating short code pay link URL</li>
+                    <li>Transmitting the pay link URL to customer through RPN messaging</li>
+                    <li>Staying up-to-date with webhooks</li>
+                </ul>
+                <p>To start, please contact us to obtain an application key. This key is unique to your application will have to be stored securely within your infrastructure. You will use the application key to obtain an access token that is unique to each merchant or MID. You need an access token, unique to each merchant, to call our APIs. There are two ways to obtain the access token for each merchant activation. </p>
+                <ul class="list-group">
+                    <li class="list-group-item list-group-item-info">
+                        <p>(1) Manually submit your application key from within each merchant's account dashboard. This will return the access token which you would then copy and store securely on your end along the MID. This integration is generally much faster of the two methods to obtain an access token.</p>
+                        <p>(2) Store the merchant user/pwd login credentials, and use it to programatically obtain the access token. This requires integration of your application to Amazon's AWS identity infrastructure.</p>
+                    </li>
+                </ul>
+                <p>
+                    <strong>
+                        In this guide, we’ll get you up and running with the RPN API. You’ll add your first customer, create your first payment short code URL tied to your invoice, collect your first invoice payment, and set up webhooks to stay up to date on the status of your payment. The guide includes code samples in PHP, Ruby, Python, C# and Java.
+                    </strong>
+                </p>
+                <a href="" class="pull-right">Creating Payment URL →</a>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="profile">...</div>
+            <div role="tabpanel" class="tab-pane" id="messages">...</div>
+            <div role="tabpanel" class="tab-pane" id="settings">...</div>
+        </div>
+    </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js" type="text/javascript"></script>
+    <script>
+        $("a[href='#top']").click(function() {
+            $("html, body").animate({
+                scrollTop: 0
+            }, "slow");
+            return false;
+        });
+    </script>
+</body>
+
+</html>

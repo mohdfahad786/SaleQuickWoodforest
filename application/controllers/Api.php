@@ -152,7 +152,6 @@ $mobile_no = htmlspecialchars($this->input->post('phone'));
               'day1' => $day1,
               'status' => 'pending',
               'date_c' => $today2,
-              'add_date' => $today3,
               'api_payment' => 'yes',
             );
            // print_r($data); die();

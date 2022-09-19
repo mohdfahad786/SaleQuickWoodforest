@@ -1,666 +1,613 @@
-<?php
-    include_once'header_dash_list.php';
-    include_once'nav_label.php';
-    include_once'sidebar_dash.php';
-?>
-
-<style>
-    .table tbody tr td span, table tbody tr td span {
-        display: inline !important;
-    }
-    .action-styling {
-        color: black !important;
-        text-decoration: underline !important;
-    }
-    .resend_rcpt_btn_confirm {
-        margin-top: 10px !important;
-        font-family: AvenirNext-Medium !important;
-        font-weight: 600;
-        color: #000;
-    }
-    .resend_rcpt_btn_confirm:focus, .resend_rcpt_btn_confirm:hover {
-        color: #000;
-    }
-    .resend_rcpt_btn {
-        font-family: AvenirNext-Medium !important;
-        color: #868e96 !important;
-        padding: 0px 15px !important;
-    }
-    .resend_rcpt_btn:focus, .resend_rcpt_btn:hover {
-        color: #000;
-    }
-    .dataTables_wrapper .dataTables_paginate .paginate_button {
-        padding: 0em 0.5em !important;
-    }
-    .summary-grid-status {
-        font-size: 18px;
-        color: rgb(62, 62, 62);
-        font-weight: 600;
-        font-family: Avenir-Heavy !important;
-        margin-bottom: 0px !important;
-    }
-    @media screen and (max-width: 640px) {
-        #pos_list_daterange span {
-            font-size: 10px !important;
-        }
-    }
-    @media screen and (max-width: 640px) {
-        select.form-control {
-            font-size: 10px !important;
-        }
-    }
-    div.dataTables_wrapper div.dataTables_filter input {
-        border:none !important;
-    }
-    .btn:not(.social-icon-btn).social-btn-outlined {
-        width: 126px !important;
-    }
-    @media screen and (max-width: 640px) {
-        .btn:not(.social-icon-btn).social-btn-outlined {
-            width: 110px !important;
-            font-size: 12px !important;
-        }
-    }
-    @media screen and (max-width: 640px) {
-        .btn.social-btn-outlined i.medium {
-            margin-right: 10px !important;
-        }
-    }
-    .top_grid_effect:hover {
-        -webkit-box-shadow: rgba(102, 102, 102, 0.09) 20px 15px 15px;
-        -moz-box-shadow: rgba(102, 102, 102, 0.09) 20px 15px 15px;
-        box-shadow: rgba(102, 102, 102, 0.09) 20px 15px 15px;
-        /*box-shadow: rgba(102, 102, 102, 0.09) 0 0 15px;*/
-        opacity: 1;
-        transition-timing-function: ease;
-    }
-    .top_grid_link {
-        background-color: #4c6ef5;
-        padding: 2px 10px;
-        border-radius: 10px;
-    }
-    .top_grid_btn {
-        background-color: #4c6ef5;
-        border-radius: 10px;
-        border: none !important;
-        padding: 0px 10px;
-    }
-    .head-count-val {
-        color: #000 !important;
-        font-family: Avenir-Black;
-        font-weight: 600 !important;
-        font-size: 20px !important;
-    }
-    @media screen and (min-width: 641px) {
-        #invoice-receipt-modal .modal-content {
-            padding: 0px 25px 15px 25px !important;
-            border: none !important;
-        }
-    }
-    @media screen and (max-width: 640px) {
-        #invoice-receipt-modal .modal-content {
-            padding: 0px 5px 15px 5px !important;
-            border: none !important;
-        }
-    }
-    .modal-header {
-        border-bottom: none !important;
-    }
-    .modal.show.blur-mdl {
-        opacity: 0.75;
-    }
-    body.p_recept .modal-dialog.modal-lg{
-        max-width: 900px;
-    }
-    body.p_recept .modal .modal-footer,body.p_recept .modal .close, body.p_recept .modal .refunded_row {
-        display: none !important;
-    }
-    span.card-img-no {
-        white-space: nowrap;
-        display: block;
-        min-width: 115px;
-    }
-    .noc {
-        display: none !important;
-    }
-    select.form-control {
-        border: 1px solid transparent !important;
-    }
-</style>
-
-<div class="page-content-wrapper">
-    <div class="page-content-wrapper-inner">
-        <div id="load-block">
-            <div class="load-main-block">
-                <div class="text-center"><img class="loader-img" src="https://salequick.com/new_assets/img/giphy.gif"></div>
+<!DOCTYPE html> 
+<html> 
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="A fully featured admin theme which can be used to build CRM, CMS, etc.">
+  <meta name="author" content="Coderthemes">
+  <link rel="shortcut icon" href="<?php echo base_url('merchant-panel'); ?>/assets/images/favicon_1.ico">
+  <title>Admin  | Report</title>
+  <!-- DataTables -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Encode+Sans:400,500|Raleway:300,400,500,600">
+  <link href="<?php echo base_url('merchant-panel'); ?>/assets/css/icons.css" rel="stylesheet" type="text/css">
+  <link href="<?php echo base_url(); ?>/new_assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">    
+  <link href="<?php echo base_url('merchant-panel'); ?>/assets/css/icons.css" rel="stylesheet" type="text/css">
+  <link href="<?php echo base_url('merchant-panel'); ?>/assets/css/dcalendar.picker.css" rel="stylesheet" type="text/css">
+  <link href="<?php echo base_url(); ?>/new_assets/css/waves.css" rel="stylesheet" type="text/css">
+  <link href="<?php echo base_url(); ?>/new_assets/css/datatables.min.css" rel="stylesheet" type="text/css">
+  <link href="<?php echo base_url('merchant-panel'); ?>/graph/app.min.css" rel="stylesheet" />  
+  <link href="<?php echo base_url(); ?>/new_assets/css/style.css" rel="stylesheet" type="text/css">
+</head>
+<body class="fixed-left">
+  <?php 
+  include_once 'top_bar.php';
+  include_once 'sidebar.php';
+  ?>
+  <div id="wrapper"> 
+    <div class="page-wrapper">
+      <div class="row dash-card">
+        <div class="col-3">
+          <div class="card-box">
+            <div class="request">
+              <span class="request-count"><?php echo '$'.@number_format($GrosspaymentValume,2) ;?></span>
+              <span class="request-name">Gross  Payment Volume </span>
             </div>
+            <div class="request-icon"> <img src="<?php echo base_url('merchant-panel'); ?>/image/doller-package.png"> </div>
+          </div>
         </div>
-        <div class="content-viewport d-none" id="base-contents">
-            <div class="row">
-                <div class="col-12 py-5-custom">
-                    <!--  <h4 class="h4-custom">Transactions</h4> --> 
-                </div>
+        <div class="col-3">
+          <div class="card-box">
+            <div class="request">
+              <span class="request-count"><?php 
+                echo '$'.@number_format($TotalFeeCaptured,2) ;?></span>
+              <span class="request-name">Total Fee Captured </span>
             </div>
-
-            <div class="row">
-                <div class="col-md-3 col-sm-6 col-6 equel-grid summary-grid-padding">
-                    <div class="grid grid-summary" >
-                        <div class="grid-body text-gray top_grid_effect">
-                            <div class="d-flex justify-content-between">
-                                <div class="summary-grid-text-section">
-                                    <h1 class="newtotalorders head-count-val">$<?php echo number_format($GrosspaymentValume,2) ;?></h1>
-                                </div>
-                                <div class="summary-grid-img-section">
-                                   <img class="summary-grid-img" src="https://salequick.com/new_assets/img/new-icons/summary-img-2.png"> 
-                                    <!-- <img src="<?php echo base_url('merchant-panel'); ?>/image/doller-package.png"> -->
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12">
-                                    <p class="summary-grid-status">Payment</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-10">
-                                  <small class="summary-grid-text">Card Payment Volume</small>
-                                </div>
-                                <div class="col-2" style="margin-left: -5px !important;">
-                                    <!-- <a class="top_grid_link" href="<?= base_url('pos/all_pos'); ?>" title="Go to List"><i class="fa fa-arrow-right" style="color: #fff !important;"></i></a> -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-sm-6 col-6 equel-grid summary-grid-padding">
-                    <div class="grid grid-summary">
-                        <div class="grid-body text-gray top_grid_effect">
-                            <!-- <a href="#" data-toggle="modal" data-target="#view-modal-revenue" data-id="" id="getRevenue" title="View Details"> -->
-                                <div class="d-flex justify-content-between">
-                                    <div class="summary-grid-text-section">
-                                        <h1 class="totalorders head-count-val" style="color: #000 !important;">$<?php echo number_format($TotalrevenueCaptured,2) ;?></h1>
-                                    </div>
-                                    <div class="summary-grid-img-section">
-                                        <img class="summary-grid-img" src="https://salequick.com/new_assets/img/new-icons/summary-img-3.png">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <p class="summary-grid-status">Revenue </p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-10">
-                                        <small class="summary-grid-text">Total Revenue </small>
-                                    </div>
-                                    <div class="col-2" style="margin-left: -5px !important;">
-                                        <!-- <a class="top_grid_link" href="<?= base_url('pos/all_customer_request'); ?>" title="Go to List"><i class="fa fa-arrow-right" style="color: #fff !important;"></i></a> -->
-                                    </div>
-                                </div>
-                            <!-- </a> -->
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-sm-6 col-6 equel-grid summary-grid-padding">
-                    <div class="grid grid-summary">
-                        <div class="grid-body text-gray top_grid_effect">
-                            <!-- <a href="#" data-toggle="modal" data-target="#view-modal-cost" data-id="" id="getCost" title="View Details"> -->
-                                <div class="d-flex justify-content-between">
-                                    <div class="summary-grid-text-section">
-                                        <h1 class="totalpendingorders head-count-val" style="color: #000 !important;">$<?php echo number_format($Cost,2) ;?></h1>
-                                    </div>
-                                    <div class="summary-grid-img-section">
-                                        <img class="summary-grid-img" src="https://salequick.com/new_assets/img/new-icons/summary-img-1.png">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <p class="summary-grid-status">Cost</p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-10">
-                                          <small class="summary-grid-text">Total  cost of revenue</small>
-                                    
-                                
-                                    </div>
-                                    <div class="col-2" style="margin-left: -5px !important;">
-                                        <!-- <form method="post" action="<?php echo base_url('pos/all_customer_request'); ?>">
-                                            <input name="start_date" type="hidden" value="<?php echo (isset($start_date) && !empty($start_date)) ? $start_date : ''; ?>">
-                                            <input name="end_date" type="hidden" value="<?php echo (isset($end_date) && !empty($end_date)) ? $end_date : ''; ?>">
-                                            <input name="status" type="hidden" value="pending">
-
-                                            <button class="top_grid_btn" type="submit" name="mysubmit" value="Search" title="Go to List"><i class="fa fa-arrow-right" style="color: #fff !important;"></i></button>
-                                        </form> -->
-                                    </div>
-                                </div>
-                            <!-- </a> -->
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-6 col-sm-6 equel-grid">
-                    <div class="grid grid-summary">
-                        <div class="grid-body text-gray top_grid_effect">
-                            <!-- <a href="#" data-toggle="modal" data-target="#view-modal-profit" data-id="" id="getProfit" title="View Details"> -->
-                                <div class="d-flex justify-content-between">
-                                    <div class="summary-grid-text-section">
-                                        <h1 class="TotalLate head-count-val" style="color: #000 !important;">$<?php echo number_format($Payout,2) ;?></h1>
-                                    </div>
-                                    <div class="summary-grid-img-section">
-                                        <img class="summary-grid-img" src="https://salequick.com/new_assets/img/new-icons/summary-img-4.png">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <p class="summary-grid-status">Payout</p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-10">
-                                        <small class="summary-grid-text">Total Payout</small>
-                                    </div>
-                                    <div class="col-2" style="margin-left: -5px !important;">
-                                        <!-- <form method="post" action="<?php echo base_url('pos/all_customer_request'); ?>">
-                                            <input name="start_date" type="hidden" value="<?php echo (isset($start_date) && !empty($start_date)) ? $start_date : ''; ?>">
-                                            <input name="end_date" type="hidden" value="<?php echo (isset($end_date) && !empty($end_date)) ? $end_date : ''; ?>">
-                                            <input name="status" type="hidden" value="pending">
-
-                                            <button class="top_grid_btn" type="submit" name="mysubmit" value="Search" title="Go to List"><i class="fa fa-arrow-right" style="color: #fff !important;"></i></button>
-                                        </form> -->
-                                    </div>
-                                </div>
-                            <!-- </a> -->
-                        </div>
-                    </div>
-                </div>
+            <div class="request-icon"> <img src="<?php echo base_url('merchant-panel'); ?>/image/package.png"> </div>
+          </div>
+        </div>
+        <div class="col-3">
+          <div class="card-box">
+            <div class="request">
+              <span class="request-count"> <?php $payout = $GrosspaymentValume - $TotalFeeCaptured; echo '$'.@number_format($payout,2); ?> </span>
+              <span class="request-name">Total Payout</span>
             </div>
+            <div class="request-icon"> <img src="<?php echo base_url('merchant-panel'); ?>/image/badge.png"> </div>
+          </div>
+        </div>
+        <div class="col-3">
+          <div class="card-box">
+            <div class="request">
+              <span class="request-count"> <?php echo $TotalTransactions ;?></span>
+              <span class="request-name">Total Transactions </span>
+            </div>
+            <div class="request-icon"> <img src="<?php echo base_url('merchant-panel'); ?>/image/money-bag.png"> </div>
+          </div>
+        </div>
+      </div>
+      <div class="row sales_date_range">
+        <div class="col-12 custom-form">
+          <div class="card content-card">
+            <form class="row" method="post" action="<?php echo base_url('subadmin/report');?>">
+              <div class="col-4">
+                <div id="daterangeFilter" class="form-control">
+                  <!-- <span>April-18-2019 - May-17-2019</span>
+                  <input name="start_date" type="hidden">
+                  <input name="end_date" type="hidden"> -->
+                  <span><?php echo ((isset($reposrint_date) && !empty($reposrint_date))?(date("F-d-Y", strtotime($reposrint_date)) .' - '.date("F-d-Y", strtotime(isset($end_date) ? $end_date:date('Y-m-d')))):('<label class="placeholder">Select date range</label>')) ?>
+                    </span>
+                    <input name="start_date" type="hidden" value="<?php echo (isset($reposrint_date) && !empty($reposrint_date))? $reposrint_date : '';?>" >
+                    <input name="end_date" type="hidden" value="<?php echo (isset($end_date) && !empty($end_date))? $end_date : '';?>" >
+                
 
-            <?php $count = 0; ?>
-            <form class="row" method="post" action="<?php echo base_url('Agent/report'); ?>" style="margin-bottom: 20px !important;margin-top: 10px !important;">
-             
-                <div class="col-12">
-                    <div class="row">
-                        <div style="width: auto;margin-right: 15px;margin-top: 10px;margin-left: 12px;">
-                            <label>Select Year & Month</label>
-                        </div>
-                        <div>
-                            <?php
-                            $currentYear = date('Y');
-                            $startYear=date('Y')-2;
-                            ?>
-                            <select class="form-control" id="csv_year" name="csv_year" required style="margin-right: 10px;width: 100px;">
-                                <option value="">Year</option>
-                                <?php for ($i=$currentYear; $i >= $startYear ; $i--) { ?>
-                                    <option value="<?=$i?>" <?php echo ($i == $csv_year) ? 'selected' : ''; ?>><?=$i;?></option>
-                                <?php } ?>
-                            </select>
-                        </div>
-                        <div style="margin-right: 10px;width: 100px;">
-                            <select class="form-control" id="csv_month" name="csv_month" required>
-                                <option value="">Month</option>
-                                <option value="1" <?php echo ($csv_month == '1') ? 'selected' : ''; ?>>Jan</option>
-                                <option value="2" <?php echo ($csv_month == '2') ? 'selected' : ''; ?>>Feb</option>
-                                <option value="3" <?php echo ($csv_month == '3') ? 'selected' : ''; ?>>Mar</option>
-                                <option value="4" <?php echo ($csv_month == '4') ? 'selected' : ''; ?>>Apr</option>
-                                <option value="5" <?php echo ($csv_month == '5') ? 'selected' : ''; ?>>May</option>
-                                <option value="6" <?php echo ($csv_month == '6') ? 'selected' : ''; ?>>Jun</option>
-                                <option value="7" <?php echo ($csv_month == '7') ? 'selected' : ''; ?>>Jul</option>
-                                <option value="8" <?php echo ($csv_month == '8') ? 'selected' : ''; ?>>Aug</option>
-                                <option value="9" <?php echo ($csv_month == '9') ? 'selected' : ''; ?>>Sep</option>
-                                <option value="10" <?php echo ($csv_month == '10') ? 'selected' : ''; ?>>Oct</option>
-                                <option value="11" <?php echo ($csv_month == '11') ? 'selected' : ''; ?>>Nov</option>
-                                <option value="12" <?php echo ($csv_month == '12') ? 'selected' : ''; ?>>Dec</option>
-                            </select>
-                        </div>
-                        <div>
-                            <button class="btn btn-rounded social-btn-outlined" type="submit" name="mysubmit" value="Search"><i class="mdi mdi-magnify medium"></i>Submit</button>
-                        </div>
-                    </div>
                 </div>
+              </div>
+              <div class="col">
+                <?php
+                $data = $this->admin_model->data_get_where_1('merchant', array('status' => 'active', 'user_type' => 'merchant')); ?>
+                <select name="employee" class="form-control bder-radius" id="employee" style="height: auto" >
+                  <option  value="" >Select Merchant</option>
+                  <?php foreach ($data as $view) { ?>
+                    <option <?php echo (@$employee==$view['id'])?'selected="selected"':''?>  value="<?php echo $view['id']; ?>"><?php echo $view['name']; ?></option>
+                  <?php } ?>
+                </select>
+              </div>
+              <div class="col">
+                <select class="form-control"  name="status" id="status" >
+                  <option value="">Select Status</option>
+                  <option <?php echo ($status=="pending")?'selected="selected"':''?> value="pending">Pending</option>
+                  <option <?php echo ($status=="confirm")?'selected="selected"':''?> value="confirm">Confirm</option>
+                </select>
+              </div>
+              <div class="col">
+                <button class="btn btn-first" type="submit" name="mysubmit"><span>Search</span></button>
+              </div>
             </form>
-            <hr>
-            
-            <div class="row">
-                <div class="col-12">
-                    <table id="datatable" class="hover row-border pos-list-dtable" style="width:100%">    
-                        <thead>
-                            <tr>
-                                 <th class="no-event">Total Transaction</th>
-                                <th class="no-event">Payment Volume</th>
-                                 <th class="no-event">Merchant</th>
-                               <!--  <th class="no-event">Reseller</th> -->
-                               <!--  <th class="no-event">Number Of active Merchants </th> -->
-                                <th class="no-event">Revenue </th>
-                                <th class="no-event">Cost </th>
-                                 <th class="no-event">Signup Bonus </th>
-                                <th class="no-event">Reseller Profit</th>
-                                <th class="no-event">Status </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                             <?php
-                            $count = 0;
-                            $i=1;
-                            foreach($mem as $a_data) {
-                                $count++; 
-                               
-                                $start_date = date("Y-m-d", strtotime("-29 days"));
-                                $end_date = date("Y-m-d");
-                                $employee=0;
-                               
-                                $package_data_total_count = $this->Inventory_graph_model->get_search_merchant_pos_total_count($start_date, $end_date, $status, $a_data['id'],$employee, 'pos');
-                               
-                                $package_data_total_count_invoice = $this->Inventory_graph_model->get_search_merchant_pos_total_count($start_date, $end_date, $status, $a_data['id'],$employee, 'customer_payment_request');
-                            
-
-                                $total_amount_a = $package_data_total_count[0]['amount']+$package_data_total_count_invoice[0]['amount'];
-
-                                ?>
-                            <tr id="row_11">
-                                <td><?php echo $a_data['m_transaction'] ?></td>
-                                <td>$ <?php echo number_format($a_data['m_amount'],2) ?> </td>
-                                <td><?php echo $a_data['name'] ?></td>
-                               <!--  <td><?php echo $a_data['total_merchant'] ?></td> -->
-                                <td>
-                                    <a href="javascript:void(0)" data-value1="<?php echo '$11.00'; ?>" data-value2="<?php echo '$22.00'; ?>" data-value3="<?php echo '$33.00'; ?>" id="getRevenue" title="View Details">$<?php echo number_format($a_data['m_revenue'],2) ?></a>
-                                </td>
-                                <td>
-                                    <a href="javascript:void(0)" data-value4="<?php echo number_format($a_data['m_cost_only'],2) ?>" data-value5="<?php echo number_format($a_data['m_buy_rate'],2) ?>" data-value6="<?php echo number_format($a_data['m_gateway_fee'],2) ?>" id="getCost" title="View Details">$<?php echo number_format($a_data['m_cost'],2) ?></a>
-                                </td>
-
-                                 <td>
-                                    <a href="javascript:void(0)" >$0.00</a>
-                                </td>
-
-                                <td>
-                                    <a href="javascript:void(0)" data-value7="<?php echo '$77.00'; ?>" data-value8="<?php echo '$88.00'; ?>" data-value9="<?php echo '$99.00'; ?>" id="getProfit" title="View Details">$<?php echo number_format($a_data['m_profit'],2) ?></a>
-                                </td>
-                                 <td>
-                                        <?php
-                                        if($a_data['status']=='active') {
-                                            if($total_amount_a > '0'){
-                                                echo '<span class="btn btn-success"> Active  </span>';
-                                            } elseif ($total_amount_a == '0') {
-                                                echo '<span class="btn btn-danger"> Inactive </span>';
-                                            } else {
-                                                echo '<span class="btn btn-danger"> Inactive </span>';
-                                            }
-                                        } else {
-                                            echo '<span class="btn btn-warning"> Pending  </span>';
-                                        } ?>
-                                    </td>
-                            </tr>
-                             <?php $i++;
-                            } ?>
-                            <!-- <tr id="row_11">
-                                <td>$ 0.00 </td>
-                                <td>Demo Name</td>
-                                <td>$0.00</td>
-                                <td>
-                                    <a href="#" data-toggle="modal" data-target="#view-modal-revenue" data-id="" id="getRevenue" title="View Details">$0.00</a>
-                                </td>
-                                <td>
-                                    <a href="#" data-toggle="modal" data-target="#view-modal-cost" data-id="" id="getCost" title="View Details">$0.00</a>
-                                </td>
-                                <td>
-                                    <a href="#" data-toggle="modal" data-target="#view-modal-profit" data-id="" id="getProfit" title="View Details">$0.00</a>
-                                </td>
-                                <td>
-                                    <span class="btn btn-success"> Active </span>
-                                </td>
-                            </tr>
-                            <tr id="row_11">
-                                <td>$ 0.00 </td>
-                                <td>Demo Name</td>
-                                <td>$0.00</td>
-                                <td>
-                                    <a href="#" data-toggle="modal" data-target="#view-modal-revenue" data-id="" id="getRevenue" title="View Details">$0.00</a>
-                                </td>
-                                <td>
-                                    <a href="#" data-toggle="modal" data-target="#view-modal-cost" data-id="" id="getCost" title="View Details">$0.00</a>
-                                </td>
-                                <td>
-                                    <a href="#" data-toggle="modal" data-target="#view-modal-profit" data-id="" id="getProfit" title="View Details">$0.00</a>
-                                </td>
-                                <td>
-                                    <span class="btn btn-success"> Active </span>
-                                </td>
-                            </tr>
-                            <tr id="row_11">
-                                <td>$ 0.00 </td>
-                                <td>Demo Name</td>
-                                <td>$0.00</td>
-                                <td>
-                                    <a href="#" data-toggle="modal" data-target="#view-modal-revenue" data-id="" id="getRevenue" title="View Details">$0.00</a>
-                                </td>
-                                <td>
-                                    <a href="#" data-toggle="modal" data-target="#view-modal-cost" data-id="" id="getCost" title="View Details">$0.00</a>
-                                </td>
-                                <td>
-                                    <a href="#" data-toggle="modal" data-target="#view-modal-profit" data-id="" id="getProfit" title="View Details">$0.00</a>
-                                </td>
-                                <td>
-                                    <span class="btn btn-success"> Active </span>
-                                </td>
-                            </tr>
-                            <tr id="row_11">
-                                <td>$ 0.00 </td>
-                                <td>Demo Name</td>
-                                <td>$0.00</td>
-                                <td>
-                                    <a href="#" data-toggle="modal" data-target="#view-modal-revenue" data-id="" id="getRevenue" title="View Details">$0.00</a>
-                                </td>
-                                <td>
-                                    <a href="#" data-toggle="modal" data-target="#view-modal-cost" data-id="" id="getCost" title="View Details">$0.00</a>
-                                </td>
-                                <td>
-                                    <a href="#" data-toggle="modal" data-target="#view-modal-profit" data-id="" id="getProfit" title="View Details">$0.00</a>
-                                </td>
-                                <td>
-                                    <span class="btn btn-success"> Active </span>
-                                </td>
-                            </tr> -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+          </div>
         </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="card content-card">
+            <div class="card-detail">
+              <?php
+              $count = 0;
+              if(isset($msg))
+                echo $msg;
+              ?>
+              <div class="pos-list-dtable reset-dataTable">
+                <form onsubmit="return validate(this);" method="post" action="<?php echo base_url('dashboard/funding_status_post');?>" >
+                  <div class="row form-group">
+                    <div style="display:none" id="hideencheckbox"></div>
+                    <div class="col-12 text-right">
+                      <input class="form-control" required  value="<?php echo $reposrint_date ?>" name="date" type="hidden" autocomplete="off"  placeholder="Select Date">
+                      <button class="btn  btn-warning " type="submit" name="pendingSubmit" value="true" ><i class="ti-pencil"></i> Pending</button>
+                      <button class="btn btn-success" type="submit" name="confirmSubmit" value="true" ><i class="ti-pencil"></i> Confirm</button>
+                    </div>
+                  </div>
+                </form>
+                <table id="example" class="display" style="width:100%">
+                  <thead>
+                    <tr>
+                      <th><input name="select_all" value="1" type="checkbox"></th>                                         <!--  <th>Sr.No.</th> -->
+                      <th>Gross Payments </th>
+                      <th>Merchant</th>
+                      <th>Account</th>
+                      <th>Fee Total</th> 
+                      <th>Payable/Hold Amount</th>
+                      <th>Status</th>
+                      <th>Funding Date</th> 
+                      <th>Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php
+                    $i=1;
+                    foreach($full_reporst as $a_data)
+                    {
+                      $count++;
+                      ?>
+                      <?php
+                      $totalFees=0;
+                      if($a_data['totalAmount']>0){
+                        $totalFees=$a_data['feesamoun']+$a_data['monthly_fees'];
+                      }
+                      ?>
+                      <tr>
+                        <td><input type="checkbox" name="chkstatus[]" value="<?php echo $a_data['id'];?>_<?php echo $a_data['totalAmount']-$totalFees?>"></td>                                    
+                        <td>$ <?php echo @number_format($a_data['totalAmount'],2); ?></td>
+                        <td>  <?php 
+                        echo $a_data['name']; ?>
+                      </td>
+                      <td> <?php echo $a_data['bank_account'] ?></td> 
+                      <td>  <b class="text-danger" > $<?php echo @number_format($totalFees,2); ?> </b> </td>
+                      <td>  <b class="text-danger" > $<?php 
+               //echo '--'.$a_data['hold_amount'].'--'; 
+                      $endAmount=(isset($a_data['hold_amount']) && $a_data['hold_amount']!="")?number_format($a_data['hold_amount'],2):'0.00';
+                      if($a_data['status']!=''){
+                        
+                        echo number_format(($a_data['amount']),2).'/'.$endAmount; 
+                      }else{
+                        echo number_format(($a_data['totalAmount']-$totalFees),2).'/0.00';
+                      }
+                      ?> </b> </td>
+                      <td><?php
+                      if($a_data['status']=='pending'){
+                        echo '<span class="badge-btn badge-pink"> '.$a_data['status'].'  </span>';
+                      }
+                      elseif ($a_data['status']=='confirm')
+                      {
+                        echo '<span class="badge-btn badge-success"> '.$a_data['status'] .' </span>';
+                      }else{
+                        echo '<span class="badge-btn badge-yellow light-yellow"> UnProcess  </span>';
+                      }
+                      ?></td>
+                      <td> <?php echo $a_data['date_c'] ; ?> </td> 
+                      <td>
+                        <a href="#" data-toggle="modal" data-target="#view-modal" data-date="<?php echo $a_data['date_c'];?>" data-id="<?php echo $a_data['id'];?>" id="getUser" class="pos_Status_c badge-btn"><i class="ti-eye"></i> View</a>
+                        <button data-toggle="modal" data-holdamount="<?php echo $a_data['hold_amount']?>" data-target="#amount-modal" data-amount="<?php echo ($a_data['status']!='')?$a_data['amount']:($a_data['totalAmount']-$totalFees)?>" data-date="<?php echo $a_data['date_c'];?>" data-mid="<?php echo $a_data['id'];?>" id="setamount" class="btn btn-sm btn-warning"><i class="ti-eye"></i> Change Status</button>
+                      </td>
+                    </tr>
+                    <?php $i++;}?>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
-
-<div id="view-modal-revenue" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+<div id="view-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
   <div class="modal-dialog"> 
     <div class="modal-content"> 
       <div class="modal-header"> 
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button> 
         <h4 class="modal-title">
-          <i class="glyphicon glyphicon-user"></i> Merchant Revenue
+          <i class="glyphicon glyphicon-user"></i> Payment Detail
         </h4> 
       </div> 
       <div class="modal-body"> 
-        <table class="table table-bordered">
-            <tbody>
-                <tr>
-                    <th>Heading1</th>
-                    <th>Heading2</th>
-                    <th>Heading3</th>
-                </tr>
-                <tr>
-                    <td class="td_value1"></td>
-                    <td class="td_value2"></td>
-                    <td class="td_value3"></td>
-                </tr>
-            </tbody>
-        </table>
+       <div id="modal-loader" class="text-center" style="display: none;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" viewBox="0 0 44 44" stroke="#000"> <g fill="none" fill-rule="evenodd" stroke-width="2"> <circle cx="22" cy="22" r="19.8669"> <animate attributeName="r" begin="0s" dur="1.8s" values="1; 20" calcMode="spline" keyTimes="0; 1" keySplines="0.165, 0.84, 0.44, 1" repeatCount="indefinite"></animate> <animate attributeName="stroke-opacity" begin="0s" dur="1.8s" values="1; 0" calcMode="spline" keyTimes="0; 1" keySplines="0.3, 0.61, 0.355, 1" repeatCount="indefinite"></animate> </circle> <circle cx="22" cy="22" r="15.8844"> <animate attributeName="r" begin="-0.9s" dur="1.8s" values="1; 20" calcMode="spline" keyTimes="0; 1" keySplines="0.165, 0.84, 0.44, 1" repeatCount="indefinite"></animate> <animate attributeName="stroke-opacity" begin="-0.9s" dur="1.8s" values="1; 0" calcMode="spline" keyTimes="0; 1" keySplines="0.3, 0.61, 0.355, 1" repeatCount="indefinite"></animate> </circle> </g> </svg>
+      </div>
+        <!-- content will be load here -->                          
+        <div id="dynamic-content"></div>
       </div> 
       <div class="modal-footer"> 
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>  
       </div> 
     </div> 
   </div>
-</div>
-
-<div id="view-modal-cost" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+</div>   
+<div id="amount-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
   <div class="modal-dialog"> 
     <div class="modal-content"> 
       <div class="modal-header"> 
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button> 
         <h4 class="modal-title">
-          <i class="glyphicon glyphicon-user"></i> Merchant Cost
+          <i class="glyphicon glyphicon-user"></i> Change Status
         </h4> 
       </div> 
       <div class="modal-body"> 
-        <table class="table table-bordered">
-            <tbody>
-                <tr>
-                    <th>InterchangeFee</th>
-                    <th>Buy Rate</th>
-                    <th>Gateway Fee</th>
-                </tr>
-                <tr>
-                    <td class="td_value4"></td>
-                    <td class="td_value5"></td>
-                    <td class="td_value6"></td>
-                </tr>
-            </tbody>
-        </table>
+        <div id="amount-loader" style="display: none; text-align: center;">
+          <img src="<?php echo base_url("logo/ajax-loader.gif"); ?>">
+        </div>
+        <!-- content will be load here -->                          
+        <div id="amountdynamic-content">
+          <form  method="post" action="<?php echo base_url('dashboard/funding_status');?>" >
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group row">
+                  <label class="col-md-2 col-form-label">Status</label>
+                  <div class="col-md-5 form-group">
+                    <select class="form-control bder-radius" required="required" name="pstatus" id="pstatus">
+                      <option value="">-Select Status-<opton>
+                      <option value="pending">Pending<opton>
+                      <option value="confirm">Confirm<opton>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-md-6 col-form-label">Payable Amount $</label>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" readonly name="PayableAmount3" id="PayableAmount"  required value="">
+                    <input type="hidden" class="form-control" readonly name="PayableAmount" id="PayableAmount2"  required value="">
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label class="col-md-5 col-form-label">Hold Amount</label>
+                  <div class="col-md-7">
+                    <input type="text" class="form-control" name="Hold_Amount" id="Hold_Amount"  required value="0">                                               
+                    <input type="hidden" class="form-control" name="date" id="popup_date"  required value="">
+                    <input type="hidden" class="form-control" name="mid" id="popup_mearchent_id"  required value="">
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <h3>Previous Hold Amount</h3>
+                <table class="table table-bordered">
+                  <tr>
+                    <th>Action</th>
+                    <th>Total Amount</th>
+                    <th>Hold Amount</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                  </tr>
+                  <tbody id="holdrow">
+                  </tbody>
+                </table>
+                <button class="btn btn-primary " type="submit" name="mysubmit" value="Search" ><i class="ti-pencil"></i> Submit</button>
+              </div>
+            </div>
+          </form>
+        </div>
       </div> 
       <div class="modal-footer"> 
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>  
       </div> 
     </div> 
   </div>
-</div>
-
-<div id="view-modal-profit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-  <div class="modal-dialog"> 
-    <div class="modal-content"> 
-      <div class="modal-header"> 
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button> 
-        <h4 class="modal-title">
-          <i class="glyphicon glyphicon-user"></i> Merchant Profit
-        </h4> 
-      </div> 
-      <div class="modal-body"> 
-        <table class="table table-bordered">
-            <tbody>
-                <tr>
-                    <th>Heading1</th>
-                    <th>Heading2</th>
-                    <th>Heading3</th>
-                </tr>
-                <tr>
-                    <td class="td_value7"></td>
-                    <td class="td_value8"></td>
-                    <td class="td_value9"></td>
-                </tr>
-            </tbody>
-        </table>
-      </div> 
-      <div class="modal-footer"> 
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>  
-      </div> 
-    </div> 
-  </div>
-</div>
-
-<script>
-    $(document).on('click', '#getRevenue1', function(e){
-        $('.td_value1').html('');
-        $('.td_value2').html('');
-        $('.td_value3').html('');
-
-        $('.td_value1').html($(this).data('value1'));
-        $('.td_value2').html($(this).data('value2'));
-        $('.td_value3').html($(this).data('value3'));
-
-        $('#view-modal-revenue').modal('show');
+</div>   
+  <script>
+    var resizefunc = [];
+  </script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="<?php echo base_url('merchant-panel'); ?>/assets/js/popper.min.js"></script>
+<script src="<?php echo base_url('merchant-panel'); ?>/assets/js/bootstrap.min.js"></script>
+<script src="<?php echo base_url('merchant-panel'); ?>/assets/js/jquery.slimscroll.js"></script>
+<script src="<?php echo base_url(); ?>/new_assets/js/waves.js"></script>
+<script src="<?php echo base_url('merchant-panel'); ?>/assets/js/wow.min.js"></script>
+<script src="<?php echo base_url('merchant-panel'); ?>/assets/js/jquery.nicescroll.js"></script>
+<script src="<?php echo base_url('merchant-panel'); ?>/plugins/moment/moment.js"></script>
+<script src="<?php echo base_url('merchant-panel'); ?>/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<script src="<?php echo base_url('merchant-panel'); ?>/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
+<!-- <script src="<?php echo base_url('merchant-panel'); ?>/assets/pages/jquery.form-advanced.init.js"></script> -->
+<script type="text/javascript" src="https://salequick.com/new_assets/js/datatables.min.js"></script>
+<!-- Custom main Js -->
+<script src="<?php echo base_url('merchant-panel'); ?>/assets/js/jquery.core.js"></script>
+<script src="<?php echo base_url('merchant-panel'); ?>/assets/js/jquery.app.js"></script>
+<script src="<?php echo base_url('merchant-panel'); ?>/assets/js/script.js"></script> 
+<a href="report.php"></a>
+<script type="text/javascript">
+  $("#Hold_Amount").on("keyup",function(){
+    calcaulatHold($(this));
+  });
+  $(document).ready(function() {
+    var table =$('#example').DataTable({
+      dom: 'lBfrtip',
+      "order": [[ 4, "desc" ]],
+      responsive: true, 
+      language: {
+        search: '', searchPlaceholder: "Search",
+        oPaginate: {
+           sNext: '<i class="fa fa-angle-right"></i>',
+           sPrevious: '<i class="fa fa-angle-left"></i>',
+           sFirst: '<i class="fa fa-step-backward"></i>',
+           sLast: '<i class="fa fa-step-forward"></i>'
+           }
+       }   ,
+     buttons: [
+      {
+        extend: 'collection',
+        text: '<span>Export List</span> <span class="material-icons"> arrow_downward</span>',
+        buttons: [
+        'copy',
+        'excel',
+        'csv',
+        'pdf',
+        'print'
+        ]
+      }
+    ]
     });
+// Handle click on checkbox
+$('#example tbody').on('click', 'input[type="checkbox"]', function(e){
+  var $row = $(this).closest('tr');
+// Get row data
+var data = table.row($row).data();
+// Get row ID
+var rowId = data[0];
+// Determine whether row ID is in the list of selected row IDs
+var index = $.inArray(rowId, rows_selected);
+// If checkbox is checked and row ID is not in list of selected row IDs
+if(this.checked && index === -1){
+  rows_selected.push(rowId);
+// Otherwise, if checkbox is not checked and row ID is in list of selected row IDs
+} else if (!this.checked && index !== -1){
+  rows_selected.splice(index, 1);
+}
+if(this.checked){
+  $row.addClass('selected');
+} else {
+  $row.removeClass('selected');
+}
+// Update state of "Select all" control
+updateDataTableSelectAllCtrl(table);
+// Prevent click event from propagating to parent
+e.stopPropagation();
+});
+// Handle click on "Select all" control
+$('thead input[name="select_all"]', table.table().container()).on('click', function(e){
+  if(this.checked){
+    $('#example tbody input[type="checkbox"]:not(:checked)').trigger('click');
+  } else {
+    $('#example tbody input[type="checkbox"]:checked').trigger('click');
+  }
+// Prevent click event from propagating to parent
+e.stopPropagation();
+});
+} );
 
-    $(document).on('click', '#getCost', function(e){
-        $('.td_value4').html('');
-        $('.td_value5').html('');
-        $('.td_value6').html('');
 
-        $('.td_value4').html($(this).data('value4'));
-        $('.td_value5').html($(this).data('value5'));
-        $('.td_value6').html($(this).data('value6'));
-
-        $('#view-modal-cost').modal('show');
-    });
-
-    $(document).on('click', '#getProfit1', function(e){
-        // e.preventDefault();
-        $('.td_value7').html('');
-        $('.td_value8').html('');
-        $('.td_value9').html('');
-
-        $('.td_value7').html($(this).data('value7'));
-        $('.td_value8').html($(this).data('value8'));
-        $('.td_value9').html($(this).data('value9'));
-
-        $('#view-modal-profit').modal('show');
-    });
-
-    function setTransactionDefDate(){
-        if($("#inv_pos_list_daterange").length){
-            $("#inv_pos_list_daterange span").html(moment().subtract(30, "days").format("MMMM-D-YYYY") +'-'+ moment().format("MMMM-D-YYYY"));
-            $("#inv_pos_list_daterange input[name='start_date']").val( moment().subtract(30, "days").format("YYYY-MM-DD"));
-            $("#inv_pos_list_daterange input[name='end_date']").val( moment().format("YYYY-MM-DD"));
-        }
-    }
-
-    $(document).ready(function() {
-        if($('#inv_pos_list_daterange').length){
-            var inv_pos_list_daterange_config = {
-                ranges: {
-                    Today: [new Date, new Date],Yesterday: [moment().subtract(1, "days"), moment().subtract(1, "days")],
-                    "Last 7 Days": [moment().subtract(6, "days"), new Date],"Last 30 Days": [moment().subtract(30, "days"), new Date],
-                    "This Month": [moment().startOf("month"), moment().endOf("month")],"Last Month": [moment().subtract(1, "month").startOf("month"), moment().subtract(1, "month").endOf("month")]
-                },opens: "right",alwaysShowCalendars: true,locale: {format: "YYYY-MM-DD"},
-                startDate: (($("#inv_pos_list_daterange input[name='start_date']").val().length > 0) ? ($("#inv_pos_list_daterange input[name='start_date']").val()) : (setTransactionDefDate(),moment().subtract(30, "days").format("YYYY-MM-DD"))),
-                    endDate: (($("#inv_pos_list_daterange input[name='end_date']").val().length > 0) ? ($("#inv_pos_list_daterange input[name='end_date']").val()) : moment().format("YYYY-MM-DD"))
-            };
-            // console.log(inv_pos_list_daterange_config)
-            $('#inv_pos_list_daterange').daterangepicker(inv_pos_list_daterange_config, function(a, b) {
-                $("#inv_pos_list_daterange input[name='start_date']").val( a.format("YYYY-MM-DD"));
-                $("#inv_pos_list_daterange input[name='end_date']").val( b.format("YYYY-MM-DD"));
-                $("#inv_pos_list_daterange span").html(a.format("MMMM-D-YYYY") + " - " + b.format("MMMM-D-YYYY"));
-                // setTransactionDefDate($("#pos_list_daterange span").data().d1,$("#pos_list_daterange span").data().d2);
-            });
-        }
-
-        $(document).ready(function() {
-            var dtTransactionsConfig={
-                "processing": true,
-                // "sAjaxSource":"data.php",
-                "pagingType": "full_numbers",
-                "pageLength": 25,
-                "dom": 'lBfrtip',
-                responsive: true, 
-                language: {
-                    search: '', searchPlaceholder: "Search",
-                    oPaginate: {
-                        sNext: '<i class="fa fa-angle-right"></i>',
-                        sPrevious: '<i class="fa fa-angle-left"></i>',
-                        sFirst: '<i class="fa fa-step-backward"></i>',
-                        sLast: '<i class="fa fa-step-forward"></i>'
-                    }
-                },
-                "buttons": [{
-                    extend: 'collection',
-                    text: '<span>Export List</span> <span class="material-icons"> arrow_downward</span>',
-                    buttons: [
-                        'copy',
-                        'excel',
-                        'csv',
-                        'pdf',
-                        'print'
-                    ]
-                }]
-            }
-            $('#datatable').DataTable(dtTransactionsConfig);
-        });
-    })
+function updateDataTableSelectAllCtrl(table){
+  var $table             = table.table().node();
+  var $chkbox_all        = $('tbody input[type="checkbox"]', $table);
+  var $chkbox_checked    = $('tbody input[type="checkbox"]:checked', $table);
+  var chkbox_select_all  = $('thead input[name="select_all"]', $table).get(0);
+// If none of the checkboxes are checked
+if($chkbox_checked.length === 0){
+  chkbox_select_all.checked = false;
+  if('indeterminate' in chkbox_select_all){
+    chkbox_select_all.indeterminate = false;
+  }
+// If all of the checkboxes are checked
+} else if ($chkbox_checked.length === $chkbox_all.length){
+  chkbox_select_all.checked = true;
+  if('indeterminate' in chkbox_select_all){
+    chkbox_select_all.indeterminate = false;
+  }
+// If some of the checkboxes are checked
+} else {
+  chkbox_select_all.checked = true;
+  if('indeterminate' in chkbox_select_all){
+    chkbox_select_all.indeterminate = true;
+  }
+}
+}
 </script>
+<script>
+  function stop_pak(id)
+  {
+    if(confirm('Are you sure Stop Recurring?'))
+    {
+      $.ajax({
+        url : "<?php echo base_url('merchant/stop_recurring')?>/"+id,
+        type: "POST",
+        dataType: "JSON",
+        success: function(data)
+        {
+          location.reload();
+        },
+        error: function (jqXHR, textStatus, errorThrown)
+        {
+          alert('Error  data');
+        }
+      });
+    }
+  }
+  function start_pak(id)
+  {
+    if(confirm('Are you sure Start Recurring?'))
+    {
+      $.ajax({
+        url : "<?php echo base_url('merchant/start_recurring')?>/"+id,
+        type: "POST",
+        dataType: "JSON",
+        success: function(data)
+        {
+          location.reload();
+        },
+        error: function (jqXHR, textStatus, errorThrown)
+        {
+          alert('Error deleting data');
+        }
+      });
+    }
+  }
+</script>
+<script>
+  var rows_selected = [];
+  var globalPaybelAmount=0;
+  function calcaulatHold(obj){
+    var PayableAmount=globalPaybelAmount;    
+    var holdamount=PayableAmount-$("#Hold_Amount").val();
+    $(document).ready(function() {
+      var PayableAmount=globalPaybelAmount;    
+      var gHoldamount=PayableAmount-$("#Hold_Amount").val();
+      $('#holdrow [type="checkbox"]').each(function(i, chk) {
+        if (chk.checked) {
+          oblhod=parseFloat($(chk).data("amount"));
+          gHoldamount=oblhod+gHoldamount;
+          console.log(oblhod,holdamount);          
+        }else{
+        }
+      });
+      gHoldamount=parseFloat(gHoldamount);
+      gHoldamount=gHoldamount.toFixed(2);
+      $("#PayableAmount2").val(gHoldamount);
+      gHoldamount=(gHoldamount + "").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+      $("#PayableAmount").val(gHoldamount);
+    });
+  }
+  $(document).ready(function(){
+    $(document).on('click', '#getUser', function(e){
+      e.preventDefault();
+var uid = $(this).data('id');   // it will get id of clicked row
+var date = $(this).data('date');   // it will get id of clicked row
+$('#dynamic-content').html(''); // leave it blank before ajax call
+$('#modal-loader').show();      // load ajax loader
+$.ajax({
+  url: "<?php  echo base_url('dashboard/search_record_column2'); ?>",
+  type: 'POST',
+  data: 'id='+uid+"&date="+date,
+  dataType: 'html'
+})
+.done(function(data){
+  console.log(data);  
+  $('#dynamic-content').html('');    
+$('#dynamic-content').html(data); // load response 
+$('#modal-loader').hide();      // hide ajax loader 
+})
+.fail(function(){
+  $('#dynamic-content').html('<i class="glyphicon glyphicon-info-sign"></i> Something went wrong, Please try again...');
+  $('#modal-loader').hide();
+});
+});
+$(document).on('click', '#getUser', function(e){
+e.preventDefault();
+var uid = $(this).data('id');   // it will get id of clicked row
+var date = $(this).data('date');   // it will get id of clicked row
+$('#dynamic-content').html(''); // leave it blank before ajax call
+$('#modal-loader').show();      // load ajax loader
+$.ajax({
+  url: "<?php  echo base_url('dashboard/search_record_column2'); ?>",
+  type: 'POST',
+  data: 'id='+uid+"&date="+date,
+  dataType: 'html'
+})
+.done(function(data){
+  console.log(data);  
+  $('#dynamic-content').html('');    
+$('#dynamic-content').html(data); // load response 
+$('#modal-loader').hide();      // hide ajax loader 
+})
+.fail(function(){
+  $('#dynamic-content').html('<i class="glyphicon glyphicon-info-sign"></i> Something went wrong, Please try again...');
+  $('#modal-loader').hide();
+});
+});
+    $(document).on('click', '#setamount', function(e){
+      e.preventDefault();
+var amounnt = $(this).data('amount');   // it will get id of clicked row
+amounnt = amounnt ? amounnt : 0;
+var holdAmount=$(this).data('holdamount');
+holdAmount=parseFloat(holdAmount);
+holdAmount = holdAmount ? holdAmount : 0;
+globalPaybelAmount=amounnt;
+var cdate=$(this).data('date');
+var mid=$(this).data('mid');
+$("#Hold_Amount").val($(this).data('holdamount'));
+amounnt=parseFloat(amounnt);
+amounnt=amounnt.toFixed(2);
+amounnt2=(amounnt-holdAmount + "").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+$("#PayableAmount").val(amounnt2);
+$("#PayableAmount2").val(amounnt-holdAmount);
+//$("#Hold_Amount").val(0);
+$("#popup_date").val(cdate);
+$("#popup_mearchent_id").val(mid);
+$('#dynamic-content').html(''); // leave it blank before ajax call
+$('#amount-loader').show();      // load ajax loader
+$.ajax({
+  url: "<?php  echo base_url('dashboard/get_holdamount'); ?>",
+  type: 'POST',
+  data: 'mid='+mid+'&cdate='+cdate+'&amounnt='+amounnt,
+  dataType: 'html'
+})
+.done(function(data){
+  data = jQuery.parseJSON(data);    
+  console.log(data);    
+  $('#holdrow').html('');    
+  $.each( data, function( key, value ) {
+    var amount=value['amount'];
+    var hold_amount=value['hold_amount'];
+    amount=(amount + "").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+    hold_amount=(hold_amount + "").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+    $('#holdrow').append('<tr><td><input type="checkbox" onclick="calcaulatHold($(this));" data-amount="'+value['hold_amount']+'" value="'+value['id']+'" name="holdetext[]"></td><td>$'+amount+'</td><td>$'+hold_amount+'</td><td>'+value['date']+'</td><td>'+value['status']+'</td></tr>');
+  });
+//$('#holdrow').html(data); // load response 
+$('#amount-loader').hide();      // hide ajax loader 
+})
+.fail(function(){
+  $('#dynamic-content').html('<i class="glyphicon glyphicon-info-sign"></i> Something went wrong, Please try again...');
+  $('#modal-loader').hide();
+});
+});
+    $(document).on('click', '#getpos', function(e){
+      e.preventDefault();
+var uid = $(this).data('id');   // it will get id of clicked row
+$('#dynamic-content').html(''); // leave it blank before ajax call
+$('#modal-loader').show();      // load ajax loader
+$.ajax({
+  url: "<?php  echo base_url('dashboard/search_record_pos'); ?>",
+  type: 'POST',
+  data: 'id='+uid,
+  dataType: 'html'
+})
+.done(function(data){
+  console.log(data);  
+  $('#dynamic-content').html('');    
+$('#dynamic-content').html(data); // load response 
+$('#modal-loader').hide();      // hide ajax loader 
+})
+.fail(function(){
+  $('#dynamic-content').html('<i class="glyphicon glyphicon-info-sign"></i> Something went wrong, Please try again...');
+  $('#modal-loader').hide();
+});
+});
+  });
 
-<?php include_once'footer_dash.php'; ?>
+
+function validate(form) {
+// validation code here ...
+if(rows_selected.length==0) {
+  alert('Please select checkbox');
+  return false;
+}
+else {
+  $("#hideencheckbox").html(''); 
+$.each(rows_selected, function(index, rowId){         // Create a hidden element
+  $("#hideencheckbox").append($(rowId).attr("checked","checked"));      
+});
+return confirm('Do you really want to submit the form?');
+}
+}
+</script>
+</script>  
+</body>
+</html>

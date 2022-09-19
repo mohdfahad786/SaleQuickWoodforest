@@ -6,7 +6,7 @@
         <meta name="description" content="A fully featured admin theme which can be used to build CRM, CMS, etc.">
         <meta name="author" content="Coderthemes">
         <link rel="shortcut icon" href="https://salequick.com/merchant-panel/assets/images/favicon_1.ico">
-        <title>Reseller | Dashboard</title>
+        <title>Merchant | Dashboard</title>
         <!-- fonts -->
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">

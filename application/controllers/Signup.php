@@ -55,7 +55,6 @@
 		// sign up step new change
 
 		public function stepfour_signup_new() {
-
 			//$name = $this->input->post('mbname') ? $this->input->post('mbname') : "";
 			//$mobile = $this->input->post('mphone') ? $this->input->post('mphone') : "";
 			//$email = $this->input->post('memail') ? $this->input->post('memail') : "";
@@ -65,7 +64,7 @@
 			// print_r($getresult['mob_no']); die();
 			$name = $getresult['name'];
 			$mobile = $getresult['mob_no'] ? $getresult['mob_no'] : $getresult['business_number'];
-			$email = $getresult['email'];
+			$email = strtolower($getresult['email']);
 
 			$routeNo = htmlspecialchars($this->input->post('routeNo') ? $this->input->post('routeNo') : '');
 			$confrouteNo = htmlspecialchars($this->input->post('confrouteNo') ? $this->input->post('confrouteNo') : "");
@@ -87,7 +86,7 @@
 
 			// start infinicept api
 
-          // $activation_id =$this->input->post('activation_id')? $this->input->post('activation_id'):'';
+          	// $activation_id =$this->input->post('activation_id')? $this->input->post('activation_id'):'';
 			$address1 = $getresult['address1'] ? $getresult['address1']:'';
 			$amexrate ='2.70';
 			$annual_cc_sales_vol = $getresult['annual_processing_volume'] ? $getresult['annual_processing_volume']:'0';
@@ -108,7 +107,7 @@
 
 			$city = $getresult['city'] ? $getresult['city']:'';
 			$country = $getresult['country'] ? $getresult['country']:'';
-			$customer_service_email = $getresult['customer_service_email'] ? $getresult['customer_service_email']:'';
+			$customer_service_email = $getresult['customer_service_email'] ? strtolower($getresult['customer_service_email']):'';
 			$customer_service_phone = $getresult['customer_service_phone'] ? $getresult['customer_service_phone']:'';
 			$dis_trans_fee = '0.15';
             $establishmentdate = $getresult['year_business'].'-'.$getresult['month_business'] .'-'.$getresult['day_business'];
@@ -120,12 +119,12 @@
 			$name = $name ? $name :'';
 			$o_address = $getresult['o_address1'] ? $getresult['o_address1']:'';
 			$o_dob = $getresult['dob'] ? $getresult['dob']:'';
-			$o_email = $getresult['o_email'] ? $getresult['o_email']:'';
+			$o_email = $getresult['o_email'] ? strtolower($getresult['o_email']):'';
 			$o_phone = $getresult['o_phone'] ? $getresult['o_phone']:'';
 			$o_ss_number = $getresult['o_ss_number'] ? $getresult['o_ss_number']:'';
 			$ownershiptype = $getresult['ownershiptype'] ? $getresult['ownershiptype']:'';
 			$pc_address = $getresult['o_address1'] ? $getresult['o_address1']:'';
-			$pc_email = $getresult['o_email'] ? $getresult['o_email']:'';
+			$pc_email = $getresult['o_email'] ? strtolower($getresult['o_email']):'';
 			$pc_name = $getresult['o_name'] ? $getresult['o_name']:'';
 			$pc_phone = $getresult['o_phone'] ? $getresult['o_phone']:'';
 			$pc_title = $getresult['business_dba_name'] ? $getresult['business_dba_name']:'';
@@ -135,654 +134,208 @@
 			$vm_cardrate ='2.70';
 			$website = $getresult['website'] ? $getresult['website']:'';
 
+			// echo $address1  .','. $amexrate  .','.  $annual_cc_sales_vol  .','. $annual_processing_volume .','. $bank_account .','. 
+		 //  	$bank_ach .','. $bank_dda  .','. $bank_routing .','. $billing_descriptor .','.  $business_dba_name .','.  $business_email .','. $business_name 
+		 //  	.','. $business_number .','. $business_type .','. $chargeback  .','. $city .','. $country .','. $customer_service_email
+		 //   	.','. $customer_service_phone .','.  $dis_trans_fee   .','. $establishmentdate .','. $key .','. $monthly_fee   .','. $monthly_gateway_fee  .','.
+			// $checkbox  .','. $name .','. $o_address .','. $o_dob .','. $o_email .','. $o_phone  .','. $o_ss_number .','. $ownershiptype .','. $pc_address 
+			// .','. $pc_email .','. $pc_name .','. $pc_phone  .','.  $pc_title .','. $question .','. $taxid .','. $vm_cardrate  .','.  $website;die;
+
           
 			if($address1  && $amexrate >=0 &&  $annual_cc_sales_vol >=0 && $annual_processing_volume && $bank_account && 
-		  $bank_ach && $bank_dda  && $bank_routing && $billing_descriptor &&  $business_dba_name &&  $business_email && $business_name 
-		  && $business_number && $business_type && $chargeback >=0 && $city && $country && $customer_service_email
-		   && $customer_service_phone &&  $dis_trans_fee >=0  && $establishmentdate && $key && $monthly_fee >=0  && $monthly_gateway_fee >=0 &&
+		  	$bank_ach && $bank_dda  && $bank_routing && $billing_descriptor &&  $business_dba_name &&  $business_email && $business_name 
+		  	&& $business_number && $business_type && $chargeback >=0 && $city && $country && $customer_service_email
+		   	&& $customer_service_phone &&  $dis_trans_fee >=0  && $establishmentdate && $key && $monthly_fee >=0  && $monthly_gateway_fee >=0 &&
 			$checkbox  && $name && $o_address && $o_dob && $o_email && $o_phone  && $o_ss_number && $ownershiptype && $pc_address 
-			&& $pc_email && $pc_name && $pc_phone  &&  $pc_title && $question && $taxid && $vm_cardrate >=0 &&  $website ) 
+			&& $pc_email && $pc_name && $pc_phone  &&  $pc_title && $question && $taxid && $vm_cardrate >=0) {
 
-		{
-		  			  	//ech//o json_encode(array('Status'=>4000)); 
-		  	//echo 'ahmad';
-		  	 //die();
+			   	$data=array(
+					'address1' =>$address1,
+					'amexrate' =>$amexrate,
+					'annual_cc_sales_vol' =>$annual_cc_sales_vol,
+					'annual_processing_volume' =>$annual_processing_volume,
+					'bank_account' =>$bank_account,
+					'bank_ach' =>$bank_ach,
+					'bank_dda' =>$bank_dda,
+					'bank_routing' =>$bank_routing,
+					'billing_descriptor' =>$billing_descriptor,
+					'business_dba_name' =>$business_dba_name,
+					'business_email' =>$business_email,
+					'business_name' =>$business_name,
+					'business_number' =>$business_number,
+					'business_type' =>$business_type,
+					'chargeback' =>$chargeback,
+					'city' =>$city,
+					'country' =>$country,
+					'customer_service_email' =>$customer_service_email,
+					'customer_service_phone' =>$customer_service_phone,
+					'dis_trans_fee' =>$dis_trans_fee,
 
-			   $data=array(
-				'address1' =>$address1,
-				'amexrate' =>$amexrate,
-				'annual_cc_sales_vol' =>$annual_cc_sales_vol,
-				'annual_processing_volume' =>$annual_processing_volume,
-				'bank_account' =>$bank_account,
-				'bank_ach' =>$bank_ach,
-				'bank_dda' =>$bank_dda,
-				'bank_routing' =>$bank_routing,
-				'billing_descriptor' =>$billing_descriptor,
-				'business_dba_name' =>$business_dba_name,
-				'business_email' =>$business_email,
-				'business_name' =>$business_name,
-				'business_number' =>$business_number,
-				'business_type' =>$business_type,
-				'chargeback' =>$chargeback,
-				'city' =>$city,
-				'country' =>$country,
-				'customer_service_email' =>$customer_service_email,
-				'customer_service_phone' =>$customer_service_phone,
-				'dis_trans_fee' =>$dis_trans_fee,
+					'year_business' =>substr($establishmentdate,0,4),
+					'month_business' =>substr($establishmentdate,5,2),
+					'day_business' =>substr($establishmentdate,8,2),
+					// 'key' =>$key,
+					'monthly_fee' =>$monthly_fee,
+					'monthly_gateway_fee'=> $monthly_gateway_fee,
+					'checkbox' => $checkbox ? 'true':'false',
+					'name' =>$name,
+					'o_name'=>$name,
+					'o_address' =>$o_address,
 
-				'year_business' =>substr($establishmentdate,0,4),
-				'month_business' =>substr($establishmentdate,5,2),
-				'day_business' =>substr($establishmentdate,8,2),
-				// 'key' =>$key,
-				'monthly_fee' =>$monthly_fee,
-				'monthly_gateway_fee'=> $monthly_gateway_fee,
-				'checkbox' => $checkbox ? 'true':'false',
-				'name' =>$name,
-				'o_name'=>$name,
-				'o_address' =>$o_address,
+					'dob' =>$o_dob,
+					'o_dob_y' =>substr($o_dob,0,4),
+					'o_dob_m' =>substr($o_dob,5,2),
+					'o_dob_d' =>substr($o_dob,8,2),
 
-				'dob' =>$o_dob,
-				'o_dob_y' =>substr($o_dob,0,4),
-				'o_dob_m' =>substr($o_dob,5,2),
-				'o_dob_d' =>substr($o_dob,8,2),
+					'cnp_percent' => '10',
+					'cp_percent' => '90',
+					'average_ticket' => '90',
 
-				'o_email' =>$o_email,
-				'o_phone' =>$o_phone,
-				'o_ss_number' =>$o_ss_number,
-				'ownershiptype' =>$ownershiptype,
-				'pc_address' =>$pc_address, 
-				'pc_email' =>$pc_email,
-				'pc_name' =>$pc_name,
-				'pc_phone' =>$pc_phone,
-				'pc_title' =>$pc_title,
-				'question' =>$question,
-				'taxid' =>$taxid,
-				'vm_cardrate' =>$vm_cardrate,
-				'website' =>$website
-			   ); 
+					'o_email' =>$o_email,
+					'o_phone' =>$o_phone,
+					'o_ss_number' =>$o_ss_number,
+					'ownershiptype' =>$ownershiptype,
+					'pc_address' =>$pc_address, 
+					'pc_email' =>$pc_email,
+					'pc_name' =>$pc_name,
+					// 'pc_phone' =>$pc_phone,
+					'pc_title' =>$pc_title,
+					'question' =>$question,
+					'taxid' =>$taxid,
+					'vm_cardrate' =>$vm_cardrate,
+					'website' =>$website
+			   	); 
 				$id= $last_merchantId;
-				$this->db->where('id', $id);
 
+				$this->db->where('id', $id);
 				$up=$this->db->update('merchant', $data);
-				//echo json_encode($up);  die(); 
-				//echo json_encode($id);  die(); 
-				if($up)
-				{
-					//echo 'shuaeb'; die();
+				//echo json_encode($up);  die();
+
+				if($up) {
 					$this->db->where('id', $id);
 					$getdata=$this->db->get('merchant')->row();
-					// echo json_encode($getdata); die(); 
-                    $inputRawData=array (
-						'AuthenticationKeyId' => 'a626be59-d58b-4f33-8050-104107dfb68f',
-						'AuthenticationKeyValue' => 'Q8n1!RGbn-5YAEA^s0s6AMrKZoPRuqLoBx2GKW15huKXOvwLq~*vJQqC7REdXviE',
-						"Merchant_IPAddress"=> $_SERVER['REMOTE_ADDR']?$_SERVER['REMOTE_ADDR'] :'',
-						"Merchant_IPDateTime"=> date("l j F Y  g:ia", time() - date("Z")) ? date("l j F Y  g:ia", time() - date("Z")) :'',
-						"Merchant_BrowserUserAgentString"=> $_SERVER['HTTP_USER_AGENT']?$_SERVER['HTTP_USER_AGENT']:'',
-						"ExternalApplicationId"=> $getdata->business_name ? $getdata->business_name :'',
-						'CustomFieldAnswers' => 
-						array (
-						  0 => 
-						  array (
-							'Id' => 6161,
-							'UserDefinedId' => 'legal.name',
-							'Value' => 
-							array (
-							  '#' => $getdata->business_name,
-							),
-						  ),
-						  1 => 
-						  array (
-							'Id' => 6162,
-							'UserDefinedId' => 'legal.dba',
-							'Value' => 
-							array (
-							  '#' => $getdata->business_dba_name,
-							),
-						  ),
-						  2 => 
-						  array (
-							'Id' => 6163,
-							'UserDefinedId' => 'legal.address',
-							'Value' => 
-							array (
-							  'Country' => $getdata->country,
-							  'Street1' => $getdata->address1,
-							  'Street2' => $getdata->address2,
-							  'City' => $getdata->city,
-							  'State' => $getdata->state,
-							  'Zip' => $getdata->zip,
-							),
-						  ),
-						  3 => 
-						  array (
-							'Id' => 6164,
-							'UserDefinedId' => 'legal.ownershiptype',
-							'Value' => 
-							array (
-							  '#' => $getdata->ownershiptype,
-							),
-						  ),
-						  4 => 
-						  array (
-							'Id' => 6165,
-							'UserDefinedId' => 'legal.taxid',
-							'Value' => 
-							array (
-							  '#' => str_replace("-","",$getdata->taxid),
-							),
-						  ),
-						  5 => 
-						  array (
-							'Id' => 6166,
-							'UserDefinedId' => 'Legal.DateofIncorporation',
-							'Value' => 
-							array (
-							  'Month' => $getdata->month_business,
-							  'Day' =>   $getdata->day_business,
-							  'Year' =>  $getdata->year_business,
-							),
-						  ),
-						  6 => 
-						  array (
-							'Id' => 6167,
-							'UserDefinedId' => 'legal.phone',
-							'Value' => 
-							array (
-							  '#' => $getdata->business_number,
-							),
-						  ),
-						  7 => 
-						  array (
-							'Id' => 6168,
-							'UserDefinedId' => 'legal.email',
-							'Value' => 
-							array (
-							  '#' => $getdata->business_email,
-							),
-						  ),
-						  8 => 
-						  array (
-							'Id' => 6169,
-							'UserDefinedId' => 'legal.website',
-							'Value' => 
-							array (
-							  '#' => $getdata->website,
-							),
-						  ),
-						  9 => 
-						  array (
-							'Id' => 6170,
-							'UserDefinedId' => 'bank.routingnumber',
-							'Value' => 
-							array (
-							  '#' => $getdata->bank_routing,
-							),
-						  ),
-						  10 => 
-						  array (
-							'Id' => 6171,
-							'UserDefinedId' => 'bank.routingnumber.confirm',
-							'Value' => 
-							array (
-							  '#' => $getdata->bank_routing,
-							),
-						  ),
-						  11 => 
-						  array (
-							'Id' => 6172,
-							'UserDefinedId' => 'bank.acctnumber',
-							'Value' => 
-							array (
-							  '#' => $getdata->bank_account,
-							),
-						  ),
-						  12 => 
-						  array (
-							'Id' => 6173,
-							'UserDefinedId' => 'bank.acctnumber.confirm',
-							'Value' => 
-							array (
-							  '#' => $getdata->bank_account,
-							),
-						  ),
-						  13 => 
-						  array (
-							'Id' => 6174,
-							'UserDefinedId' => 'owner1.name',
-							'Value' => 
-							array (
-							  'FirstName' => $getdata->o_name,
-							  'MiddleName' => $getdata->m_name,
-							  'LastName' => $getdata->l_name,
-							),
-						  ),
-						  14 => 
-						  array (
-							'Id' => 6175,
-							'UserDefinedId' => 'owner1.dob',
-							'Value' => 
-							array (
-							  'Month' => $getdata->o_dob_m,
-							  'Day' => $getdata->o_dob_d,
-							  'Year' => $getdata->o_dob_y,
-							),
-						  ),
-						  15 => 
-						  array (
-							'Id' => 6176,
-							'UserDefinedId' => 'owner1.address',
-							'Value' => 
-							array (
-							  'Country' => $getdata->o_country,
-							  'Street1' => $getdata->o_address1,
-							  'Street2' => $getdata->o_address2,
-							  'City' => $getdata->o_city,
-							  'State' => $getdata->o_state,
-							  'Zip' => $getdata->o_zip,
-							),
-						  ),
-						  16 => 
-						  array (
-							'Id' => 6178,
-							'UserDefinedId' => 'owner1.ssn',
-							'Value' => 
-							array (
-							  '#' =>$getdata->o_ss_number,
-							),
-						  ),
-						  17 => 
-						  array (
-							'Id' => 6200,
-							'UserDefinedId' => 'pc.name',
-							'Value' => 
-							array (
-							  'FirstName' => $getdata->pc_name,
-							  'MiddleName' =>  $getdata->pc_name,
-							  'LastName' => $getdata->pc_name,
-							),
-						  ),
-						  18 => 
-						  array (
-							'Id' => 6201,
-							'UserDefinedId' => 'pc.title',
-							'Value' => 
-							array (
-							//   '#' => 'true',
-							  '#' => $getdata->pc_title ? 'true' :'false',
-							),
-						  ),
-						  19 => 
-						  array (
-							'Id' => 6202,
-							'UserDefinedId' => 'pc.address',
-							'Value' => 
-							array (
-							  'Country' => $getdata->pc_address,
-							  'Street1' => '11',
-							  'Street2' => '12',
-							  'City' => 'HongCong',
-							  'State' =>'california',
-							  'Zip' => '23233',
-							),
-						  ),
-						  20 => 
-						  array (
-							'Id' => 6203,
-							'UserDefinedId' => 'pc.email',
-							'Value' => 
-							array (
-							  '#' => $getdata->pc_email,
-							),
-						  ),
-						  21 => 
-						  array (
-							'Id' => 6204,
-							'UserDefinedId' => 'pc.phone',
-							'Value' => 
-							array (
-							  '#' => $getdata->pc_phone,
-							),
-						  ),
-						  22 => 
-						  array (
-							'Id' => 6205,
-							'UserDefinedId' => 'bank.ach',
-							'Value' => 
-							array (
-							  '#' => $getdata->bank_ach,
-							),
-						  ),
-						  23 => 
-						  array (
-							'Id' => 6206,
-							'UserDefinedId' => 'legal.annualprocessing',
-							'Value' => 
-							array (
-							  '#' => $getdata->annual_cc_sales_vol,
-							),
-						  ),
-						  24 => 
-						  array (
-							'Id' => 6208,
-							'UserDefinedId' => 'feeprofile.monthlyfee',
-							'Value' => 
-							array (
-							  '#' => $getdata->monthly_fee,
-							),
-						  ),
-						  25 => 
-						  array (
-							'Id' => 6209,
-							'UserDefinedId' => 'feeprofile.vmcardrate',
-							'Value' => 
-							array (
-							  '#' => $getdata->vm_cardrate,
-							),
-						  ),
-						  26 => 
-						  array (
-							'Id' => 6212,
-							'UserDefinedId' => 'feeprofile.distransfee',
-							'Value' => 
-							array (
-							  '#' => $getdata->dis_trans_fee,
-							),
-						  ),
-						  27 => 
-						  array (
-							'Id' => 6213,
-							'UserDefinedId' => 'feeprofile.amexrate',
-							'Value' => 
-							array (
-							  '#' => $getdata->amexrate,
-							),
-						  ),
-						  28 => 
-						  array (
-							'Id' => 6215,
-							'UserDefinedId' => 'feeprofile.chargebackfee',
-							'Value' => 
-							array (
-							  '#' => $getdata->chargeback,
-							),
-						  ),
-						  29 => 
-						  array (
-							'Id' => 6216,
-							'UserDefinedId' => 'feeprofile.monthlygatewayfee',
-							'Value' => 
-							array (
-							  '#' => $getdata->monthly_gateway_fee,
-							),
-						  ),
-						  30 => 
-						  array (
-							'Id' => 6217,
-							'UserDefinedId' => 'feeprofile.annualccsalesvol',
-							'Value' => 
-							array (
-							  '#' => $getdata->annual_cc_sales_vol,
-							),
-						  ),
-						  31 => 
-						  array (
-							'Id' => 6226,
-							'UserDefinedId' => 'owner1.checkbox',
-							'Value' => 
-							array (
-							  '#' => $getdata->business_name ? 'true':'false',
-							),
-						  ),
-						  32 => 
-						  array (
-							'Id' => 6230,
-							'UserDefinedId' => 'legal.question',
-							'Value' => 
-							array (
-							  '#' => $getdata->question,
-							),
-						  ),
-						  33 => 
-						  array (
-							'Id' => 6231,
-							'UserDefinedId' => 'legal.billingdescriptor',
-							'Value' => 
-							array (
-							  '#' => $getdata->billing_descriptor,
-							),
-						  ),
-						  34 => 
-						  array (
-							'Id' => 6232,
-							'UserDefinedId' => 'cs.phone',
-							'Value' => 
-							array (
-							  '#' => $getdata->customer_service_phone,
-							),
-						  ),
-						  35 => 
-						  array (
-							'Id' => 6233,
-							'UserDefinedId' => 'cs.email',
-							'Value' => 
-							array (
-							  '#' => $getdata->customer_service_email,
-							),
-						  ),
-						  36 => 
-						  array (
-							'Id' => 6237,
-							'UserDefinedId' => 'legal.businesstype',
-							'Value' => 
-							array (
-							  '#' => $getdata->business_type,
-							),
-						  ),
-						  37 => 
-						  array (
-							'Id' => 6238,
-							'UserDefinedId' => 'bank.dda',
-							'Value' => 
-							array (
-							  '#' => $getdata->bank_dda,
-							),
-						  ),
-						),
+   					$getdauth_key=$this->db->query("SELECT auth_key FROM  merchant WHERE id='$last_merchantId'  ")->row_array();
+
+					// end infincept api
+
+					//print_r($email);  die();
+					$today1 = date("Ymdhisu");
+					$unique = $getdauth_key['auth_key'];
+					//$unique = "SAL" . $today1;
+					$merchant_key = substr("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", mt_rand(0, 51), 1) . substr(md5(time()), 1);
+					$data = array(
+						"bank_dda" => $bank_dda,
+						"bank_ach" => $bank_ach,
+						"bank_routing" => $routingno,
+						"bank_account" => $accountnumber,
+						//"auth_key" => $unique,
+						//"merchant_key" => $merchant_key,
+						"amexrate" =>$amexrate,
+						'monthly_fee'=> $monthly_fee,
+						'monthly_gateway_fee'=> $monthly_gateway_fee,
+						'vm_cardrate'=> $vm_cardrate,
+						'dis_trans_fee' =>$dis_trans_fee,
+						//   'status' => 'block',
+						// 'status' => 'Waiting_For_Approval',
+						// 'status' => 'pending',
 					);
-			      //print_r($inputRawData);  
-				//    echo json_encode($inputRawData); 
-				// 	die;
-					
-				   $purl='https://merchantapp.io/salequicktest/api/v1/MerchantApplication/Submit'; 
-					$ch = curl_init();
-					$headers = array("Accept-Encoding: gzip", "Content-Type: application/json" );
-					curl_setopt($ch, CURLOPT_URL,$purl);
-					curl_setopt($ch, CURLOPT_POST, 1);
-					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-					curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($inputRawData));           
-					curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-					$response     = curl_exec ($ch);
-					$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                    $err = curl_error($ch);
-					 //$xml = simplexml_load_string($response, "SimpleXMLElement", LIBXML_NOCDATA);
-					 //$jsondata = json_encode($response);
-					 $responceArrayData =json_decode($response, true); 
-					curl_close($ch);
-                    // print_r($response); echo $err;  die();  
-					//echo  $statusCode;
-					if ($err) {
-					  //echo json_encode("cURL Error #:" . $err);
-					  echo json_encode(array('Status'=>600,'StatusMessage'=>'cURL Error #'.$err));
+
+					if ($routingno && $accountnumber) {
+						//$result=$this->Home_model->insert_data("merchant", $data);
+						$this->db->where('id', $last_merchantId);
+						$this->db->update('merchant', $data);
+						$this->session->unset_userdata('last_merchantId');
+						$this->session->unset_userdata('step');
+						$url = base_url() . "confirm/" . $unique;
+						set_time_limit(3000);
+
+						// $MailTo = $email;
+						// $htmlContent = '<!DOCTYPE html>
+						// 	<html>
+						// 	<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+						// 	<title></title>
+							
+						// 	<meta name="viewport" content="width=device-width, initial-scale=1">
+						// 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800" rel="stylesheet">
+						// 	</head>
+						// 	<body style="padding: 0px;margin: 0;font-family:Open Sans, sans-serif;font-size: 14px !important;color: #333;">
+						// 	<div style="max-width: 751px;margin: 0 auto;background:#fafafa;">
+						// 	<div style="color:#fff;padding-top: 30px;padding-bottom: 5px;background-color: #2273dc;border-top-left-radius: 10px;border-top-right-radius: 10px;">
+						// 	<div style="width:80%;margin:0 auto;">
+						// 	<div style="width: 245px;text-align: center;height: 70px;border-radius: 50%;margin: 10px auto 20px;padding: 10px;box-shadow: 0px 0px 5px 10px #438cec8c;"><img src="https://salequick.com/front/images/logo-w.png" style="max-width: 90%;width: 100%;margin: 8px auto 0;display: block;"></div>
+						// 	</div>
+						// 	</div>
+						// 	<div style="max-width: 563px;text-align:right;margin: 0px auto 0;clear: both;width: 100%;display: table;">
+						// 	<p style="text-align: center !important;font-size: 20px !important;font-family: fantasy !important;letter-spacing: 3px;color: #3c763d;">Your registration is complete.</p>
+			   //  			<p style="font-size: 16px !important;text-align: center !important;font-weight: 600;">Registration Details:</p>
+						// 	<table style="border-collapse: separate; border-spacing: 0;width: 100%; max-width: 100%;clear: both;-webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;font-size: 14px;"> 
+						// 		<tr >
+						// 			<th style="color: #535963;font-weight: 500;border: 0px;text-align: left;border-bottom: 1px solid #eaeaea;padding: 7px;">
+						// 				Name
+						// 			</th>
+						// 			<td style="color: #7e8899;text-transform: uppercase;font-weight: 500;border: 0px;text-align: left;border-bottom: 1px solid #eaeaea;padding: 7px;color: #444;text-align: right;">'. $name . '</td>
+						// 		</tr>
+						// 		<tr >
+						// 			<th style="color: #535963;font-weight: 500;border: 0px;text-align: left;border-bottom: 1px solid #eaeaea;padding: 7px;">
+						// 				Email
+						// 			</th>
+						// 			<td style="color: #7e8899;text-transform: uppercase;font-weight: 500;border: 0px;text-align: left;border-bottom: 1px solid #eaeaea;padding: 7px;color: #444;text-align: right;">'.$email.'</td>
+						// 		</tr>
+						// 		<tr >
+						// 			<th style="color: #535963;font-weight: 500;border: 0px;text-align: left;border-bottom: 1px solid #eaeaea;padding: 7px;">
+						// 				Phone
+						// 			</th>
+						// 			<td style="color: #7e8899;text-transform: uppercase;font-weight: 500;border: 0px;text-align: left;border-bottom: 1px solid #eaeaea;padding: 7px;color: #444;text-align: right;">'.$mobile.'</td>
+						// 		</tr>
+						// 	</table>
+						// 	</div>
+						// 	<div style="padding: 25px 0;overflow:hidden;">
+						// 	<div style="width: 100%;margin:0 auto;overflow:hidden;max-width: 80%;">
+						// 	<div style="width: 100%;margin:10px auto 20px;text-align:center;">
+						// 	<p style="line-height: 1.432;">
+						// 	<span style="display: block;margin-bottom: 11px;font-weight: 600;color: #3c763d !important;">Verify Email</span>
+						// 	<a href="'.$url.'" style="max-height: 40px;padding: 10px 20px;display: inline-flex;justify-content: center;align-items: center;font-size: 0.875rem;font-weight: 600;letter-spacing: 0.03rem;color: #fff;background-color: #696ffb;text-decoration: none;border-radius: 20px;">Click Here</a>
+						// 	</p> 
+							
+						// 	</div>
+						// 	</div>
+						// 	<footer style="width:100%;padding: 35px 0 21px;background: #414141;margin-top: 0px;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
+						// 	<div style="text-align:center;width:80%;margin:0 auto;color: rgba(255, 255, 255, 0.75);">
+						// 	<h5 style="margin-top: 0;margin-bottom: 10px;font-size: 16px;font-weight:400;line-height: 1.432;">Feel free to contact us any time with question and concerns.</h5>
+						// 	<p style="color: rgba(255, 255, 255, 0.55);">You are receiving something because purchased something at Company name</p>
+						// 	<p style="text-align:center"><a href="https://salequick.com/" style="color: #6ea9ff;cursor:pointer;text-decoration:none !important;"><span style="color: rgba(255, 255, 255, 0.55);">Powered by:</span> SaleQuick.com</a></p>
+						// 	</div>
+						// 	</footer>
+						// 	</div>
+						// 	</body>
+						// 	</html>
+    		// 			';
+						// //print_r($htmlContent); die();
+						// $config['mailtype'] = 'html';
+						// $this->email->initialize($config);
+						// $MailSubject = 'Salequick Registration Confirmation ';
+						// $this->email->from('info@salequick.com', 'Confirm Email');
+						// $this->email->to($email);
+						// $this->email->subject($MailSubject);
+						// $this->email->message($htmlContent);
+						// $this->email->send();
+						$this->session->set_flashdata('msg', '<div class="alert alert-success text-center">Member Business Registration Successfully.. </div>');
+						echo json_encode(array('Status'=>200));
+
 					} else {
-						//print_r($responceArrayData['Status']); 
-						if($responceArrayData['Status']=='30')
-						{
-                           $apidata=array(
-							
-							'merchant_id'=>$getdata->id,
-							'merchant_application_id'=>$responceArrayData['MerchantApplicationId'],
-							'external_merchant_application_id'=>$responceArrayData['ExternalMerchantApplicationId'],
-							'infinicept_application_id'=>$responceArrayData['InfiniceptApplicationId'],
-							'status'=>$responceArrayData['Status'],
-							'status_message'=>$responceArrayData['StatusMessage']
-							
-							
-						   );
-                           $getdataOfApi=$this->db->query("SELECT * FROM  merchant_api WHERE merchant_id='$getdata->id'  ")->result_array(); 
-						   if(count($getdataOfApi) == '0')
-						   {
-							     $this->db->insert('merchant_api',$apidata);
-						   }
-           $getdauth_key=$this->db->query("SELECT auth_key FROM  merchant WHERE id='$last_merchantId'  ")->row_array();
-
-				// end infincept api
-
-			//print_r($email);  die();
-			$today1 = date("Ymdhisu");
-			 $unique = $getdauth_key['auth_key'];
-			//$unique = "SAL" . $today1;
-			$merchant_key = substr("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", mt_rand(0, 51), 1) . substr(md5(time()), 1);
-			$data = array(
-				"bank_dda" => $bank_dda,
-				"bank_ach" => $bank_ach,
-				"bank_routing" => $routingno,
-				"bank_account" => $accountnumber,
-				//"auth_key" => $unique,
-				//"merchant_key" => $merchant_key,
-				"amexrate" =>$amexrate,
-				'monthly_fee'=> $monthly_fee,
-				'monthly_gateway_fee'=> $monthly_gateway_fee,
-				'vm_cardrate'=> $vm_cardrate,
-				'dis_trans_fee' =>$dis_trans_fee,
-				//   'status' => 'block',
-				// 'status' => 'Waiting_For_Approval',
-				'status' => 'pending',
-			);
-
-			if ($routingno && $accountnumber) {
-				//$result=$this->Home_model->insert_data("merchant", $data);
-				$this->db->where('id', $last_merchantId);
-				$this->db->update('merchant', $data);
-				$this->session->unset_userdata('last_merchantId');
-				$this->session->unset_userdata('step');
-				$url = base_url() . "confirm/" . $unique;
-				set_time_limit(3000);
-
-				$MailTo = $email;
-				$htmlContent = '<!DOCTYPE html>
-				<html>
-				<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-				<title></title>
-				
-				<meta name="viewport" content="width=device-width, initial-scale=1">
-				<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800" rel="stylesheet">
-				</head>
-				<body style="padding: 0px;margin: 0;font-family:Open Sans, sans-serif;font-size: 14px !important;color: #333;">
-				<div style="max-width: 751px;margin: 0 auto;background:#fafafa;">
-				<div style="color:#fff;padding-top: 30px;padding-bottom: 5px;background-color: #2273dc;border-top-left-radius: 10px;border-top-right-radius: 10px;">
-				<div style="width:80%;margin:0 auto;">
-				<div style="width: 245px;text-align: center;height: 70px;border-radius: 50%;margin: 10px auto 20px;padding: 10px;box-shadow: 0px 0px 5px 10px #438cec8c;"><img src="https://salequick.com/front/images/logo-w.png" style="max-width: 90%;width: 100%;margin: 8px auto 0;display: block;"></div>
-				</div>
-				</div>
-				<div style="max-width: 563px;text-align:right;margin: 0px auto 0;clear: both;width: 100%;display: table;">
-				<p style="text-align: center !important;font-size: 20px !important;font-family: fantasy !important;letter-spacing: 3px;color: #3c763d;">Your registration is complete.</p>
-    			<p style="font-size: 16px !important;text-align: center !important;font-weight: 600;">Registration Details:</p>
-				<table style="border-collapse: separate; border-spacing: 0;width: 100%; max-width: 100%;clear: both;-webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;font-size: 14px;"> 
-					<tr >
-						<th style="color: #535963;font-weight: 500;border: 0px;text-align: left;border-bottom: 1px solid #eaeaea;padding: 7px;">
-							Name
-						</th>
-						<td style="color: #7e8899;text-transform: uppercase;font-weight: 500;border: 0px;text-align: left;border-bottom: 1px solid #eaeaea;padding: 7px;color: #444;text-align: right;">'. $name . '</td>
-					</tr>
-					<tr >
-						<th style="color: #535963;font-weight: 500;border: 0px;text-align: left;border-bottom: 1px solid #eaeaea;padding: 7px;">
-							Email
-						</th>
-						<td style="color: #7e8899;text-transform: uppercase;font-weight: 500;border: 0px;text-align: left;border-bottom: 1px solid #eaeaea;padding: 7px;color: #444;text-align: right;">'.$email.'</td>
-					</tr>
-					<tr >
-						<th style="color: #535963;font-weight: 500;border: 0px;text-align: left;border-bottom: 1px solid #eaeaea;padding: 7px;">
-							Phone
-						</th>
-						<td style="color: #7e8899;text-transform: uppercase;font-weight: 500;border: 0px;text-align: left;border-bottom: 1px solid #eaeaea;padding: 7px;color: #444;text-align: right;">'.$mobile.'</td>
-					</tr>
-				</table>
-				</div>
-				<div style="padding: 25px 0;overflow:hidden;">
-				<div style="width: 100%;margin:0 auto;overflow:hidden;max-width: 80%;">
-				<div style="width: 100%;margin:10px auto 20px;text-align:center;">
-				<p style="line-height: 1.432;">
-				<span style="display: block;margin-bottom: 11px;font-weight: 600;color: #3c763d !important;">Verify Email</span>
-				<a href="'.$url.'" style="max-height: 40px;padding: 10px 20px;display: inline-flex;justify-content: center;align-items: center;font-size: 0.875rem;font-weight: 600;letter-spacing: 0.03rem;color: #fff;background-color: #696ffb;text-decoration: none;border-radius: 20px;">Click Here</a>
-				</p> 
-				
-				</div>
-				</div>
-				<footer style="width:100%;padding: 35px 0 21px;background: #414141;margin-top: 0px;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
-				<div style="text-align:center;width:80%;margin:0 auto;color: rgba(255, 255, 255, 0.75);">
-				<h5 style="margin-top: 0;margin-bottom: 10px;font-size: 16px;font-weight:400;line-height: 1.432;">Feel free to contact us any time with question and concerns.</h5>
-				<p style="color: rgba(255, 255, 255, 0.55);">You are receiving something because purchased something at Company name</p>
-				<p style="text-align:center"><a href="https://salequick.com/" style="color: #6ea9ff;cursor:pointer;text-decoration:none !important;"><span style="color: rgba(255, 255, 255, 0.55);">Powered by:</span> SaleQuick.com</a></p>
-				</div>
-				</footer>
-				</div>
-				</body>
-				</html>
-	    	';
-				//print_r($htmlContent); die();
-				$config['mailtype'] = 'html';
-				$this->email->initialize($config);
-				$MailSubject = 'Salequick Registration Confirmation ';
-				$this->email->from('info@salequick.com', 'Confirm Email');
-				$this->email->to($email);
-				$this->email->subject($MailSubject);
-				$this->email->message($htmlContent);
-				$this->email->send();
-				$this->session->set_flashdata('msg', '<div class="alert alert-success text-center">Member Business Registration Successfully.. </div>');
-				//echo $this->session->flashdata('success'); die();
-				//redirect(base_url("signup"));
-				//redirect(base_url("login"));
-				//echo '200';
-				echo json_encode(array('Status'=>200)); 
-			} else {
-				$this->session->set_flashdata('msg', '<div class="alert alert-danger text-center">Somthing Event Wrong!..</div>');
-				//echo $this->session->flashdata('error'); die();
-				//redirect(base_url("signup"));
-				//echo '500';
-				echo json_encode(array('Status'=>500)); 
-			}
-// start infinicpt api
-
-						//echo $response;
-						} 
-						else
-						{
-							echo json_encode(array('Status'=>200));
-							//echo $response;   
-						}
-						
+						$this->session->set_flashdata('msg', '<div class="alert alert-danger text-center">Somthing Event Wrong!..</div>');
+						echo json_encode(array('Status'=>500)); 
 					}
-                    //die("okay"); 
-					//echo "update"; 
-					}
-				else
-				{
+				} else {
 	                echo json_encode(array('Status'=>600));   
-				}  
+				}
 
-
-			}else
-			{
-				echo json_encode(array('Status'=>40)); 
-
+			} else {
+				echo json_encode(array('Status'=>40));
 			}
-
-
-
-			// 
 		}
-		public function stepfour_signup() {
 
+		public function stepfour_signup() {
 			//$name = $this->input->post('mbname') ? $this->input->post('mbname') : "";
 			//$mobile = $this->input->post('mphone') ? $this->input->post('mphone') : "";
 			//$email = $this->input->post('memail') ? $this->input->post('memail') : "";
@@ -965,7 +518,7 @@
 		public function steptwo_signup() {
 			$data = array(
 				'business_dba_name' => $this->input->post('bsns_dbaname') ? $this->input->post('bsns_dbaname') : "",
-				"business_email" => $this->input->post('bsns_email') ? $this->input->post('bsns_email') : "",
+				"business_email" => $this->input->post('bsns_email') ? strtolower($this->input->post('bsns_email')) : "",
 				'business_name' => $this->input->post('bsns_name') ? $this->input->post('bsns_name') : "",
 				'ownershiptype' => $this->input->post('bsns_ownrtyp') ? $this->input->post('bsns_ownrtyp') : "",
 				'business_number' => $this->input->post('bsns_phone') ? $this->input->post('bsns_phone') : "",
@@ -974,14 +527,14 @@
 				'year_business' => $this->input->post('bsns_strtdate_y') ? $this->input->post('bsns_strtdate_y') : "",
 				'taxid' => $this->input->post('bsns_tin') ? $this->input->post('bsns_tin') : "",
 				'business_type' => $this->input->post('bsns_type') ? $this->input->post('bsns_type') : "",
-				'website' => $this->input->post('bsns_website') ? $this->input->post('bsns_website') : "",
+				'website' => !empty($this->input->post('bsns_website')) ? 'https://'.$this->input->post('bsns_website') : "",
 				'address1' => $this->input->post('bsnspadd_1') ? $this->input->post('bsnspadd_1') : "",
 				'address2' => $this->input->post('bsnspadd_2') ? $this->input->post('bsnspadd_2') : "",
 				'city' => $this->input->post('bsnspadd_city') ? $this->input->post('bsnspadd_city') : "",
 				'country' => $this->input->post('bsnspadd_cnttry') ? $this->input->post('bsnspadd_cnttry') : "",
 				'state' => $this->input->post('bsnspadd_state') ? $this->input->post('bsnspadd_state') : "",
 				'zip' => $this->input->post('bsnspadd_zip') ? $this->input->post('bsnspadd_zip') : "",
-				'customer_service_email' => $this->input->post('custServ_email') ? $this->input->post('custServ_email') : "",
+				'customer_service_email' => $this->input->post('custServ_email') ? strtolower($this->input->post('custServ_email')) : "",
 				'customer_service_phone' => $this->input->post('custServ_phone') ? $this->input->post('custServ_phone') : "",
 				'annual_processing_volume' => $this->input->post('mepvolume') ? $this->input->post('mepvolume') : "",
 
@@ -1003,7 +556,7 @@
 				echo json_encode($data);
 			}
 		}
-		public function stepone_signup() {
+		public function stepone_signup_original() {
 
 			$email = $this->input->post('email') ? $this->input->post('email') : '';
 			$password_one = $this->input->post('password') ? $this->input->post('password') : '';
@@ -1038,7 +591,9 @@
 					"password" => $password,
 					"auth_key" => $unique,
 				    "merchant_key" => $merchant_key,
-					'status' => 'pending_signup'
+					'status' => 'pending_signup',
+					'is_token_system_permission' => '1',
+					'is_tokenized' => '1'
 				);
 				if ($email && $password_one && $cpassword) {
 					$result = $this->Home_model->insert_data("merchant", $data);
@@ -1054,6 +609,131 @@
 			}
 			else
 			{
+				echo json_encode(700); 
+			}
+		}
+
+		public function stepone_signup() {
+			$allData = $_POST['allData'];
+			$dataArr = explode('/', $allData);
+			
+			$email = strtolower($dataArr[0]);
+			$password_one = $dataArr[1];
+			$cpassword = $dataArr[2];
+			$pc_phone = $dataArr[3];
+			// echo $email.','.$password_one.','.$cpassword;die;
+
+			if ($password_one == $cpassword) {
+				$password1 = $password_one;
+			} else {
+				// return
+				// $password1=$this->input->post('password');
+				echo json_encode(600);
+			}
+			//$merchant_key = substr("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", mt_rand(0, 51), 1) . substr(md5(time()), 1);
+
+			$today1 = date("Ymdhisu");
+			$unique = "SAL" . $today1;
+			$merchant_key = substr("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", mt_rand(0, 51), 1) . substr(md5(time()), 1);
+
+
+			$password = $this->my_encrypt($password1, 'e');
+			
+			
+			$usr_result = $this->db->query("SELECT * FROM merchant WHERE email='$email'")->row_array();
+			
+			if(count($usr_result) =='0') {
+				$data = array(
+					"email" => $email,
+					"password" => $password,
+					"auth_key" => $unique,
+				    "merchant_key" => $merchant_key,
+					'status' => 'pending_signup',
+					'is_token_system_permission' => '1',
+					'is_tokenized' => '1',
+					'pc_phone' => $pc_phone
+				);
+
+				// INSERT INTO `merchant_year_graph` (`id`, `merchant_id`) VALUES (NULL, '978');
+
+				if ($email && $password_one && $cpassword) {
+					$last_merchantId = $this->Home_model->insert_data("merchant", $data);
+					$this->session->set_userdata('last_merchantId', $last_merchantId);
+					$this->session->set_userdata('merchant_key', $merchant_key);
+					$this->session->set_userdata('step', 'one');
+
+					$ins_merchant_graph = array(
+						'id' => NULL,
+						'merchant_id' => $last_merchantId
+					);
+					$this->db->insert('merchant_year_graph', $ins_merchant_graph);
+					$this->db->insert('merchant_year_graph_two', $ins_merchant_graph);
+
+					$mail_verify_key = substr("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", mt_rand(0, 51), 1) . substr(md5(time()), 1);
+					// echo $verify_key;die;
+
+					// $mail_count = $this->db->where('merchant_id', $id)->get('agreement_verification')->num_rows();
+					$mail_arr = $this->db->where('merchant_id', $last_merchantId)->get('agreement_verification')->row();
+					if(count($mail_arr) > 0) {
+						if($mail_arr->verification_status == 'done') {
+							$up_mail = array(
+								'mail_verify_key' => $mail_verify_key,
+								'verification_status' => ''
+							);
+
+							$this->db->where('merchant_id', $last_merchantId);
+							$this->db->update('agreement_verification', $up_mail);
+							
+						} else {
+							$up_mail = array(
+								'mail_verify_key' => $mail_verify_key
+							);
+
+							$this->db->where('merchant_id', $last_merchantId);
+							$this->db->update('agreement_verification', $up_mail);
+						}
+
+					} else {
+						$ins_mail = array(
+							'mail_verify_key' => $mail_verify_key,
+							'merchant_id' => $last_merchantId,
+							'verification_status' => ''
+						);
+						$this->db->insert('agreement_verification', $ins_mail);
+					}
+
+					$new_email = strtolower($email);
+					// $mail_temp['merchant_id'] = '894';
+					// $mail_temp['auth_key'] = 'be63ed6a-69eb-437c-b026-c4a4c4b81ee7';
+					$mail_data['url'] = base_url().'Merchant_agreement/verification/'.$last_merchantId.'/'.$mail_verify_key.'/'.$unique;
+					// $mail_data['email'] = $new_email;
+					$mail_data['business_dba_name'] = $business_dba_name;
+					$subject = 'Salequick - Merchant Agreement';
+					$mail_temp = $msg = $this->load->view('email/agreement_mail', $mail_data, true);
+
+					// $business_email
+					$this->email->from('info@salequick.com', 'Admin - Salequick');
+                    // $this->email->to('amir.proget@gmail.com');
+                    $this->email->to($new_email);
+                    $this->email->subject($subject);
+                    $this->email->message($mail_temp);
+                    if($this->email->send()) {
+                    	$mail_ins_data = array(
+                    		'admin_id' => 1,
+                    		'merchant_id' => $last_merchantId
+                    	);
+                    	$this->db->insert('agreement_mail_log', $mail_ins_data);
+                    } else {
+                    	echo json_encode(500);
+                    }
+					//echo json_encode($data);
+					// echo 'run';
+					echo json_encode(200);
+				} else {
+					echo json_encode(400); 
+				}
+			
+			} else {
 				echo json_encode(700); 
 			}
 		}
@@ -1536,7 +1216,6 @@
 										'recurring_next_pay_date' => $recurring_next_pay_date,
 										'recurring_pay_type' => $paytype,
 
-										'add_date' => $today3,
 										'status' => $staus,
 
 										'year' => $year,
@@ -1892,7 +1571,39 @@
 			}
 			$this->load->view('merchant/update_card', $data);
 		}
+
 		public function confirm() {
+			$id = $this->uri->segment(2);
+			$getQuery = $this->db->query("SELECT * from merchant where auth_key='" . $id . "' ");
+
+			$getEmail = $getQuery->result_array();
+
+			$getEmailCount = $getQuery->num_rows();
+
+			$data['getEmailCount'] = $getEmailCount;
+
+			if ($getEmailCount > 0) {
+				//print_r($getEmail); die();
+				if ($getEmail[0]['status'] == 'pending' || $getEmail[0]['status'] == 'block' || $getEmail[0]['status'] == 'Waiting_For_Approval') {
+					$bct_id1 = $this->uri->segment(4);
+					$info = array(
+						'status' => 'Waiting_For_Approval',
+					);
+
+					$this->Home_model->update_date_single($id, $info);
+
+					$this->session->set_flashdata('cmsg', 'Email has been verified');
+
+				} elseif ($getEmail[0]['status'] == 'confirm') {
+					$this->session->set_flashdata('cmsg', 'Email has already been verified');
+				}
+
+			} else {
+				$this->session->set_flashdata('cmsg', 'Email Not Available');
+			}
+			$this->load->view('confirm_dash');
+		}
+		public function confirm_old() {
 
 			$id = $this->uri->segment(2);
 
@@ -2388,7 +2099,8 @@
 								if (!empty($getEmail[0]['mobile_no'])) {
 									//$sms_sender = trim($this->input->post('sms_sender'));
 									$sms_reciever = $getEmail[0]['mobile_no'];
-									$sms_message = trim(' Receipt from ' . $getEmail1[0]['business_dba_name'] . ' : ' . $purl);
+				$sms_message = trim(' Receipt from ' . $getEmail1[0]['business_dba_name'] . ' : ' . $purl);
+									// $sms_message = trim('Payment Receipt : '.$purl);
 									$from = '+18325324983'; //trial account twilio number
 									// $to = '+'.$sms_reciever; //sms recipient number
 									$mob = str_replace(array('(', ')', '-', ' '), '', $sms_reciever);
@@ -2766,7 +2478,7 @@
 								$arrayy = json_decode($json, true);
 
 								//print_r($arrayy);   die();
-								//echo 'shuaeb';
+								
 
 								//print_r($arrayy);
 
@@ -2975,7 +2687,8 @@
 							if (!empty($getEmail[0]['mobile_no'])) {
 								$sms_reciever = $getEmail[0]['mobile_no'];
 								//$sms_message = trim('Payment Receipt : ' . $purl);
-								$sms_message = trim(' Receipt from ' . $getEmail1[0]['business_dba_name'] . ' : ' . $purl);
+						$sms_message = trim(' Receipt from ' . $getEmail1[0]['business_dba_name'] . ' : ' . $purl);
+								 //$sms_message = trim('Payment Receipt : '.$purl);
 								$from = '+18325324983'; //trial account twilio number
 								$mob = str_replace(array('(', ')', '-', ' '), '', $sms_reciever);
 								$to = '+1' . $mob;
@@ -3283,8 +2996,8 @@
 						$this->email->send();
 						//$sms_sender = trim($this->input->post('sms_sender'));
 						$sms_reciever = $getEmail[0]['mobile_no'];
-						$sms_message = trim('Payment Receipt : ' . $purl);
-						// $sms_message = trim(' Receipt from '.$getEmail1[0]['business_dba_name'].' : '.$purl);
+						//$sms_message = trim('Payment Receipt : ' . $purl);
+						$sms_message = trim(' Receipt from '.$getEmail1[0]['business_dba_name'].' : '.$purl);
 						$from = '+18325324983'; //trial account twilio number
 						// $to = '+'.$sms_reciever; //sms recipient number
 						$mob = str_replace(array('(', ')', '-', ' '), '', $sms_reciever);
@@ -3629,8 +3342,8 @@
 						$this->email->send();
 						//$sms_sender = trim($this->input->post('sms_sender'));
 						$sms_reciever = $getEmail[0]['mobile_no'];
-						$sms_message = trim('Payment Receipt : ' . $purl);
-						// $sms_message = trim(' Receipt from '.$getEmail1[0]['business_dba_name'].' : '.$purl);
+						//$sms_message = trim('Payment Receipt : ' . $purl);
+					 $sms_message = trim(' Receipt from '.$getEmail1[0]['business_dba_name'].' : '.$purl);
 						$from = '+18325324983'; //trial account twilio number
 						// $to = '+'.$sms_reciever; //sms recipient number
 						$mob = str_replace(array('(', ')', '-', ' '), '', $sms_reciever);
@@ -3783,6 +3496,9 @@
 		}
 	
 		public function reciept() {
+			// if($this->session->userdata('user_type') != 'admin') {
+			// 	redirect(base_url('admin'));
+			// }
 			$id = $this->input->post('bct_id') ? $this->input->post('bct_id') : "";
 			$bct_id2 = $this->uri->segment(3);
 			$bct_id1 = $this->uri->segment(2);
@@ -3826,7 +3542,8 @@
 			}
 			$item = $this->Admin_model->data_get_where_1("order_item", array("p_id" => $data['bct_id']));
 			$data['item'] = $item;
-			$this->load->view('reciept', $data); 
+			// echo '<pre>';print_r($data);die;
+			$this->load->view('reciept_dash', $data);
 		}
 
 		public function refund_reciept() {
@@ -3881,6 +3598,9 @@
 		}
 
 	public function pos_refund_reciept() {
+		// if($this->session->userdata('user_type') != 'admin') {
+		// 	redirect(base_url('admin'));
+		// }
 		$bct_id1 = $this->uri->segment(2);
 		$bct_id2 = $this->uri->segment(3);
 		$today2 = date("Y-m-d H:i:s");
@@ -3922,9 +3642,12 @@
 			break;
 		}
 		// echo "<pre>";print_r($data);die;
-		$this->load->view('pos_refund_reciept', $data);
+		$this->load->view('pos_refund_reciept_dash', $data);
 	}
 	public function adv_pos_refund_reciept() {
+		// if($this->session->userdata('user_type') != 'admin') {
+		// 	redirect(base_url('admin'));
+		// }
 		$bct_id2 = $this->uri->segment(3);
 		$bct_id1 = $this->uri->segment(2);
 		$today2 = date("Y-m-d H:i:s");
@@ -3965,11 +3688,13 @@
 			break;
 		}
 
-		$this->load->view('pos_refund_reciept', $data);
+		$this->load->view('pos_refund_reciept_dash', $data);
 	}
 
 	public function pos_reciept() {
-
+		// if($this->session->userdata('user_type') != 'admin') {
+		// 	redirect(base_url('admin'));
+		// }
 		$bct_id2 = $this->uri->segment(3);
 		$bct_id1 = $this->uri->segment(2);
 		$today2 = date("Y-m-d H:i:s");
@@ -4010,10 +3735,13 @@
 			$data['card_no'] = $sub->card_no;
 			break;
 		}
-		$this->load->view('pos_reciept', $data);
+		$this->load->view('pos_reciept_dash', $data);
 	}
 
 	public function adv_pos_reciept() {
+		// if($this->session->userdata('user_type') != 'admin') {
+		// 	redirect(base_url('admin'));
+		// }
 		$bct_id2 = $this->uri->segment(3);
 		$bct_id1 = $this->uri->segment(2);
 		$today2 = date("Y-m-d H:i:s");
@@ -4062,7 +3790,7 @@
 			break;
 		}
 		// echo "<pre>";print_r($data);die;
-		$this->load->view('pos_reciept', $data);
+		$this->load->view('pos_reciept_dash', $data);
 	}
 
 	public function pos_reciept_json($invoice, $id) {
@@ -4109,10 +3837,10 @@
 					
 					'date_c' => $invoice->date_c,
 					'status' => ($invoice->status == 'Chargeback_Confirm') ? true : false,
-					'sign' => !empty($invoice->sign) ? "https://salequick.com/demo_new/logo/" . $invoice->sign : "",
+					'sign' => !empty($invoice->sign) ? "https://salequick.com/logo/" . $invoice->sign : "",
 				);
 				$totalAmu = $totalAmu + $invoice->amount;
-				$sign = !empty($invoice->sign) ? "https://salequick.com/demo_new/logo/" . $invoice->sign : "";
+				$sign = !empty($invoice->sign) ? "https://salequick.com/logo/" . $invoice->sign : "";
 			}
 
 		}
@@ -4142,7 +3870,7 @@
 			$data['card_type'] = $sub->card_type;
 			$data['tax'] = $sub->tax;
 			$data['tip'] = ($sub->tip_amount != 0 || $sub->tip_amount != 0.00) ? $sub->tip_amount : "n/a";
-			$data['sign'] = "https://salequick.com/demo_new/logo/" . $sub->sign;
+			$data['sign'] = "https://salequick.com/logo/" . $sub->sign;
 			$data['split_sign'] = $sign;
 			$data['date_c'] = $sub->date_c;
 			$data['reference'] = ($sub->reference) ? $sub->reference : "n/a";
@@ -4159,7 +3887,7 @@
 			$data['business_dba_name'] = $sub->business_dba_name;
 			$data['business_number'] = $sub->business_number;
 			$data['address'] = $sub->address1;
-			$data['logo'] = "https://salequick.com/demo_new/logo/" . $sub->logo;
+			$data['logo'] = "https://salequick.com/logo/" . $sub->logo;
 			break;
 
 		}
@@ -4928,8 +4656,8 @@
 
 				$sms_reciever = $getEmail[0]['mobile_no'];
 
-				$sms_message = trim('Payment Receipt' . $purl);
-// $sms_message = trim(' Receipt from '.$getEmail1[0]['business_dba_name'].' : '.$purl);
+				//$sms_message = trim('Payment Receipt' . $purl);
+ $sms_message = trim(' Receipt from '.$getEmail1[0]['business_dba_name'].' : '.$purl);
 				$from = '+18325324983'; //trial account twilio number
 
 // $to = '+'.$sms_reciever; //sms recipient number
@@ -5950,6 +5678,7 @@
                             //print_r($staus);  die();
                             $day1 = date("N");
                             $today2_a = date("Y-m-d");
+                            $new_add_date= gmdate("Y-m-d H:i:s");
                             $year = date("Y");
                             $month = date("m");
                             $time11 = date("H");
@@ -6004,6 +5733,7 @@
                                     'cvv_status' => $cvv_status,
                                     'ip_a' => $_SERVER['REMOTE_ADDR'],
                                     'order_type' => 'a',
+                                    'new_add_date' => $new_add_date,
                                 );
                             } elseif ($type == 'recurring') {
                                 $info = array(
@@ -6033,6 +5763,7 @@
                                     'cvv_status' => $cvv_status,
                                     'ip_a' => $_SERVER['REMOTE_ADDR'],
                                     'order_type' => 'a',
+                                    'new_add_date' => $new_add_date,
                                 );
                             }
                             //print_r($info);  die("op");
@@ -6153,6 +5884,7 @@
                                     //$sms_sender = trim($this->input->post('sms_sender'));
                                     $sms_reciever = $getEmail[0]['mobile_no'];
                                     $sms_message = trim(' Receipt from ' . $getEmail1[0]['business_dba_name'] . ' : ' . $purl);
+                                     //$sms_message = trim('Payment Receipt : '.$purl);
                                     $from = '+18325324983'; //trial account twilio number
                                     // $to = '+'.$sms_reciever; //sms recipient number
                                     $mob = str_replace(array('(', ')', '-', ' '), '', $sms_reciever);
@@ -6532,7 +6264,7 @@
                                 $arrayy = json_decode($json, true);
 
                                 //print_r($arrayy);   die();
-                                //echo 'shuaeb';
+                                
 
                                 //print_r($arrayy);
 
@@ -6600,6 +6332,7 @@
                             $day1 = date("N");
                             $today2_a = date("Y-m-d");
                             $today2 = date("Y-m-d H:i:s");
+                            $new_add_date= gmdate("Y-m-d H:i:s");
                             $year = date("Y");
                             $month = date("m");
                             $time11 = date("H");
@@ -6626,6 +6359,7 @@
                                     'l_name' => "",
                                     'ip_a' => $_SERVER['REMOTE_ADDR'],
                                     'order_type' => 'a',
+                                    'new_add_date' => $new_add_date,
                                 );
                             } elseif ($type == 'recurring') {
                                 $info = array(
@@ -6650,6 +6384,7 @@
                                     'recurring_payment' => $recurring_payment,
                                     'ip_a' => $_SERVER['REMOTE_ADDR'],
                                     'order_type' => 'a',
+                                    'new_add_date' => $new_add_date,
                                 );
                             }
                             //print_r($id); die();
@@ -6774,7 +6509,8 @@
                             if (!empty($getEmail[0]['mobile_no'])) {
                                 $sms_reciever = $getEmail[0]['mobile_no'];
                                 //$sms_message = trim('Payment Receipt : ' . $purl);
-                                $sms_message = trim(' Receipt from ' . $getEmail1[0]['business_dba_name'] . ' : ' . $purl);
+                               $sms_message = trim(' Receipt from ' . $getEmail1[0]['business_dba_name'] . ' : ' . $purl);
+                                // $sms_message = trim('Payment Receipt : '.$purl);
                                 $from = '+18325324983'; //trial account twilio number
                                 $mob = str_replace(array('(', ')', '-', ' '), '', $sms_reciever);
                                 $to = '+1' . $mob;
@@ -6853,7 +6589,12 @@
         }
 
 
-      public function stepthree_signup_new() {
+      	public function stepthree_signup_new() {
+      		// echo '<pre>';print_r($_POST);die;
+      		$o_question = ($_POST['o_question'] == '1') ? 'True' : 'False';
+			$is_primary_owner = ($_POST['is_primary_owner'] == '1') ? 'True' : 'False';
+			// echo $o_question.','.$is_primary_owner;die;
+
 			$dobYear = $this->input->post('fodoby') ? $this->input->post('fodoby') : "";
 			$dobMonth = $this->input->post('fodobm') ? $this->input->post('fodobm') : "";
 			$dobDate = $this->input->post('fodobd') ? $this->input->post('fodobd') : "";
@@ -6861,7 +6602,7 @@
 			$DOB = $dobYear . '-' . $dobMonth . '-' . $dobDate;
 
 			$data = array(
-				'o_email' => $this->input->post('fo_email') ? $this->input->post('fo_email') : "",
+				'o_email' => $this->input->post('fo_email') ? strtolower($this->input->post('fo_email')) : "",
 				"o_phone" => $this->input->post('fo_phone') ? $this->input->post('fo_phone') : "",
 				'o_dob_d' => $dobDate,
 				'o_dob_m' => $dobMonth,
@@ -6877,7 +6618,10 @@
 				'o_name' => $this->input->post('foname1') ? $this->input->post('foname1') : "",
 				'name' => htmlspecialchars($this->input->post('foname1') ? $this->input->post('foname1') : ""),
 				'm_name' => htmlspecialchars($this->input->post('foname2') ? $this->input->post('foname2') : ""),
-				'l_name' => htmlspecialchars($this->input->post('foname3') ? $this->input->post('foname3') : "")
+				'l_name' => htmlspecialchars($this->input->post('foname3') ? $this->input->post('foname3') : ""),
+				'o_question' => $o_question,
+				'is_primary_owner' => $is_primary_owner,
+				'o_percentage' => $_POST['o_percentage'] ? $_POST['o_percentage'] : '0'
 			);
 			// echo json_encode($data);  die();
 			$last_merchantId = $this->session->userdata('last_merchantId');
@@ -6895,15 +6639,19 @@
 				$allOwnerInsertedIds = [$last_merchantId];
 				if(!empty($ownerArr)) {
 					foreach ($ownerArr as $owner) {
+						$is_primary_o_arr = ($owner['is_primary_o_arr'] == '1') ? 'True' : 'False';
+						$o_perc_arr = $owner['o_perc_arr'] ? $owner['o_perc_arr'] : "0";
+
 						$dobYear_arr = $owner['fodoby_arr'] ? $owner['fodoby_arr'] : "";
 						$dobMonth_arr = $owner['fodobm_arr'] ? $owner['fodobm_arr'] : "";
 						$dobDate_arr = $owner['fodobd_arr'] ? $owner['fodobd_arr'] : "";
 						$DOB_arr = $dobYear_arr . '-' . $dobMonth_arr . '-' . $dobDate_arr;
 
 						if( !empty($owner['saved_id']) ) {
+							// echo '1';die;
 							//update
 							$update_data_owner = array(
-								'o_email_arr'		=> $owner['fo_email_arr'] ? $owner['fo_email_arr'] : "",
+								'o_email_arr'		=> $owner['fo_email_arr'] ? strtolower($owner['fo_email_arr']) : "",
 								"o_phone_arr"		=> $owner['fo_phone_arr'] ? $owner['fo_phone_arr'] : "",
 								'o_dob_d_arr'		=> $dobDate_arr,
 								'o_dob_m_arr'		=> $dobMonth_arr,
@@ -6919,7 +6667,10 @@
 								'o_name_arr'		=> $owner['foname1_arr'] ? $owner['foname1_arr'] : "",
 								'name_arr'			=> htmlspecialchars($owner['foname1_arr'] ? $owner['foname1_arr'] : ""),
 								'm_name_arr'		=> htmlspecialchars($owner['foname2_arr'] ? $owner['foname2_arr'] : ""),
-								'l_name_arr'		=> htmlspecialchars($owner['foname3_arr'] ? $owner['foname3_arr'] : "")
+								'l_name_arr'		=> htmlspecialchars($owner['foname3_arr'] ? $owner['foname3_arr'] : ""),
+								'o_perc_arr'		=> $o_perc_arr,
+								'is_primary_o_arr'	=> $is_primary_o_arr,
+
 							);
 							$this->db->where('id', $owner['saved_id']);
 							$this->db->update('business_owner', $update_data_owner);
@@ -6929,10 +6680,11 @@
 					        array_push($allOwnerInsertedIds, $insertedId);
 
 						} else {
+							// echo '2';die;
 							//insert
 							$insert_data_owner = array(
 								'merchant_id_arr'	=> $last_merchantId,
-								'o_email_arr'		=> $owner['fo_email_arr'] ? $owner['fo_email_arr'] : "",
+								'o_email_arr'		=> $owner['fo_email_arr'] ? strtolower($owner['fo_email_arr']) : "",
 								"o_phone_arr"		=> $owner['fo_phone_arr'] ? $owner['fo_phone_arr'] : "",
 								'o_dob_d_arr'		=> $dobDate_arr,
 								'o_dob_m_arr'		=> $dobMonth_arr,
@@ -6948,7 +6700,9 @@
 								'o_name_arr'		=> $owner['foname1_arr'] ? $owner['foname1_arr'] : "",
 								'name_arr'			=> htmlspecialchars($owner['foname1_arr'] ? $owner['foname1_arr'] : ""),
 								'm_name_arr'		=> htmlspecialchars($owner['foname2_arr'] ? $owner['foname2_arr'] : ""),
-								'l_name_arr'		=> htmlspecialchars($owner['foname3_arr'] ? $owner['foname3_arr'] : "")
+								'l_name_arr'		=> htmlspecialchars($owner['foname3_arr'] ? $owner['foname3_arr'] : ""),
+								'o_perc_arr'		=> $o_perc_arr,
+								'is_primary_o_arr'	=> $is_primary_o_arr,
 							);
 					        $this->db->insert('business_owner', $insert_data_owner);
 					        $insertedId = $this->db->insert_id();
