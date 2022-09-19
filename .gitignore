@@ -30,19 +30,4 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 /tests/tests/
 /tests/results/
 
-memcached
-memcached-debug
-memcached-debug.profile
-missing
-stamp-h1
-tags
-TAGS
-cscope.out
-memcached_dtrace.h
-*~
-memcached-*.tar.gz
-memcached-*.tar.gz.sha1
-salequick-memcached.qycmvc.cfg.use1.cache.amazonaws.com/*
-memcached.qycmvc.cfg.use1.cache.amazonaws.com/*
-memcached.qycmvc.cfg.use1.cache.amazonaws.com:11211/
-salequick-memcached.qycmvc.cfg.use1.cache.amazonaws.com:11211/
+
