@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+
+<url>
+  <loc>https://salequick.com/</loc>
+  <lastmod>2019-10-18T06:44:54+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://salequick.com/pos</loc>
+  <lastmod>2019-10-18T06:44:54+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://salequick.com/invoice</loc>
+  <lastmod>2019-10-18T06:44:54+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://salequick.com/api</loc>
+  <lastmod>2019-10-18T06:44:54+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://salequick.com/pricing</loc>
+  <lastmod>2019-10-18T06:44:54+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://salequick.com/home</loc>
+  <lastmod>2019-10-18T06:44:54+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://salequick.com/login</loc>
+  <lastmod>2019-10-18T06:44:54+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://salequick.com/signup</loc>
+  <lastmod>2019-10-18T06:44:54+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://salequick.com/blog</loc>
+  <lastmod>2019-10-18T06:44:54+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://salequick.com/terms_and_condition</loc>
+  <lastmod>2019-10-18T06:44:54+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://salequick.com/privacy_policy</loc>
+  <lastmod>2019-10-18T06:44:54+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://salequick.com/reset/merchant</loc>
+  <lastmod>2019-10-18T06:44:54+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://salequick.com/five_payment_processing_trends_in_2019</loc>
+  <lastmod>2019-10-18T06:44:54+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://salequick.com/eight_important_questions_all_businesses_should_ask_their_payment_provider</loc>
+  <lastmod>2019-10-18T06:44:54+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://salequick.com/innovation_of_pay_by_text</loc>
+  <lastmod>2019-10-18T06:44:54+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+
+
+</urlset>
