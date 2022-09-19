@@ -9,8 +9,6 @@ class Otp extends CI_Controller
         $this->load->helper('url');
         $this->load->helper('form');
         $this->load->helper('html');
-        $this->load->library('session');
-        $this->load->database();
         $this->load->library('form_validation');
         $this->load->model('reset_model');
         $this->load->model('login_model');
