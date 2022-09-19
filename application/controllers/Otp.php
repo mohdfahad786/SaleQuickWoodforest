@@ -124,11 +124,11 @@ public function otp()
                     $sessiondata = array( 'id' => $usr_result['id'], 'username' => $usr_result['username'], 
               'time_zone' => 'America/Chicago',
             'user_type' => $usr_result['user_type'],
-            'name' => $usr_result['name'],'image' => $usr_result['image'], 'loginuser' => TRUE
+            'name' => $usr_result['name'],'wf_merchants'=>$usr_result['wf_merchants'], 'image' => $usr_result['image'], 'loginuser' => TRUE
          );
                     //print_r($sessiondata);die;
             $this->session->set_userdata($sessiondata);
-           print_r($this->session->userdata); 
+           //print_r($this->session->userdata); 
             //die();
 
             $data = Array("ip" => $this->input->post("ip"),  "user_type" => 'wf', 'user_id' => $usr_result['id'],  'status' => 'true'  );
