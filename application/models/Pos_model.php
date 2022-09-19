@@ -62,7 +62,7 @@ class Pos_model extends CI_Model {
 			$this->db->where('pos.date_c <=', $end_date);
 		}
 		if (!empty($status)) {
-			$this->db->like('pos.status', $status);
+			$this->db->where('pos.status', $status);
 		} else {
 			$this->db->where('pos.status !=', 'pending');
 		}
@@ -145,7 +145,7 @@ class Pos_model extends CI_Model {
 			$this->db->where('date_c <=', $end_date);
 		}
 		if (!empty($status)) {
-			$this->db->like('status', $status);
+			$this->db->where('status', $status);
 		} else {
 			$this->db->where('status !=', 'pending');
 		}
