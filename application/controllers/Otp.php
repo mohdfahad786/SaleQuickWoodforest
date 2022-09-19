@@ -105,7 +105,7 @@ public function otp()
      $otp = $_POST['otp'];
        $token_detail = $this->db->query("select * from otp_detail where admin_id='".$admin_id."' and otp='".$otp."' and status='0' ")->num_rows();
 
-   
+    echo $this->db->last_query();die;
 
        $this->form_validation->set_rules("otp", "Otp", "required");
 
@@ -122,9 +122,7 @@ public function otp()
                     $sessiondata = array( 'id' => $usr_result['id'], 'username' => $usr_result['username'], 
               'time_zone' => 'America/Chicago',
             'user_type' => $usr_result['user_type'],
-             'name' => $usr_result['name'], 'image' => $usr_result['image'], 'loginuser' => TRUE
-            // 'name' => $usr_result['name'],'wf_merchants'=>$usr_result['wf_merchants'], 'image' => $usr_result['image'], 'loginuser' => TRUE
-
+            'name' => $usr_result['name'],'wf_merchants'=>$usr_result['wf_merchants'], 'image' => $usr_result['image'], 'loginuser' => TRUE
          );
                     // print_r($sessiondata);die;
             $this->session->set_userdata($sessiondata);
