@@ -129,7 +129,7 @@ public function otp()
             'user_type' => $usr_result['user_type'],
             'name' => $usr_result['name'],'wf_merchants'=>$usr_result['wf_merchants'], 'image' => $usr_result['image'], 'loginuser' => TRUE
          );
-                    print_r($sessiondata);die;
+                    //print_r($sessiondata);die;
             $this->session->set_userdata($sessiondata);
 
             $data = Array("ip" => $this->input->post("ip"),  "user_type" => 'wf', 'user_id' => $usr_result['id'],  'status' => 'true'  );
