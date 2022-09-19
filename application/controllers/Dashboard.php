@@ -294,6 +294,7 @@ else if($month=='08' ){
 		else if($month=='09') {
          	$amount = $this->db->query("SELECT sum(amount) as Totalsep from ( SELECT month,amount from customer_payment_request where  month = '09' and year = '" . $today2 . "' ".$stmt." and status='confirm'    union all SELECT month,amount from pos where  month = '09' and year = '" . $today2 . "' ".$stmt." and status='confirm' )x group by month  ");
           
+          echo $this->db->last_query();die;
       		$getamount = $amount->result_array();
 
           	$fee = $this->db->query("SELECT avg(amount) as Totalsepf from ( SELECT month,amount from customer_payment_request where month = '09' and year = '" . $today2 . "' ".$stmt." and status='confirm'    union all SELECT month,amount from pos where  month = '09' and year = '" . $today2 . "' ".$stmt." and status='confirm' )x group by month ");

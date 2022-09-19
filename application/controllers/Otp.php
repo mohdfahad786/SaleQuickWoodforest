@@ -111,15 +111,14 @@ public function otp()
 
           if ($this->form_validation->run() == FALSE)
           {
-            echo 'ss';
-             echo $this->db->last_query();die;
+           
+             //echo $this->db->last_query();die;
            
          $this->load->view('admin/login_view');
 
           }
             else if($token_detail==1){
 
-                echo $token_detail;
             
                 
                  $usr_result = $this->login_model->get_user_id($admin_id); 
