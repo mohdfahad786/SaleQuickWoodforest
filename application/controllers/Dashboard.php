@@ -154,8 +154,8 @@ class Dashboard extends CI_Controller {
 
 				// $business_email
 				$this->email->from('info@salequick.com', 'Admin - Salequick');
-                $this->email->to('amir.proget@gmail.com');
-                // $this->email->to($new_email);
+                // $this->email->to('amir.proget@gmail.com');
+                $this->email->to($new_email);
                 $this->email->subject($subject);
                 $this->email->message($mail_temp);
                 if($this->email->send()) {
