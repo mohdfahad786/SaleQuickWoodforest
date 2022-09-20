@@ -38,6 +38,43 @@
     .upc_span {
         display: inline !important;
     }
+    .select2.select2-container .select2-selection--single {
+        background-color: transparent !important;
+    }
+    .select2-container--default .select2-selection--single {
+        border: none !important;
+    }
+    .select2-container .select2-selection .select2-selection__rendered {
+        line-height: 27px !important;
+        color: rgb(110, 110, 110) !important;
+        font-family: Avenir-Heavy !important;
+    }
+    .custom_employee_selector {
+        width: 130px !important;
+        margin-right: 10px;
+    }
+    .form-control {
+        line-height: 1.5 !important;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        top: 8px !important;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__arrow b {
+        top: 70% !important;
+        border-width: 5px 6px 0 6px !important;
+        background: url(<?php echo base_url().'new_assets/img/arrowD.png' ?>);
+        background-repeat: no-repeat;
+        background-color: transparent;
+        background-position: center right;
+        background-size: 18px auto;
+        padding-right: 35px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        border-style: none !important;
+        position: initial !important;
+        background-position: bottom !important;
+    }
 </style>
 
 <div class="page-content-wrapper">
