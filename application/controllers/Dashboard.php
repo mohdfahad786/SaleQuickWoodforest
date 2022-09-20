@@ -17,6 +17,7 @@ class Dashboard extends CI_Controller {
 		$this->load->model("serverside_model");
 		$this->load->model("invoice_model");
 		$this->load->model("recurring_model");
+		$this->load->model("Home_model");
 		$this->load->model('session_checker_model');
 		$this->load->library('email');
 		$this->load->library('twilio');
@@ -27,9 +28,173 @@ class Dashboard extends CI_Controller {
 
 		date_default_timezone_set("America/Chicago");
 		// ini_set('display_errors', 1);
-	 //    error_reporting(E_ALL);
+	    // error_reporting(E_ALL);
 	}
 
+	public function add_merchant() {
+		$data['meta'] = "Add New Merchant";
+		$data['loc'] = "create_merchant";
+		$data['action'] = "Add New Merchant";
+		
+		$this->load->view("admin/add_merchant_dash", $data);
+  	}
+
+  	public function create_merchant() {
+  		// echo '<pre>';print_r($_POST);die;
+
+  		$this->form_validation->set_rules('email', 'Email Address', 'required|valid_email|is_unique[merchant.email]');
+		$this->form_validation->set_rules('mobile', 'Mobile No', 'required|is_unique[merchant.mob_no]');
+		
+		$email = $this->input->post('memail') ? $this->input->post('memail') : "";
+		$pc_phone = $this->input->post('primary_phone') ? $this->input->post('primary_phone') : "";
+
+		$password1 = substr(md5(uniqid(rand(), true)), 0, 10);
+		$password = $this->my_encrypt($password1, 'e');
+
+		$today1 = date("Ymdhisu");
+		$unique = "SAL" . $today1;
+		$merchant_key = substr("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", mt_rand(0, 51), 1) . substr(md5(time()), 1);
+		
+		$usr_result = $this->db->query("SELECT * FROM merchant WHERE email='$email'")->row_array();
+		// echo $this->db->last_query();die;
+		// print_r($usr_result);die;
+		
+		if(empty($usr_result)) {
+			$view_permissions = $this->input->post('view_permissions') ? $this->input->post('view_permissions') : '0' . "";
+			$edit_permissions = $this->input->post('edit_permissions') ? $this->input->post('edit_permissions') : '0' . "";
+			$create_pay_permissions = $this->input->post('create_pay_permissions') ? $this->input->post('create_pay_permissions') : '0' . "";
+
+			$view_menu_permissions='';
+			$view_menu_permissions .=$this->input->post('ViewPermissions') ? $this->input->post('ViewPermissions').',' : "";  
+			$view_menu_permissions .=$this->input->post('AddPermissions') ? $this->input->post('AddPermissions').',' : "";  
+			$view_menu_permissions .=$this->input->post('EditPermissions') ? $this->input->post('EditPermissions').',' : "";  
+			$view_menu_permissions .=$this->input->post('DeletePermissions') ? $this->input->post('DeletePermissions').',' : ""; 
+			$view_menu_permissions .=$this->input->post('Dashboard') ? $this->input->post('Dashboard').',' : "";  
+			$view_menu_permissions .=$this->input->post('TransactionSummary') ? $this->input->post('TransactionSummary').',' : "";  
+			$view_menu_permissions .=$this->input->post('SalesTrends') ? $this->input->post('SalesTrends').',' : "";  
+			$view_menu_permissions .= $this->input->post('TInstoreMobile') ? $this->input->post('TInstoreMobile').',' : "";  
+			$view_menu_permissions .= $this->input->post('TInvoice') ? $this->input->post('TInvoice').',' : "";  
+			$view_menu_permissions .= $this->input->post('TRecurring') ? $this->input->post('TRecurring').',' : "";  
+			$view_menu_permissions .= $this->input->post('VirtualTerminal') ? $this->input->post('VirtualTerminal').',' : "";  
+			$view_menu_permissions .= $this->input->post('IInvoicing') ? $this->input->post('IInvoicing').',' : "";  
+			$view_menu_permissions .= $this->input->post('IRecurring') ? $this->input->post('IRecurring').',' : "";  
+			$view_menu_permissions .= $this->input->post('RInstoreMobile') ? $this->input->post('RInstoreMobile').',' : "";
+			$view_menu_permissions .= $this->input->post('RInvoice') ? $this->input->post('RInvoice').',' : "";
+			$view_menu_permissions .= $this->input->post('ItemsManagement') ? $this->input->post('ItemsManagement').',' : "";  
+			$view_menu_permissions .= $this->input->post('Reports') ? $this->input->post('Reports').',' : "";  
+			$view_menu_permissions .= $this->input->post('Settings') ? $this->input->post('Settings') : "";
+
+			$data = array(
+				"email" => $email,
+				"password" => $password,
+				"auth_key" => $unique,
+			    "merchant_key" => $merchant_key,
+				'status' => 'pending_signup',
+				'is_token_system_permission' => '1',
+				'is_tokenized' => '1',
+				'pc_phone' => $pc_phone,
+				'wood_forest' => '1',
+				'view_permissions' => $view_permissions,
+				'edit_permissions' => $edit_permissions,
+				'create_pay_permissions' => $create_pay_permissions,
+				'view_menu_permissions' => $view_menu_permissions,
+			);
+
+			if ($email) {
+				$last_merchantId = $this->Home_model->insert_data("merchant", $data);
+
+				$ins_merchant_graph = array(
+					'id' => NULL,
+					'merchant_id' => $last_merchantId
+				);
+				$this->db->insert('merchant_year_graph', $ins_merchant_graph);
+				$this->db->insert('merchant_year_graph_two', $ins_merchant_graph);
+
+				$mail_verify_key = substr("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", mt_rand(0, 51), 1) . substr(md5(time()), 1);
+				// echo $verify_key;die;
+
+				// $mail_count = $this->db->where('merchant_id', $id)->get('agreement_verification')->num_rows();
+				$mail_arr = $this->db->where('merchant_id', $last_merchantId)->get('agreement_verification')->row();
+				if(count($mail_arr) > 0) {
+					if($mail_arr->verification_status == 'done') {
+						$up_mail = array(
+							'mail_verify_key' => $mail_verify_key,
+							'verification_status' => ''
+						);
+
+						$this->db->where('merchant_id', $last_merchantId);
+						$this->db->update('agreement_verification', $up_mail);
+						
+					} else {
+						$up_mail = array(
+							'mail_verify_key' => $mail_verify_key
+						);
+
+						$this->db->where('merchant_id', $last_merchantId);
+						$this->db->update('agreement_verification', $up_mail);
+					}
+
+				} else {
+					$ins_mail = array(
+						'mail_verify_key' => $mail_verify_key,
+						'merchant_id' => $last_merchantId,
+						'verification_status' => ''
+					);
+					$this->db->insert('agreement_verification', $ins_mail);
+				}
+
+				$new_email = strtolower($email);
+				// $mail_temp['merchant_id'] = '894';
+				// $mail_temp['auth_key'] = 'be63ed6a-69eb-437c-b026-c4a4c4b81ee7';
+				$mail_data['url'] = base_url().'Merchant_agreement/verification/'.$last_merchantId.'/'.$mail_verify_key.'/'.$unique;
+				// $mail_data['email'] = $new_email;
+				$mail_data['business_dba_name'] = $business_dba_name;
+				$subject = 'Salequick - Merchant Agreement';
+				$mail_temp = $msg = $this->load->view('email/agreement_mail', $mail_data, true);
+
+				// $business_email
+				$this->email->from('info@salequick.com', 'Admin - Salequick');
+                $this->email->to('amir.proget@gmail.com');
+                // $this->email->to($new_email);
+                $this->email->subject($subject);
+                $this->email->message($mail_temp);
+                if($this->email->send()) {
+                	$mail_ins_data = array(
+                		'admin_id' => 1,
+                		'merchant_id' => $last_merchantId
+                	);
+                	$this->db->insert('agreement_mail_log', $mail_ins_data);
+                	$this->session->set_flashdata("success", "Merchant successfully created. Credentials has been sent to your registered email.");
+					redirect('dashboard/all_merchant');
+                } else {
+                	$this->session->set_flashdata("success", "Merchant successfully created. Mail sent error. Please contact admin.");
+					redirect('dashboard/all_merchant');
+                }
+
+			} else {
+				$this->session->set_flashdata("error", "Unauthorized email account. Please try another.");
+				redirect('dashboard/add_merchant');
+			}
+		
+		} else {
+			$this->session->set_flashdata("error", "This email is already registered. Please try another.");
+			redirect('dashboard/add_merchant');
+		}
+	}
+
+	public function getDigit(){
+	    $emp_pin=random_int(1000, 9999);
+	    $merchant_id = $this->session->userdata('merchant_id');
+		$query=$this->db->query("SELECT employee_pin from merchant where employee_pin=".$emp_pin." and id=".$merchant_id)->result_array();
+        //echo $this->db->last_query();
+        $emp_pinDb=$query[0]['employee_pin'];
+        if($emp_pinDb!=$emp_pin){
+            return $emp_pin;
+        }
+        else{
+          $this->getDigit();
+        }
+  	}		
 	public function index_original() {
 		// echo '123';die;
 		$data["title"] = "Admin Panel";
@@ -401,7 +566,7 @@ else if($month=='08' ){
       		$getamount = $amount->result_array();
 
           	$fee = $this->db->query("SELECT avg(amount) as Totalsepf from ( SELECT month,amount from customer_payment_request where month = '09' and year = '" . $today2 . "' ".$stmt." and status='confirm'    union all SELECT month,amount from pos where  month = '09' and year = '" . $today2 . "' ".$stmt." and status='confirm' )x group by month ");
-
+          		
          	$getfee = $fee->result_array();
 
            	$tax = $this->db->query("SELECT sum(tax) as Totalseptax from ( SELECT month,tax from customer_payment_request where  month = '09' and year = '" . $today2 . "' ".$stmt." and status='confirm'    union all SELECT month,tax from pos where  month = '09' and year = '" . $today2 . "' ".$stmt." and status='confirm' )x group by month");
@@ -409,6 +574,7 @@ else if($month=='08' ){
            	$gettax = $tax->result_array();
           
            	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totalsep='".$getamount[0]['Totalsep']."' ,Totalsepf='".$getfee[0]['Totalsepf']."',Totalseptax='".$gettax[0]['Totalseptax']."'  ");
+           	// echo $this->db->last_query();die;
 
 		} else if($month=='10' ) {
          	$amount = $this->db->query("SELECT sum(amount) as Totaloct from ( SELECT month,amount from customer_payment_request where  month = '10' and year = '" . $today2 . "' ".$stmt." and status='confirm'    union all SELECT month,amount from pos where  month = '10' and year = '" . $today2 . "' ".$stmt." and status='confirm' )x group by month  ");

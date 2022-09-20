@@ -91,7 +91,7 @@
 
             <div class="row" style="margin-bottom: 20px !important;">
                 <div class="table_custom_range_selector" style="width: auto;margin-right: 10px;margin-left: 5px !important;">
-                    <div id="daterangeFilter" class="form-control date-range-style" style="border: none !important;margin-top: 5px;color: rgb(110, 110, 110) !important;font-family: Avenir-Heavy !important;">
+                    <div id="daterangeFilter" hidden class="form-control date-range-style" style="border: none !important;margin-top: 5px;color: rgb(110, 110, 110) !important;font-family: Avenir-Heavy !important;">
                         <span>
                             <?php echo (date("F-d-Y", strtotime($start_date)) .' - '.date("F-d-Y", strtotime($end_date))) ?>
                         </span>

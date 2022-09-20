@@ -14,8 +14,10 @@ class Recurring_admin_model extends CI_Model {
 	public function _all_conditions_datatable() {
 		// echo '<pre>';print_r($_POST);die;
 		// $merchant_id = $this->session->userdata('merchant_id');
-		$date1 = $this->input->post('start_date');
-		$date2 = $this->input->post('end_date');
+		// $date1 = $this->input->post('start_date');
+		// $date2 = $this->input->post('end_date');
+		$date1='1969-01-01';
+		$date2=date("Y-m-d");
 		$status = $this->input->post('status');
 
 		$date1 = date('Y-m-d', strtotime($date1));

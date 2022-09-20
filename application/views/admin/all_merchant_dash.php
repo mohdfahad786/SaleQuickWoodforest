@@ -279,6 +279,18 @@
         height: 40px !important;
         max-height: 40px !important;
     }
+    .add-merchant {
+        width: auto;
+        height: 40px;
+        background: rgb(237, 237, 237);
+        border: none;
+        border-radius: 8px;
+        color: rgb(132, 132, 132);
+        font-size: 16px;
+        font-weight: 400;
+        padding: 10px 20px 10px 20px;
+        font-family: Avenir-Black !important;
+    }
 </style>
 
 <div class="page-content-wrapper">
@@ -293,55 +305,23 @@
                 <div class="col-12 py-5-custom"></div>
             </div>
 
-            <div class="row" style="margin-bottom: 20px !important;">
-                <!-- <div class="table_custom_range_selector" style="width: auto;margin-right: 10px;margin-left: 5px !important;">
-                    <div id="daterangeFilter" class="form-control date-range-style" style="border: none !important;margin-top: 5px;color: rgb(110, 110, 110) !important;font-family: Avenir-Heavy !important;">
-                        <span>
-                            <?php echo (date("F-d-Y", strtotime($start_date)) .' - '.date("F-d-Y", strtotime($end_date))) ?>
-                        </span>
-                        <input name="start_date" id="startDate" type="hidden" value="">
-                        <input name="end_date" id="endDate" type="hidden" value="">
-                    </div>
-                </div> -->
-                <!-- <div class="table_custom_status_selector">
-                    <select class="form-control" name="status" id="status" style="border: none !important;color: rgb(110, 110, 110) !important;font-family: Avenir-Heavy !important;">
-                        <option value="">Select Status</option>
-                        <?php if (!empty($status) && isset($status)) { ?>
-                            <option value="pending" <?php echo (($status == 'pending') ? 'selected' : "") ?> >Pending</option>
-                            <option value="Activate_Details" <?php echo (($status == 'Activate_Details') ? 'selected' : "") ?> > Activate Details</option>
-                            <option value="Waiting_For_Approval" <?php echo (($status == 'Waiting_For_Approval') ? 'selected' : "") ?> >Waiting For Approval</option>
-                            <option value="confirm" <?php echo (($status == 'confirm') ? 'selected' : "") ?> >Confirm</option>
-                            <option value="active" <?php echo (($status == 'active') ? 'selected' : "") ?> >Active</option>
-                            <option value="block" <?php echo (($status == 'block') ? 'selected' : "") ?>>Block</option>
-                            
-                       <?php } else { ?>
-                            <option value="pending">Pending</option>                
-                            <option value="Activate_Details">Activate Details</option>
-                            <option value="Waiting_For_Approval">Waiting For Approval</option>
-                            <option value="confirm">Confirm</option>
-                            <option value="active">Active</option>
-                            <option value="block">Block</option>
-                        <?php } ?>
-                    </select>
-                </div>
-                <div class="col-sm-2 col-md-2 col-lg-2">
-                    <button class="btn btn-rounded social-btn-outlined" type="submit" id="mysubmit" name="mysubmit" value="Search" style="text-transform: none !important;"><i class="mdi mdi-magnify medium"></i>Submit</button>
-                </div> -->
-            </div>
-            <!-- <hr> -->
-
             <div class="row">
-                <div class="col-12">
+                <div class="col-sm-6 col-md-6 col-lg-6">
                     <ul class="nav nav-tabs status_tabs" style="margin: 20px 0px 22px;visibility: visible;">
                         <li class="active"><a class="status_tab_anchor" href="javascript:void(0)" data-val="">All</a></li>
-                        <!-- <li><a class="status_tab_anchor" href="javascript:void(0)" data-val="pending">Pending</a></li> -->
-                        <li><a class="status_tab_anchor" href="javascript:void(0)" data-val="Activate_Details">Activate Details</a></li>
+                        <li><a class="status_tab_anchor" href="javascript:void(0)" data-val="active">Active</a></li>
+                        <li><a class="status_tab_anchor" href="javascript:void(0)" data-val="pending">Pending</a></li>
                         <!-- <li><a class="status_tab_anchor" href="javascript:void(0)" data-val="Waiting_For_Approval">Waiting For Approval</a></li>
                         <li><a class="status_tab_anchor" href="javascript:void(0)" data-val="confirm">Confirm</a></li>
                         <li><a class="status_tab_anchor" href="javascript:void(0)" data-val="active">Active</a></li>
                         <li><a class="status_tab_anchor" href="javascript:void(0)" data-val="block">Block</a></li> -->
-                        <li><a class="status_tab_anchor" href="javascript:void(0)" data-val="deactivate">Deactivate</a></li>
+                        <li><a class="status_tab_anchor" href="javascript:void(0)" data-val="deactivate">Deactivated</a></li>
                     </ul>
+                </div>
+                <div class="col-sm-6 col-md-6 col-lg-6">
+                    <div class="col-12 py-5 py-5-custom text-right">
+                        <a class="add-merchant" href="<?php echo base_url('dashboard/add_merchant'); ?>"><i class="fa fa-plus"></i> Add Merchant</a>
+                    </div>
                 </div>
             </div>
             <!-- <hr> -->
