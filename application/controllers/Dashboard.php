@@ -28,18 +28,270 @@ class Dashboard extends CI_Controller {
 
 		date_default_timezone_set("America/Chicago");
 		// ini_set('display_errors', 1);
-	    // error_reporting(E_ALL);
+	 //    error_reporting(E_ALL);
 	}
 
 	public function add_merchant() {
 		$data['meta'] = "Add New Merchant";
 		$data['loc'] = "create_merchant";
 		$data['action'] = "Add New Merchant";
-		
+
 		$this->load->view("admin/add_merchant_dash", $data);
   	}
-
   	public function create_merchant() {
+  		// echo '<pre>';print_r($_POST);die;
+
+  		$this->form_validation->set_rules('email', 'Email Address', 'required|valid_email|is_unique[merchant.email]');
+		$this->form_validation->set_rules('mobile', 'Mobile No', 'required|is_unique[merchant.mob_no]');
+		
+		$email = $this->input->post('memail') ? $this->input->post('memail') : "";
+		$pc_phone = $this->input->post('primary_phone') ? $this->input->post('primary_phone') : "";
+
+		$password1 = substr(md5(uniqid(rand(), true)), 0, 10);
+		$password = $this->my_encrypt($password1, 'e');
+
+		$today1 = date("Ymdhisu");
+		$unique = "SAL" . $today1;
+		$merchant_key = substr("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", mt_rand(0, 51), 1) . substr(md5(time()), 1);
+		
+		$usr_result = $this->db->query("SELECT * FROM merchant WHERE email='$email'")->row_array();
+		// echo $this->db->last_query();die;
+		// print_r($usr_result);die;
+		
+		if(empty($usr_result)) {
+			$view_permissions = $this->input->post('view_permissions') ? $this->input->post('view_permissions') : '0' . "";
+			$edit_permissions = $this->input->post('edit_permissions') ? $this->input->post('edit_permissions') : '0' . "";
+			$create_pay_permissions = $this->input->post('create_pay_permissions') ? $this->input->post('create_pay_permissions') : '0' . "";
+
+			$view_menu_permissions='';
+			$view_menu_permissions .=$this->input->post('ViewPermissions') ? $this->input->post('ViewPermissions').',' : "";  
+			$view_menu_permissions .=$this->input->post('AddPermissions') ? $this->input->post('AddPermissions').',' : "";  
+			$view_menu_permissions .=$this->input->post('EditPermissions') ? $this->input->post('EditPermissions').',' : "";  
+			$view_menu_permissions .=$this->input->post('DeletePermissions') ? $this->input->post('DeletePermissions').',' : ""; 
+			$view_menu_permissions .=$this->input->post('Dashboard') ? $this->input->post('Dashboard').',' : "";  
+			$view_menu_permissions .=$this->input->post('TransactionSummary') ? $this->input->post('TransactionSummary').',' : "";  
+			$view_menu_permissions .=$this->input->post('SalesTrends') ? $this->input->post('SalesTrends').',' : "";  
+			$view_menu_permissions .= $this->input->post('TInstoreMobile') ? $this->input->post('TInstoreMobile').',' : "";  
+			$view_menu_permissions .= $this->input->post('TInvoice') ? $this->input->post('TInvoice').',' : "";  
+			$view_menu_permissions .= $this->input->post('TRecurring') ? $this->input->post('TRecurring').',' : "";  
+			$view_menu_permissions .= $this->input->post('VirtualTerminal') ? $this->input->post('VirtualTerminal').',' : "";  
+			$view_menu_permissions .= $this->input->post('IInvoicing') ? $this->input->post('IInvoicing').',' : "";  
+			$view_menu_permissions .= $this->input->post('IRecurring') ? $this->input->post('IRecurring').',' : "";  
+			$view_menu_permissions .= $this->input->post('RInstoreMobile') ? $this->input->post('RInstoreMobile').',' : "";
+			$view_menu_permissions .= $this->input->post('RInvoice') ? $this->input->post('RInvoice').',' : "";
+			$view_menu_permissions .= $this->input->post('ItemsManagement') ? $this->input->post('ItemsManagement').',' : "";  
+			$view_menu_permissions .= $this->input->post('Reports') ? $this->input->post('Reports').',' : "";  
+			$view_menu_permissions .= $this->input->post('Settings') ? $this->input->post('Settings') : "";
+
+			$data = array(
+				"email" => $email,
+				"password" => $password,
+				"auth_key" => $unique,
+			    "merchant_key" => $merchant_key,
+			    'user_type'=>'merchant',
+				'status' => 'pending_signup',
+				'is_token_system_permission' => '1',
+				'is_tokenized' => '1',
+				'pc_phone' => $pc_phone,
+				'wood_forest' => '1',
+				'view_permissions' => $view_permissions,
+				'edit_permissions' => $edit_permissions,
+				'create_pay_permissions' => $create_pay_permissions,
+				'view_menu_permissions' => $view_menu_permissions,
+			);
+
+			if ($email) {
+				$last_merchantId = $this->Home_model->insert_data("merchant", $data);
+				// echo $last_merchantId;die;
+				// $usr_result = $this->reset_model->get_merchant($username); 
+                //echo $this->db->last_query();
+                if (!empty($last_merchantId)) {
+                    //print_r($usr_result); die;   
+                    // $usr_result_merchant = $this->reset_model->get_merchant_detail($username);
+                    // $password1 = time();
+                    $token = date("Ymdhmsu");
+                    $merchant_id=$last_merchantId;
+                             
+                    $getQuery_delete = $this->db->query(" DELETE FROM change_password where merchant_id='".$merchant_id."' "); 
+                    $getQuery_a = $this->db->query("INSERT INTO change_password (merchant_id, token) VALUES ('".$merchant_id."', '".$token."') ");
+                    //$password = $this->my_encrypt( $password1 , 'e' );
+                    //$usr_update = $this->reset_model->update_merchant($username,$password);
+                    $url = base_url().'reset/password/'.$merchant_id.'/'.$token;
+
+                    set_time_limit(3000); 
+                    $MailTo = $email; 
+                    $MailSubject = 'Salequick Credentials'; 
+                    $header = "From: Salequick<info@salequick.com>\r\n".
+                    "MIME-Version: 1.0" . "\r\n" .
+                    "Content-type: text/html; charset=UTF-8" . "\r\n"; 
+                    // $msg = " Reset Link : ".$url." ";
+                    $htmlContent = '<!DOCTYPE html>
+                        <html>
+                        <head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+                        <title></title>
+                        <meta name="viewport" content="width=device-width, initial-scale=1">
+                        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800" rel="stylesheet">
+                        </head>
+                        <body style="padding: 0px;margin: 0;font-family:Open Sans, sans-serif;font-size: 14px !important;color: #333;">
+                        <div style="max-width: 751px;margin: 0 auto;background:#fafafa;">
+                        <div style="color:#fff;padding-top: 30px;padding-bottom: 5px;background-color: #2273dc;border-top-left-radius: 10px;border-top-right-radius: 10px;">
+                        <div style="width:80%;margin:0 auto;">
+                        <div style="width: 245px;text-align: center;height: 70px;border-radius: 50%;margin: 10px auto 20px;padding: 10px;box-shadow: 0px 0px 5px 10px #438cec8c;"><img src="https://salequick.com/front/images/logo-w.png" style="max-width: 90%;width: 100%;margin: 8px auto 0;display: block;"></div>
+                        </div>
+                        </div>
+                        <div style="max-width: 563px;text-align:right;margin: 0px auto 0;clear: both;width: 100%;display: table;">
+                        <p style="text-align: center !important;font-size: 20px !important;font-family: sans-serif !important;letter-spacing: 3px;color: #3c763d;font-weight: 600 !important;">Salequick Credentials</p>
+                        <p style="font-size: 16px !important;text-align: center !important;">Hi, Your password is <b>"'.$password1.'"</b> , If you want to reset it then click on link below to create a new password:</p>
+                        <p style="line-height: 1.432;text-align: center !important;">
+                        <a href="'.$url.'" style="max-height: 40px;padding: 10px 20px;display: inline-flex;justify-content: center;align-items: center;font-size: 0.875rem;font-weight: 600;letter-spacing: 0.03rem;color: #fff;background-color: #696ffb;text-decoration: none;border-radius: 20px;">Set a new password</a>
+                        </p> 
+                        <p style="font-size: 16px !important;text-align: center !important;">If you did not requested a password reset. you can ignore this email. Your password will not be changed.</p>
+                        </div>
+                        <div style="padding: 25px 0;overflow:hidden;">
+                        <div style="width: 100%;margin:0 auto;overflow:hidden;max-width: 80%;">
+                        <div style="width: 100%;margin:10px auto 20px;text-align:center;">
+                        </div>
+                        </div>
+                        <footer style="width:100%;padding: 35px 0 21px;background: #414141;margin-top: 0px;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
+                        <div style="text-align:center;width:80%;margin:0 auto;color: rgba(255, 255, 255, 0.75);">
+                        <h5 style="margin-top: 0;margin-bottom: 10px;font-size: 16px;font-weight:400;line-height: 1.432;">Feel free to contact us any time with question and concerns.</h5>
+                        <p style="text-align:center"><a href="https://salequick.com/" style="color: #6ea9ff;cursor:pointer;text-decoration:none !important;"><span style="color: rgba(255, 255, 255, 0.55);">Powered by:</span> SaleQuick.com</a></p>
+                        </div>
+                        </footer>
+                        </div>
+                        </body>
+                        </html>
+                    ';
+
+                    ini_set('sendmail_from', $email); 
+                    // mail($MailTo, $MailSubject, $msg, $header);
+                    $this->email->from('reply@salequick.com', 'Reset Password Link');
+                    $this->email->to($MailTo);
+                    $this->email->subject($MailSubject);
+                    $this->email->message($htmlContent);
+                    $this->email->send();
+                    // $this->session->set_userdata($sessiondata);
+                    $this->session->set_flashdata('msg', '<div class="alert alert-success text-center">Merchant added successfully and email has been sent to reset the password.  </div>');
+                    redirect('dashboard/all_merchant');
+                } else {
+                    $this->session->set_flashdata('msg', '<div class="alert alert-danger text-center">Invalid Email-Id!</div>');
+                    redirect('dashboard/all_merchant');
+                }
+
+			} else {
+				$this->session->set_flashdata("error", "Unauthorized email account. Please try another.");
+				redirect('dashboard/add_merchant');
+			}
+		
+		} else {
+			$this->session->set_flashdata("error", "This email is already registered. Please try another.");
+			redirect('dashboard/add_merchant');
+		}
+	}
+	public function add_subuser() {
+		$merchant_id=$this->uri->segment(3);
+		$get_merchant = $this->db->select('status')->from('merchant')->where('id', $merchant_id)->get()->row();
+
+		if($get_merchant->status != 'active') {
+			echo 'Unauthorised Merchant';die;
+		}
+		// echo $merchant_id;die;
+		$data['meta'] = "Add Sub User";
+		$data['loc'] = "save_subuser";
+		$data['action'] = "Add Sub User";
+		$emp_pin=$this->getDigit($merchant_id);
+		$data['employee_pin']=$emp_pin;
+		$data['merchant_id']=$merchant_id;
+		$this->load->view("admin/add_subuser_dash", $data);
+	}
+	public function save_subuser(){
+				$this->form_validation->set_rules('email', 'Email Address', 'required|valid_email|is_unique[merchant.email]');
+				$this->form_validation->set_rules('mobile', 'Mobile No', 'required|is_unique[merchant.mob_no]');
+				
+				$email = $this->input->post('memail') ? $this->input->post('memail') : "";
+				$pc_phone = $this->input->post('primary_phone') ? $this->input->post('primary_phone') : "";
+
+				// $password1 = substr(md5(uniqid(rand(), true)), 0, 10);
+				$password1 = $this->input->post('password') ? $this->input->post('password') : "";
+				$password = $this->my_encrypt($password1, 'e');
+
+				$today1 = date("Ymdhisu");
+				$unique = "SAL" . $today1;
+				$merchant_key = substr("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", mt_rand(0, 51), 1) . substr(md5(time()), 1);
+				
+				$usr_result = $this->db->query("SELECT * FROM merchant WHERE email='$email'")->row_array();
+				// echo $this->db->last_query();die;
+				// print_r($usr_result);die;
+				
+				if(empty($usr_result)) {
+					$view_permissions = $this->input->post('view_permissions') ? $this->input->post('view_permissions') : '0' . "";
+					$edit_permissions = $this->input->post('edit_permissions') ? $this->input->post('edit_permissions') : '0' . "";
+					$create_pay_permissions = $this->input->post('create_pay_permissions') ? $this->input->post('create_pay_permissions') : '0' . "";
+
+					$view_menu_permissions='';
+					$view_menu_permissions .=$this->input->post('ViewPermissions') ? $this->input->post('ViewPermissions').',' : "";  
+					$view_menu_permissions .=$this->input->post('AddPermissions') ? $this->input->post('AddPermissions').',' : "";  
+					$view_menu_permissions .=$this->input->post('EditPermissions') ? $this->input->post('EditPermissions').',' : "";  
+					$view_menu_permissions .=$this->input->post('DeletePermissions') ? $this->input->post('DeletePermissions').',' : ""; 
+					$view_menu_permissions .=$this->input->post('Dashboard') ? $this->input->post('Dashboard').',' : "";  
+					$view_menu_permissions .=$this->input->post('TransactionSummary') ? $this->input->post('TransactionSummary').',' : "";  
+					$view_menu_permissions .=$this->input->post('SalesTrends') ? $this->input->post('SalesTrends').',' : "";  
+					$view_menu_permissions .= $this->input->post('TInstoreMobile') ? $this->input->post('TInstoreMobile').',' : "";  
+					$view_menu_permissions .= $this->input->post('TInvoice') ? $this->input->post('TInvoice').',' : "";  
+					$view_menu_permissions .= $this->input->post('TRecurring') ? $this->input->post('TRecurring').',' : "";  
+					$view_menu_permissions .= $this->input->post('VirtualTerminal') ? $this->input->post('VirtualTerminal').',' : "";  
+					$view_menu_permissions .= $this->input->post('IInvoicing') ? $this->input->post('IInvoicing').',' : "";  
+					$view_menu_permissions .= $this->input->post('IRecurring') ? $this->input->post('IRecurring').',' : "";  
+					$view_menu_permissions .= $this->input->post('RInstoreMobile') ? $this->input->post('RInstoreMobile').',' : "";
+					$view_menu_permissions .= $this->input->post('RInvoice') ? $this->input->post('RInvoice').',' : "";
+					$view_menu_permissions .= $this->input->post('ItemsManagement') ? $this->input->post('ItemsManagement').',' : "";  
+					$view_menu_permissions .= $this->input->post('Reports') ? $this->input->post('Reports').',' : "";  
+					$view_menu_permissions .= $this->input->post('Settings') ? $this->input->post('Settings') : "";
+					$mid = $this->input->post('merchant_id') ? $this->input->post('merchant_id') : "";
+					if(isset($_POST['emp_refund'])) {
+    				    $emp_refund = '1';
+    				} else {
+    				    $emp_refund = '0';
+    				}
+    				$name = $this->input->post('name') ? $this->input->post('name') : "";
+      				$employee_pin = $this->input->post('employee_pin') ? $this->input->post('employee_pin') : "";
+					$data = array(
+						'name' => $name,
+						"email" => $email,
+						"password" => $password,
+						"merchant_id" => $mid,
+						"auth_key" => $unique,
+					    "merchant_key" => $merchant_key,
+					    'user_type'=>'employee',
+						'status' => 'pending_signup',
+						'is_token_system_permission' => '1',
+						'is_tokenized' => '1',
+						'pc_phone' => $pc_phone,
+						'wood_forest' => '1',
+						'view_permissions' => $view_permissions,
+						'edit_permissions' => $edit_permissions,
+						'create_pay_permissions' => $create_pay_permissions,
+						'view_menu_permissions' => $view_menu_permissions,
+						'employee_pin' => $employee_pin,
+						'emp_refund' => $emp_refund,
+					);
+
+				if ($email) {
+					 $this->Home_model->insert_data("merchant", $data);
+		             $this->session->set_flashdata('msg', '<div class="alert alert-success text-center">Sub User added successfully.  </div>');
+                    redirect('dashboard/all_merchant');
+				} else {
+					$this->session->set_flashdata('error',  '<div class="alert alert-danger text-center">Unauthorized email account. Please try another.</div>');
+					redirect('dashboard/all_merchant');	
+				}
+				
+			} else {
+					$this->session->set_flashdata('error',  '<div class="alert alert-danger text-center">This email is already registered. Please try another.</div>');
+					redirect('dashboard/all_merchant');
+		}
+				
+	}
+  	public function create_merchant_old() {
   		// echo '<pre>';print_r($_POST);die;
 
   		$this->form_validation->set_rules('email', 'Email Address', 'required|valid_email|is_unique[merchant.email]');
@@ -182,12 +434,14 @@ class Dashboard extends CI_Controller {
 		}
 	}
 
-	public function getDigit(){
+	public function getDigit($merchant_id){
+
 	    $emp_pin=random_int(1000, 9999);
-	    $merchant_id = $this->session->userdata('merchant_id');
+	    // $merchant_id = $this->session->userdata('merchant_id');
 		$query=$this->db->query("SELECT employee_pin from merchant where employee_pin=".$emp_pin." and id=".$merchant_id)->result_array();
-        //echo $this->db->last_query();
+        // echo $this->db->last_query();die;
         $emp_pinDb=$query[0]['employee_pin'];
+        // echo $emp_pinDb;die;
         if($emp_pinDb!=$emp_pin){
             return $emp_pin;
         }
@@ -303,7 +557,7 @@ class Dashboard extends CI_Controller {
     	 $first_date = date('Y-m-01');
          $last_date = date('Y-m-t');
 
-         $stmt="";
+        $stmt="";
 		$wf_merchants=$this->session->userdata('wf_merchants');
 
 		if(!empty($wf_merchants)) {
@@ -311,7 +565,6 @@ class Dashboard extends CI_Controller {
 	        $len=sizeof($x);
 	        for ($i=0; $i <$len ; $i++) { 
 	            if($i==0){
-	                // $stmt.=$this->db->where('merchant_id', $x[$i]);
 	                $stmt.=" and (merchant_id=".$x[$i];
 	            }else{
 	                $stmt.=" or merchant_id=".$x[$i];
@@ -2680,6 +2933,7 @@ else if($month=='08' ){
 		//$branch = $this->admin_model->get_subadmin_details($bct_id);
 		$branch = $this->admin_model->get_payment_details_3($bct_id);
 		// echo '<pre>';print_r($_POST);die;
+		// echo $this->db->last_query();die;
 		//print_r($_POST); die("ok"); 
 		if($this->input->post('updatepassword')) {
 			// echo '<pre>';print_r($_POST);die;
@@ -2768,11 +3022,33 @@ else if($month=='08' ){
 			$f_swap_Invoice = $this->input->post('f_swap_Invoice') ? $this->input->post('f_swap_Invoice') : "";
 			$f_swap_Recurring = $this->input->post('f_swap_Recurring') ? $this->input->post('f_swap_Recurring') : "";
 			$f_swap_Text = $this->input->post('f_swap_Text') ? $this->input->post('f_swap_Text') : "";
+			$mobile = $this->input->post('mobile') ? $this->input->post('mobile') : "";
+			$view_permissions = $this->input->post('view_permissions') ? $this->input->post('view_permissions') : '0' . "";
+            $edit_permissions = $this->input->post('edit_permissions') ? $this->input->post('edit_permissions') : '0' . "";
+            $create_pay_permissions = $this->input->post('create_pay_permissions') ? $this->input->post('create_pay_permissions') : '0' . "";
 
+            $view_menu_permissions='';
+            $view_menu_permissions .=$this->input->post('ViewPermissions') ? $this->input->post('ViewPermissions').',' : "";  
+            $view_menu_permissions .=$this->input->post('AddPermissions') ? $this->input->post('AddPermissions').',' : "";  
+            $view_menu_permissions .=$this->input->post('EditPermissions') ? $this->input->post('EditPermissions').',' : "";  
+            $view_menu_permissions .=$this->input->post('DeletePermissions') ? $this->input->post('DeletePermissions').',' : ""; 
+            $view_menu_permissions .=$this->input->post('Dashboard') ? $this->input->post('Dashboard').',' : "";  
+            $view_menu_permissions .=$this->input->post('TransactionSummary') ? $this->input->post('TransactionSummary').',' : "";  
+            $view_menu_permissions .=$this->input->post('SalesTrends') ? $this->input->post('SalesTrends').',' : "";  
+            $view_menu_permissions .= $this->input->post('TInstoreMobile') ? $this->input->post('TInstoreMobile').',' : "";  
+            $view_menu_permissions .= $this->input->post('TInvoice') ? $this->input->post('TInvoice').',' : "";  
+            $view_menu_permissions .= $this->input->post('TRecurring') ? $this->input->post('TRecurring').',' : "";  
+            $view_menu_permissions .= $this->input->post('VirtualTerminal') ? $this->input->post('VirtualTerminal').',' : "";  
+            $view_menu_permissions .= $this->input->post('IInvoicing') ? $this->input->post('IInvoicing').',' : "";  
+            $view_menu_permissions .= $this->input->post('IRecurring') ? $this->input->post('IRecurring').',' : "";  
+            $view_menu_permissions .= $this->input->post('RInstoreMobile') ? $this->input->post('RInstoreMobile').',' : "";
+            $view_menu_permissions .= $this->input->post('RInvoice') ? $this->input->post('RInvoice').',' : "";
+            $view_menu_permissions .= $this->input->post('ItemsManagement') ? $this->input->post('ItemsManagement').',' : "";  
+            $view_menu_permissions .= $this->input->post('Reports') ? $this->input->post('Reports').',' : "";  
+            $view_menu_permissions .= $this->input->post('Settings') ? $this->input->post('Settings') : "";
 
 			
 			// $email = $this->input->post('email') ? $this->input->post('email') : "";
-			$mobile = $this->input->post('mobile') ? $this->input->post('mobile') : "";
 			// $password = $this->input->post('password') ? $this->input->post('password') : "";
 			// $cpsw = $this->input->post('cpsw') ? $this->input->post('cpsw') : "";
 			// $state = $this->input->post('state') ? $this->input->post('state') : "";
@@ -2832,6 +3108,10 @@ else if($month=='08' ){
 				'f_swap_Recurring' => $f_swap_Recurring,
 				'f_swap_Text' => $f_swap_Text,
 				'business_number' => $mobile,
+				'view_permissions' => $view_permissions,
+                'edit_permissions' => $edit_permissions,
+                'create_pay_permissions' => $create_pay_permissions,
+                'view_menu_permissions' => $view_menu_permissions,
 				//'password' => $psw1,
 				// 'state' => $state,
 				// 'mi' => $mi,
@@ -2898,6 +3178,10 @@ else if($month=='08' ){
 				$data['email'] = strtolower($sub->email);
 				$data['mobile'] = $sub->business_number;
 				$data['password'] = $sub->password;
+				$data['view_permissions'] = $sub->view_permissions;
+				$data['edit_permissions'] = $sub->edit_permissions;
+				$data['create_pay_permissions'] = $sub->create_pay_permissions;
+				$data['view_menu_permissions'] = $sub->view_menu_permissions;
 				// $data['auth_key'] = $sub->auth_key;
 				// $data['date'] = $sub->created_on;
 				// $data['state'] = $sub->state;
@@ -2910,7 +3194,7 @@ else if($month=='08' ){
 		$data['meta'] = "Edit Merchant Info";
 		$data['action'] = "Update Merchant";
 		$data['loc'] = "update_merchant";
-		//print_r($data);
+		// echo '<pre>';print_r($data);die;
 		$this->load->view('admin/update_merchant_dash', $data);
 	}
 
@@ -3175,7 +3459,7 @@ else if($month=='08' ){
 
             $row[] = '<button data-toggle="modal" data-target="#view-modall" data-id="'.$member->id.'" id="getcredt" class="btn btn-sm btn-primary span_lg_btn" title="Credentials"><i class="fa fa-key"></i></button>
                 <button data-toggle="modal" title="Activation Details" onClick="viewDetails('.$member->id.')" data-target="#view-ActivationDetails" data-id="'.$key.'" id="activationDetails" class="'.$activation_text_highlighter.' btn btn-sm btn-info span_lg_btn" style="margin-left:5px;"><i class="fa fa-eye"></i></button>
-                <button data-toggle="modal" title="All Sub User" data-target="#view_all_subuser" data-id="'.$member->id.'" id="getSubUser" class="btn btn-sm btn-gray span_sm_btn" style="margin-right:5px;"><i class="fa fa-users"></i></button>';
+                <button data-toggle="modal" title="All Sub User" data-target="#view_all_subuser" data-id="'.$member->id.'" data-status="'.$member->status.'" id="getSubUser" class="btn btn-sm btn-gray span_sm_btn" style="margin-right:5px;"><i class="fa fa-users"></i></button>';
 
             // $field_name
             $get_monthly_volume = $this->db->select($field_name)->where('merchant_id',$member->id)->get('merchant_year_graph_two')->row();

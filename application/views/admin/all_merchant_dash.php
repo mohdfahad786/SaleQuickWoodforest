@@ -444,7 +444,7 @@
                                     <a class="cred_nav_link nav-link" data-toggle="tab" href="#tsysDetail">TSYS</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="cred_nav_link nav-link" data-toggle="tab" href="#vtsDetail">VTS</a>
+                                    <a class="cred_nav_link nav-link" data-toggle="tab" href="#wfDetail">WoodForest</a>
                                 </li>
                             </ul>
                             <div class="tab-content">
@@ -1328,6 +1328,17 @@
                                             </div>
                                           </div>
                                         </div>
+                                        <div class="col-6">
+                                          <div class="form-group">
+                                            <label>Security Key</label>
+                                             <div>
+                                              <div class="input-group">
+                                                  <span class="input-group-addon"><i class="fa fa-credit-card-alt"></i></span>
+                                                  <input type="text" class="form-control" autocomplete="off" name="security_key_value" id="security_key_value" placeholder="Security Key">
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="tab-pane container fade" id="vtsDetail">
@@ -1350,6 +1361,33 @@
                                                 </label>
                                             </div>
                                           </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane container fade" id="wfDetail">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label>Activate Woodforest Account</label>
+                                                <div class="wf_switch_section">
+                                                    <label class="switch switch_type1" role="switch">
+                                                        <input type="checkbox" name="wood_forest" checked id="wood_forest" value="" class="switch__toggle">
+                                                        <span class="switch__label"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label>Billing Package</label>
+                                                <select class="form-control" id="package_value" name="package_value">
+                                                    <option value="">Please select</option>
+                                                    <option value="1">Mobile App Only</option>
+                                                    <option value="2">Mobile Only With Other Charges</option>
+                                                    <option value="3">All in one (Access to all our products)</option>
+                                                    <option value="4">All in one + Other charges (Access to all our products)</option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1964,13 +2002,261 @@
   </div>
 </div> -->
 
+<!-- Add sub user -->
+<!-- <div id="add_subuser" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" id="closebtn" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">Add Sub User</h4>
+            </div>
+            <div class="modal-body custom-form">
+                <div id="modal-loader" class="text-center" style="display: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" viewBox="0 0 44 44" stroke="#000"> <g fill="none" fill-rule="evenodd" stroke-width="2"> <circle cx="22" cy="22" r="19.8669"> <animate attributeName="r" begin="0s" dur="1.8s" values="1; 20" calcMode="spline" keyTimes="0; 1" keySplines="0.165, 0.84, 0.44, 1" repeatCount="indefinite"></animate> <animate attributeName="stroke-opacity" begin="0s" dur="1.8s" values="1; 0" calcMode="spline" keyTimes="0; 1" keySplines="0.3, 0.61, 0.355, 1" repeatCount="indefinite"></animate> </circle> <circle cx="22" cy="22" r="15.8844"> <animate attributeName="r" begin="-0.9s" dur="1.8s" values="1; 20" calcMode="spline" keyTimes="0; 1" keySplines="0.165, 0.84, 0.44, 1" repeatCount="indefinite"></animate> <animate attributeName="stroke-opacity" begin="-0.9s" dur="1.8s" values="1; 0" calcMode="spline" keyTimes="0; 1" keySplines="0.3, 0.61, 0.355, 1" repeatCount="indefinite"></animate> </circle> </g> </svg>
+                </div>
+                <div id="dynamic-content_subuser">
+                    <form id="pop_inputs">
+                    <div class="row">
+                        <input type="hidden" id="current_id" name="merchant_id">
+                    
+                            <div class="col-sm-6 col-md-12 col-lg-12">
+                                
+                        <div   style="width: 100% !important;">
+                            <div class="grid-body d-flex flex-column">
+                                <div class="mt-auto">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-6 col-lg-6">
+                                            <div class="form-title">User Info</div>
+                                            <div class="form-group">
+                                                <label for="">Email</label>
+                                                <input type="email" class="form-control" name="memail" id="email" pattern="[ a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,5}$"  placeholder="Email" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="">Mobile Number</label>
+                                                <input type="text" class="form-control" name="primary_phone" id="phone" onkeypress="return isNumberKey(event)" placeholder="Mobile Number" required="">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12" style="display:none;">
+                                            <div class="card content-card">
+                                                <div class="card-detail">
+                                                    <div class="row custom-form responsive-cols f-wrap f-auto">
+                                                        <div class="col-12">
+                                                            <div class="custom-form">
+                                                                <div class="form-group">
+                                                                    <p><b>Payment Type</b></p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                  
+                                                        <div class="col mx-253">
+                                                            <div class="form-group">
+                                                                <div class="custom-checkbox">
+                                                                    <input type="checkbox" name="ViewPermissions"   id="ViewPermissions" value="12a">
+                                                                    <label for="ViewPermissions">View Permissions</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                  
+                                                        <div class="col mx-253">
+                                                            <div class="form-group">
+                                                                <div class="custom-checkbox">
+                                                                    <input type="checkbox" name="AddPermissions"   id="AddPermissions" value="12b">
+                                                                    <label for="AddPermissions">Add Permissions</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                  
+                                                        <div class="col mx-253">
+                                                            <div class="form-group">
+                                                                <div class="custom-checkbox">
+                                                                    <input type="checkbox" name="EditPermissions"   id="EditPermissions" value="12c">
+                                                                    <label for="EditPermissions">Edit Permissions</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                  
+                                                        <div class="col mx-253">
+                                                            <div class="form-group">
+                                                                <div class="custom-checkbox">
+                                                                    <input type="checkbox" name="DeletePermissions"  id="DeletePermissions" value="12d">
+                                                                    <label for="DeletePermissions">Delete Permissions</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-6 col-md-6 col-lg-6">
+                                            <div class="form-title">User Permissions</div>
+                                                    
+                                            <div class="form-group">
+                                                <label for="">Dashboard</label>
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <div class="checkbox">
+                                                            <label class="permission_label" for="">
+                                                                <input type="checkbox" name="Dashboard"  id="Dashboard" value="1a" class="form-check-input"> Dashboard <i class=""></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4" style="padding-right: 0px !important;">
+                                                        <div class="checkbox">
+                                                            <label class="permission_label" for="">
+                                                                <input type="checkbox" name="TransactionSummary"  id="TransactionSummary" value="1b" class="form-check-input"> Transaction Summary <i class=""></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div class="checkbox">
+                                                            <label class="permission_label" for="">
+                                                                <input type="checkbox" name="SalesTrends"  id="SalesTrends" value="1c" class="form-check-input"> Sales Trends <i class=""></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="">Transaction</label>
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <div class="checkbox">
+                                                            <label class="permission_label" for="">
+                                                                <input type="checkbox" name="TInstoreMobile"  id="TInstoreMobile" value="2a" class="form-check-input"> Instore &amp; Mobile <i class=""></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div class="checkbox">
+                                                            <label class="permission_label" for="">
+                                                                <input type="checkbox" name="TInvoice"  id="TInvoice" value="2b" class="form-check-input"> Invoicing <i class=""></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div class="checkbox">
+                                                            <label class="permission_label" for="">
+                                                                <input type="checkbox" name="TRecurring" id="TRecurring" value="2c" class="form-check-input"> Recurring <i class=""></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="">Invoice/Virtual Terminal</label>
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <div class="checkbox">
+                                                            <label class="permission_label" for="">
+                                                                <input type="checkbox" name="VirtualTerminal"   id="VirtualTerminal" value="3a" class="form-check-input"> Virtual Terminal <i class=""></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div class="checkbox">
+                                                            <label class="permission_label" for="">
+                                                                <input type="checkbox" name="IInvoicing"  id="IInvoicing" value="3b" class="form-check-input"> Invoicing <i class=""></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div class="checkbox">
+                                                            <label class="permission_label" for="">
+                                                                <input type="checkbox" name="IRecurring"  id="IRecurring" value="3c" class="form-check-input"> Recurring <i class=""></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group" style="display:none;">
+                                                <label for="">Refund</label>
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <div class="checkbox">
+                                                            <label class="permission_label" for="">
+                                                                <input type="checkbox" name="RInstoreMobile" id="RInstoreMobile" value="4a" class="form-check-input"> Instore & Mobile <i class=""></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div class="checkbox">
+                                                            <label class="permission_label" for="">
+                                                                <input type="checkbox" name="RInvoice"  id="RInvoice" value="4b" class="form-check-input"> Invoice <i class=""></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="">Inventory</label>
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <div class="checkbox">
+                                                            <label class="permission_label" for="">
+                                                                <input type="checkbox" name="ItemsManagement"  id="ItemsManagement" value="4c" class="form-check-input"> Items Management <i class=""></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div class="checkbox">
+                                                            <label class="permission_label" for="">
+                                                                <input type="checkbox" name="Reports"   id="Reports" value="4d" class="form-check-input"> Reports <i class=""></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group" style="display:none;">
+                                                <label for="">Settings</label>
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <div class="checkbox">
+                                                            <label class="permission_label" for="">
+                                                                <input type="checkbox" checked=""   name="Settings" id="Settings" value="6" class="form-check-input"> Settings <i class=""></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="margin-top: 15px;margin-bottom: 15px;">
+                                                <div class="col-12 text-right">
+                                                    <!-- <input type="submit" id="btn_login" name="submit" class="btn btn-first" value="Add Sub User" style="border-radius: 8px !important;" /> -->
+                                                    <a href="javascript:void(0)" class="btn btn-first d-colors" id="subuser_popup_add_btn">Add Sub User</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                    </form>
+            </div>
+        </div>
+    </div>
+</div> -->
+<!-- End of add sub user -->
 <!-- All Sub User - Original -->
 <div id="view_all_subuser" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title">All Sub Users</h4>
+                <div class="col-6 col-sm-6 col-md-6 col-lg-6">
+                    <h4 class="modal-title">All Sub Users</h4>
+                </div>
+                <div class="col-6 col-sm-6 col-md-6 col-lg-6 add_employee_section text-right">
+                    
+                </div>
             </div>
             <div class="modal-body custom-form">
                 <div id="modal-loader" class="text-center" style="display: none;">
@@ -1978,6 +2264,7 @@
                 </div>
                 <div id="dynamic-content_subuser">
                     <div class="row">
+                      
                         <div class="col-12">
                             <table id="all_subuser_dt" class="table table-hover" style="width:100%">
                                 <thead>
@@ -2683,13 +2970,25 @@
         $('.contactModalBody').html('<p><strong>Full Name: </strong>'+fullname+'</p><strong>Email: </strong>'+email+'</p><p><strong>Mobile: </strong>'+mobile+'</p>')
         $('#contactModal').modal('show');
     })
-
+    // var x= '<?=base_url(); ?>';
     $(document).on('click', '#getSubUser', function(e){
-        // console.log($('#myModal'));
+        // console.log(x);
         e.preventDefault();
+         
         $('#all_subuser_dt').DataTable().destroy();
-        // $('#myModal').modal('show');
         var merchant_id = $(this).data('id');
+        var status = $(this).data('status');
+        $('#subuser').attr('data-id',merchant_id);
+        $('#current_id').val(merchant_id);
+
+        if(status == 'active') {
+            var myurl='<?= base_url('Dashboard/add_subuser/') ?>'+merchant_id;
+
+            var add_employee_btn_html = '<a class="add-merchant" id="subuser" href="'+myurl+'"><i class="fa fa-plus"></i> Add Sub User</a>';
+            // $('#subuser').attr("href",myurl); // Get current url
+            $('.add_employee_section').html('');
+            $('.add_employee_section').html(add_employee_btn_html);
+        }
 
         var table;
         table = $('#all_subuser_dt').DataTable({
@@ -2724,11 +3023,48 @@
             }]
         });
     });
+    $(document).on('click', '#subuser_popup_add_btn', function() {
+        if($('#email').val() == '') {
+            alert('Email field is required');
+            return false;
+        }
 
+        if($('#phone').val() == '') {
+            alert('Enter Mobile Number.');
+            return false;
+        }
+        $('.d-colors').html('<i class="fa fa-spin fa-spinner"></i> Processing...');
+        var formData = $('#pop_inputs').serialize();
+        // console.log(formData);
+            // $.ajax({
+            //     url: "<?= base_url('Dashboard/add_subuser') ?>",
+            //     type: 'post',
+            //     dataType: 'json',
+            //     data: formData,
+            //     success: function(data1) {
+            //         if(data1.code=='200') {
+            //            $('#add_subuser').modal('hide');     
+            //             alert(data1.msg);
+            //             $('#view_all_subuser').modal('show');
+
+            //         } else {
+            //             $('.d-colors').html('Add Sub User');
+            //             alert(data1.msg);return false;
+            //             // $('small').html(data1); 
+            //         }
+            //         // console.log(data1); 
+            //     },
+            //     error :function() {
+            //         //alert('error'); 
+            //         console.log('Error'); 
+            //     }
+            // });
+    })
     function updateCredentialFn(e){
         // console.log($('.cred_nav_link.active').attr('href'));return false;
         var cred_nav_link = $('.cred_nav_link.active').attr('href');
         var PinNumber = $('#PinNumber').val();
+        var package_value = $('#package_value').val();
 
         if(cred_nav_link == '#tsysDetail') {
             var pax_pos_mid = $('#pax_pos_mid').val();
@@ -2752,7 +3088,17 @@
             //     alert('Pin Number is required');
             //     return false;
             // }
-        } else {
+        }  else if(cred_nav_link == '#wfDetail') {
+            if ($('#wood_forest').is(':checked')) {
+                if(package_value == '') {
+                    alert('Please select Billing package');
+                    return false;
+                }
+            }
+            var payroc_val = $('#payroc_value').val();
+
+
+        }else {
             var payroc_val = '0';
         }
 
@@ -2761,7 +3107,11 @@
         } else {
             var is_vts_value = 0;
         }
-
+        if ($('#wood_forest').is(':checked')) {
+            var wood_forest = '1';
+        } else {
+            var wood_forest = '0';
+        }
         console.log('clicked-cr');
         // $('#getcredt').on("click", function () {
         var auth_code =  $('#auth_code').val();
@@ -2842,7 +3192,8 @@
         var pax_timezone = $('#pax_timezone').val();
         var pax_mcc_sic = $('#pax_mcc_sic').val();
         var processor_id = $('#processor_id').val();
-        
+        var security_key_value = $('#security_key_value').val();
+
         
         $.ajax({
             type: 'POST',
@@ -2861,13 +3212,13 @@
                 t1_max_value : t1_max_value ,t1_fixed : t1_fixed,t2_code_name : t2_code_name , t2_code_value : t2_code_value , t2_min_value : t2_min_value ,
                 t2_max_value : t2_max_value ,t2_fixed : t2_fixed,t3_code_name : t3_code_name , t3_code_value : t3_code_value , t3_min_value : t3_min_value ,
                 t3_max_value : t3_max_value ,t3_fixed : t3_fixed  , url_cr : url_cr , username_cr : username_cr ,password_cr : password_cr ,api_key_cr : api_key_cr ,
-                account_id : account_id,account_token : account_token,application_id : application_id,acceptor_id : acceptor_id,terminal_id : terminal_id, pax_pos_mid : pax_pos_mid, pax_v_no : pax_v_no, pax_bin : pax_bin, pax_agent : pax_agent, pax_chain : pax_chain, pax_store_no : pax_store_no, pax_terminal_no : pax_terminal_no, pax_currency_code : pax_currency_code, pax_country_code : pax_country_code, pax_location_no : pax_location_no, pax_timezone : pax_timezone, pax_mcc_sic : pax_mcc_sic, processor_id : processor_id, PinNumber : PinNumber, payroc_val : payroc_val, is_vts : is_vts_value
+                account_id : account_id,account_token : account_token,application_id : application_id,acceptor_id : acceptor_id,terminal_id : terminal_id, pax_pos_mid : pax_pos_mid, pax_v_no : pax_v_no, pax_bin : pax_bin, pax_agent : pax_agent, pax_chain : pax_chain, pax_store_no : pax_store_no, pax_terminal_no : pax_terminal_no, pax_currency_code : pax_currency_code, pax_country_code : pax_country_code, pax_location_no : pax_location_no, pax_timezone : pax_timezone, pax_mcc_sic : pax_mcc_sic, processor_id : processor_id, PinNumber : PinNumber, payroc_val : payroc_val, is_vts : is_vts_value, package_value : package_value, wood_forest : wood_forest, security_key_value : security_key_value
             },
             type:'post',
             success: function (dataJson) {
                 if(dataJson == '200'){
                     $('#payment_method_name').empty();
-                    var payment_method_name = (payroc_val == 1) ? 'Payroc/TSYS' : 'WorldPay/FIS';
+                    var payment_method_name = (payroc_val == 1) ? 'TSYS' : 'WorldPay/FIS';
                     $('#payment_method_name').html('<a class="badge badge-success" style="font-size: 12px; color:white;">'+payment_method_name+'</a>')
 
                     $('#updateCredentialFnMsg').html('<span class="text-success">Updated successfully!</span>');
@@ -3105,6 +3456,10 @@
         $('#processor_id').val('');
         $('#PinNumber').val('');
         $('.vts_switch_section').html('');
+        $('.wf_switch_section').html('');
+        $('#package_value').val('');
+        $('#security_key_value').val('');
+        
         
         $.ajax({
             type: 'POST',
@@ -3113,9 +3468,9 @@
             type:'post',
             success: function (dataJson) {
                 data = JSON.parse(dataJson)
-                //console.log(data)
+                // console.log(data)
                 $(data).each(function (index, element) {
-                    var payment_method_name = (element.payroc == 1) ? 'Payroc/TSYS' : 'WorldPay/FIS';
+                    var payment_method_name = (element.payroc == 1) ? 'TSYS' : 'WorldPay/FIS';
                     $('#payment_method_name').html('<a class="badge badge-success" style="font-size: 12px; color:white;">'+payment_method_name+'</a>')
                     $('#auth_code').val(element.auth_code);
                     $('#api_key').val(element.api_key);
@@ -3196,9 +3551,13 @@
                     $('#processor_id').val(element.processor_id);
                     $('#PinNumber').val(element.PinNumber);
                     $('#payroc_value').val(element.payroc);
+                    $('#package_value').val(element.package_value);
+                    $('#security_key_value').val(element.security_key_value);
                     console.log(element.is_vts);
                     var is_vts_checked = (element.is_vts == 1) ? 'checked' : '';
+                    var is_wf_checked = (element.wood_forest == 1) ? 'checked' : '';
                     $('.vts_switch_section').html('<label class="switch switch_type1" role="switch"><input type="checkbox" name="is_vts" '+is_vts_checked+' id="is_vts" value="" class="switch__toggle"><span class="switch__label"></span></label>')
+                    $('.wf_switch_section').html('<label class="switch switch_type1" role="switch"><input type="checkbox" name="wood_forest" '+is_wf_checked+' id="wood_forest" value="" class="switch__toggle"><span class="switch__label"></span></label>')
                 });
             }
         });
@@ -3218,7 +3577,39 @@
             $('#payroc_value').val('0');
         }
     })
+    $(document).on('click', '#subuser', function(e){
+        
+        $('#view_all_subuser').modal('hide');
+        var merchant_id=$(this).data('id');
+        // $(this).each(function(){ 
+        
+        // });
+        // $.ajax({
+        //         url: "<?= base_url('Dashboard/add_subuser') ?>",
+        //         type: 'post',
+        //         dataType: 'json',
+        //         data: {merchant_id : merchant_id},
+        //         success: function(data1) {
+        //             if(data1.code=='200') {
+        //                $('#add_subuser').modal('hide');     
+        //                 alert(data1.msg);
+        //                 $('#view_all_subuser').modal('show');
 
+        //             } else {
+        //                 $('.d-colors').html('Add Sub User');
+        //                 alert(data1.msg);return false;
+        //                 // $('small').html(data1); 
+        //             }
+        //             // console.log(data1); 
+        //         },
+        //         error :function() {
+        //             //alert('error'); 
+        //             console.log('Error'); 
+        //         }
+        //     });
+        
+    })
+    
     $(document).on('click', '#getSubUserCreds', function(e){
         e.preventDefault();
         $('#view_all_subuser').modal('hide');
