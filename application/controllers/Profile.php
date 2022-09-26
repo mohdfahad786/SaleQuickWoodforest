@@ -11,6 +11,8 @@ class Profile extends CI_Controller {
 		if(!$this->session_checker_model->chk_session())
 		redirect('admin');
 		 date_default_timezone_set("America/Chicago");
+		 ini_set('display_errors', 1);
+		  error_reporting(E_ALL);
     }
 	
  	function my_encrypt( $string, $action = 'e' ) {
@@ -169,7 +171,7 @@ class Profile extends CI_Controller {
 					}
 
 				} else {
-					// echo $this->upload->display_errors();die;
+					echo $this->upload->display_errors();die;
 					$this->session->set_flashdata("error", "Error in uploading image.");
 					redirect('profile/edit_profile');
 				}
