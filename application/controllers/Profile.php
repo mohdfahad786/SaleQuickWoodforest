@@ -116,7 +116,7 @@ class Profile extends CI_Controller {
 		// echo '<pre>';print_r($this->session->userdata());die;
 		$data = array();
 		$data['meta'] = 'Edit Profile';
-		$data['upload_loc'] = base_url('uploads');
+		$data['upload_loc'] = base_url('logo');
 			
 		$pak_id = $this->session->userdata('id');
 		if(!$pak_id && !$this->input->post('mysubmit')) {
@@ -132,7 +132,7 @@ class Profile extends CI_Controller {
 			$psw = $this->input->post('cpsw') ? $this->input->post('cpsw') : "";
 
 			if($_FILES['mypic']['name'] != '') {
-				$config['upload_path'] = 'uploads/';
+				$config['upload_path'] = 'logo/';
         		$config['allowed_types'] = 'gif|jpg|jpeg|png';
         		$config['max_size'] = '0';
 
