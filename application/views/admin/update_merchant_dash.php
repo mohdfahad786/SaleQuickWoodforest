@@ -97,6 +97,9 @@
                                     <li class="nav-item">
                                         <a class="nav-link" data-toggle="tab" href="#pricing">Pricing</a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#permission">Permissions</a>
+                                    </li>
                                 </ul>
 
                                 <div class="tab-content">
@@ -104,6 +107,12 @@
                                         <?php
                                         echo form_open('dashboard/' . $loc, array('id' => "my_form"));
                                         echo isset($bct_id) ? form_hidden('bct_id', $bct_id) : ""; ?>
+                                        <?php if(isset($view_menu_permissions) && $view_menu_permissions!="") {
+                                                                $view_menu_permissions_Array=explode(',',$view_menu_permissions); 
+                                                            } else {
+                                                                $view_menu_permissions_Array=array();
+                                                            }?>
+
                                             <div class="row">
                                                 <div class="col-12">
                                                     <div class="form-group">
@@ -180,7 +189,7 @@
                                         <div class="row" style="margin-bottom: 10px !important;">
                                             <div class="col-12">
                                                 <div class="form-group">
-                                                    <input type="submit" name="submit" class="btn btn-first btn-md pull-right" value="<?php echo $action ?>" />
+                                                    <input type="submit" name="submit" class="btn btn-first btn-md pull-right btn_submit" value="<?php echo $action ?>" />
                                                 </div>
                                             </div>
                                         </div>
@@ -268,7 +277,7 @@
                                         <div class="row" style="margin-bottom: 10px !important;">
                                             <div class="col-12">
                                                 <div class="form-group">
-                                                    <input type="submit" name="submit" class="btn btn-first btn-md pull-right" value="<?php echo $action ?>" />
+                                                    <input type="submit" name="submit" class="btn btn-first btn-md pull-right btn_submit" value="<?php echo $action ?>" />
                                                 </div>
                                             </div>
                                         </div>
@@ -371,7 +380,7 @@
                                         <div class="row" style="margin-bottom: 10px !important;">
                                             <div class="col-12">
                                                 <div class="form-group">
-                                                    <input type="submit" name="submit" class="btn btn-first btn-md pull-right" value="<?php echo $action ?>" />
+                                                    <input type="submit" name="submit" class="btn btn-first btn-md pull-right btn_submit" value="<?php echo $action ?>" />
                                                 </div>
                                             </div>
                                         </div>
@@ -401,7 +410,7 @@
                                         <div class="row" style="margin-bottom: 10px !important;">
                                             <div class="col-12">
                                                 <div class="form-group">
-                                                    <input type="submit" name="submit" class="btn btn-first btn-md pull-right" value="<?php echo $action ?>" />
+                                                    <input type="submit" name="submit" class="btn btn-first btn-md pull-right btn_submit" value="<?php echo $action ?>" />
                                                 </div>
                                             </div>
                                         </div>
@@ -475,7 +484,154 @@
                                         <div class="row" style="margin-bottom: 10px !important;">
                                             <div class="col-12">
                                                 <div class="form-group">
-                                                    <input type="submit" name="submit" class="btn btn-first btn-md pull-right" value="<?php echo $action ?>" />
+                                                    <input type="submit" name="submit" class="btn btn-first btn-md pull-right btn_submit" value="<?php echo $action ?>" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="permission" class="tab-pane container">
+                                        <div class="col-sm-6 col-md-6 col-lg-6">
+                                            <div class="form-group">
+                                                <label for="">Dashboard</label>
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <div class="checkbox">
+                                                            <label class="permission_label" for="">
+                                                                <input type="checkbox" name="Dashboard" <?php if ( isset($view_menu_permissions) && in_array("1a", $view_menu_permissions_Array)) { echo 'checked'; }?> id="Dashboard" value="1a" class="form-check-input"> Dashboard <i class="input-frame"></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4" style="padding-right: 0px !important;">
+                                                        <div class="checkbox">
+                                                            <label class="permission_label" for="">
+                                                                <input type="checkbox" name="TransactionSummary" <?php if ( isset($view_menu_permissions) && in_array("1b", $view_menu_permissions_Array)) { echo 'checked'; }?> id="TransactionSummary" value="1b" class="form-check-input"> Transaction Summary <i class="input-frame"></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div class="checkbox">
+                                                            <label class="permission_label" for="">
+                                                                <input type="checkbox" name="SalesTrends" <?php if ( isset($view_menu_permissions) && in_array("1c", $view_menu_permissions_Array)) { echo 'checked'; }?> id="SalesTrends" value="1c" class="form-check-input"> Sales Trends <i class="input-frame"></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="">Transaction</label>
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <div class="checkbox">
+                                                            <label class="permission_label" for="">
+                                                                <input type="checkbox" name="TInstoreMobile" <?php if ( isset($view_menu_permissions) && in_array("2a", $view_menu_permissions_Array)) { echo 'checked'; }?> id="TInstoreMobile" value="2a" class="form-check-input"> Instore &amp; Mobile <i class="input-frame"></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div class="checkbox">
+                                                            <label class="permission_label" for="">
+                                                                <input type="checkbox" name="TInvoice" <?php if ( isset($view_menu_permissions) && in_array("2b", $view_menu_permissions_Array)) { echo 'checked'; }?> id="TInvoice" value="2b" class="form-check-input"> Invoicing <i class="input-frame"></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div class="checkbox">
+                                                            <label class="permission_label" for="">
+                                                                <input type="checkbox" name="TRecurring" <?php if ( isset($view_menu_permissions) && in_array("2c", $view_menu_permissions_Array)) { echo 'checked'; }?>  id="TRecurring" value="2c" class="form-check-input"> Recurring <i class="input-frame"></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="">Invoice/Virtual Terminal</label>
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <div class="checkbox">
+                                                            <label class="permission_label" for="">
+                                                                <input type="checkbox" name="VirtualTerminal"  <?php if ( isset($view_menu_permissions) && in_array("3a", $view_menu_permissions_Array)) { echo 'checked'; }?> id="VirtualTerminal" value="3a" class="form-check-input"> Virtual Terminal <i class="input-frame"></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div class="checkbox">
+                                                            <label class="permission_label" for="">
+                                                                <input type="checkbox" name="IInvoicing" <?php if ( isset($view_menu_permissions) && in_array("3b", $view_menu_permissions_Array)) { echo 'checked'; }?> id="IInvoicing" value="3b" class="form-check-input"> Invoicing <i class="input-frame"></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div class="checkbox">
+                                                            <label class="permission_label" for="">
+                                                                <input type="checkbox" name="IRecurring" <?php if ( isset($view_menu_permissions) && in_array("3c", $view_menu_permissions_Array)) { echo 'checked'; }?> id="IRecurring" value="3c" class="form-check-input"> Recurring <i class="input-frame"></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group" style="display:none;">
+                                                <label for="">Refund</label>
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <div class="checkbox">
+                                                            <label class="permission_label" for="">
+                                                                <input type="checkbox" name="RInstoreMobile" <?php if ( isset($view_menu_permissions) && in_array("4a", $view_menu_permissions_Array)) { echo 'checked'; }?> id="RInstoreMobile" value="4a" class="form-check-input"> Instore & Mobile <i class="input-frame"></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div class="checkbox">
+                                                            <label class="permission_label" for="">
+                                                                <input type="checkbox" name="RInvoice" <?php if ( isset($view_menu_permissions) && in_array("4b", $view_menu_permissions_Array)) { echo 'checked'; }?> id="RInvoice" value="4b" class="form-check-input"> Invoice <i class="input-frame"></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="">Inventory</label>
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <div class="checkbox">
+                                                            <label class="permission_label" for="">
+                                                                <input type="checkbox" name="ItemsManagement" <?php if ( isset($view_menu_permissions) && in_array("4c", $view_menu_permissions_Array)) { echo 'checked'; }?> id="ItemsManagement" value="4c" class="form-check-input"> Items Management <i class="input-frame"></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div class="checkbox">
+                                                            <label class="permission_label" for="">
+                                                                <input type="checkbox" name="Reports" <?php if ( isset($view_menu_permissions) && in_array("4d", $view_menu_permissions_Array)) { echo 'checked'; }?>  id="Reports" value="4d" class="form-check-input"> Reports <i class="input-frame"></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group" style="display:none;">
+                                                <label for="">Settings</label>
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <div class="checkbox">
+                                                            <label class="permission_label" for="">
+                                                                <input type="checkbox" checked="" <?php if ( isset($view_menu_permissions) && in_array("6", $view_menu_permissions_Array)) { echo 'checked'; }?>  name="Settings" id="Settings" value="6" class="form-check-input"> Settings <i class="input-frame"></i>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            
+                                        </div>
+                                        <div class="row" style="margin-bottom: 10px !important;">
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                    <input type="submit" name="submit" class="btn btn-first btn-md pull-right btn_submit" value="<?php echo $action ?>" />
                                                 </div>
                                             </div>
                                         </div>
@@ -554,6 +710,21 @@
                     event.cancel = true;
                 }
             });
+        }
+    })
+
+    $(document).on('click', '.btn_submit', function() {
+        var batch_report_time = $('#batch_report_time').val();
+        var zip = $('#zip').val();
+
+        if(batch_report_time == '') {
+            alert('Batch Report Time in Primary Contact Tab is required');
+            return false;
+        }
+
+        if(zip == '') {
+            alert('Zip in Business Info Tab is required');
+            return false;
         }
     })
 </script>

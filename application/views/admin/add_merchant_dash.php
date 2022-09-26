@@ -35,7 +35,7 @@
                                 <div class="mt-auto">
                                     <div class="row">
                                         <div class="col-sm-6 col-md-6 col-lg-6">
-                                            <div class="form-title">Employee Details</div>
+                                            <div class="form-title">Merchant Info</div>
                                             <div class="form-group">
                                                 <label for="">Email</label>
                                                 <input type="email" class="form-control"  <?php if($loc=='edit_employee')  {  echo 'readonly'; } ?> name="memail" id="email" pattern="[ a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,5}$"  placeholder="Email"  value="<?php echo (isset($email) && !empty($email)) ? $email : set_value('email');?>" required>
@@ -99,7 +99,7 @@
                                         </div>
 
                                         <div class="col-sm-6 col-md-6 col-lg-6">
-                                            <div class="form-title">Menu Permission</div>
+                                            <div class="form-title">Merchant Permissions</div>
                                                     
                                             <div class="form-group">
                                                 <label for="">Dashboard</label>

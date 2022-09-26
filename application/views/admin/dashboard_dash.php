@@ -427,7 +427,7 @@ if($total!=0) { ?>
                                     <div class="wrapper">
                                         <div class="d-flex justify-content-between">
                                             <div class="split-header">
-                                                <p class="h4-custom">Sales Chart</p>
+                                                <p class="h4-custom">Daily Volume</p>
                                             </div>
                                         </div>
                                     </div>
@@ -451,7 +451,7 @@ if($total!=0) { ?>
                             <div class="wrapper">
                                 <div class="d-flex justify-content-between">
                                     <div class="split-header">
-                                        <p class="h4-custom">Order Charts</p>
+                                        <p class="h4-custom">Product Volume</p>
                                     </div>
                                 </div>
                             </div>
@@ -565,7 +565,7 @@ if($total!=0) { ?>
                                         <div class="split-sub-header">
                                             <div class="row">
                                                 <div class="col-sm-6 col-md-6 col-lg-6">
-                                                    <p class="h4-custom">Yearly Gross Sales</p>
+                                                    <p class="h4-custom">Yearly Volume</p>
                                                 </div>
                                                 <div class="col-sm-6 col-md-6 col-lg-6 text-right">
                                                     <!-- <div class="row pull-right" style="margin-right: 10px;">

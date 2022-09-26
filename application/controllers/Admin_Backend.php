@@ -113,6 +113,39 @@ class Admin_Backend extends CI_Controller {
 		$processor_id = $this->input->post('processor_id') ? $this->input->post('processor_id') : "";
 		$PinNumber = $this->input->post('PinNumber') ? $this->input->post('PinNumber') : "";
 		$is_vts = $this->input->post('is_vts') ? $this->input->post('is_vts') : "";
+		$wood_forest = $this->input->post('wood_forest') ? $this->input->post('wood_forest') : "0";
+		// echo ','.$wood_forest.',';die;
+		$package_value = $this->input->post('package_value') ? $this->input->post('package_value') : "";
+		$security_key_value = $this->input->post('security_key_value') ? $this->input->post('security_key_value') : "";
+		// $admin_id=$_SESSION['id'];
+		$merchant_id=$_POST['id'];
+		$status=$this->db->query("SELECT status from merchant where id=".$merchant_id)->row();
+		 
+		if($wood_forest=='1'){
+			$status=$status->status;
+		}else{
+			$status='deactivate';
+		}
+		if($package_value == '') {
+			$monthly_value = '';
+			$per_transaction_value = '';
+
+		} else if($package_value == '1') {
+			$monthly_value = '8.95';
+			$per_transaction_value = '0.02';
+
+		} else if($package_value == '2') {
+			$monthly_value = '8.95';
+			$per_transaction_value = '0.05';
+
+		} else if($package_value == '3') {
+			$monthly_value = '25';
+			$per_transaction_value = '0.02';
+
+		} else if($package_value == '4') {
+			$monthly_value = '25';
+			$per_transaction_value = '0.05';
+		}
 
 		$branch_info = array(
 			'connection_id' => $connection_id,
@@ -194,7 +227,14 @@ class Admin_Backend extends CI_Controller {
 			'processor_id' => $processor_id,
 			'PinNumber' => $PinNumber,
 			'is_vts' => $is_vts,
-			'payroc' => $payroc_val
+			'payroc' => $payroc_val,
+			'package_value' => $package_value,
+			// 'wood_forest' => $wood_forest,
+			'status'=>$status,
+			'monthly_value' => $monthly_value,
+			'per_transaction_value' => $per_transaction_value,
+			'security_key_value' => $security_key_value,
+
 
 		);
 
