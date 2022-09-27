@@ -115,7 +115,7 @@ class Profile extends CI_Controller {
 		$data = array();
 		$data['meta'] = 'Edit Profile';
 		//$data['upload_loc'] = base_url('uploads');
-		$data['upload_loc'] ="https://salequick.com/uploads";
+		$data['upload_loc'] ="https://salequick.com/uploads/";
 			
 		$pak_id = $this->session->userdata('id');
 		if(!$pak_id && !$this->input->post('mysubmit')) {
