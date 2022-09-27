@@ -114,7 +114,8 @@ class Profile extends CI_Controller {
 		// echo '<pre>';print_r($this->session->userdata());die;
 		$data = array();
 		$data['meta'] = 'Edit Profile';
-		$data['upload_loc'] = base_url('uploads');
+		//$data['upload_loc'] = base_url('uploads');
+		$data['upload_loc'] ="https://salequick.com/uploads";
 			
 		$pak_id = $this->session->userdata('id');
 		if(!$pak_id && !$this->input->post('mysubmit')) {
@@ -169,7 +170,7 @@ class Profile extends CI_Controller {
 					}
 
 				} else {
-					// echo $this->upload->display_errors();die;
+					 echo $this->upload->display_errors();die;
 					$this->session->set_flashdata("error", "Error in uploading image.");
 					redirect('profile/edit_profile');
 				}
