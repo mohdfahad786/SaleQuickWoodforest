@@ -40,7 +40,7 @@ if (empty($this->session->userdata('username'))) {
         <div class="user-profile">
             <div class="display-avatar sidebar_logo_preview">
                 <?php if($this->session->userdata('image') ) { ?>
-                    <img class="img-lg-custom" src="<?php echo base_url()."logo/".$this->session->userdata('image'); ?>" alt="profile image">
+                    <img class="img-lg-custom" src="<?php echo base_url()."uploads/".$this->session->userdata('image'); ?>" alt="profile image">
                 <?php } else { ?>
                     <div class="img-lg-custom-text-light">
                         <?php echo (!empty($this->session->userdata('name'))) ? strtoupper(substr($this->session->userdata('name'),0,1)) : strtoupper(substr($this->session->userdata('username'),0,1)); ?>
