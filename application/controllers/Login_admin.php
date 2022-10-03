@@ -137,7 +137,7 @@ class Login_admin extends CI_Controller
 
         } else {
             if ($this->input->post('btn_login') == "Login") {
-                $ip = $this->input->post("ip");
+                $ip=$_SERVER['REMOTE_ADDR'];
                 $usr_count = $this->login_model->get_ip($ip,$add_time,$endTime,$date);
                 if($usr_count > 50) {
                     $this->session->set_flashdata('msg', '<div class="alert alert-danger text-center">Your Ip is Block!</div>');
@@ -196,7 +196,7 @@ class Login_admin extends CI_Controller
                     else
                     {
                          $data = Array(
-                    "ip" => $this->input->post("ip"),
+                    "ip" => $ip,
                     "user_type" => 'admin', //wf
                     'user_id' => '',
                     'status' => 'false'
@@ -234,7 +234,7 @@ class Login_admin extends CI_Controller
                                   
                                $this->session->set_userdata($sessiondata);
                                 
-                               $data = Array( "ip" => $this->input->post("ip"),  "user_type" => 'sub_admin', 'user_id' => $usr_result2['id'],  'status' => 'true'  );
+                               $data = Array( "ip" => $ip,  "user_type" => 'sub_admin', 'user_id' => $usr_result2['id'],  'status' => 'true'  );
                                $this->Home_model->insert_data("login_detail", $data);
                               //  print_r($this->session->userdata()); die; 
                                //redirect(base_url().'subadmin/dashboard');
@@ -246,7 +246,7 @@ class Login_admin extends CI_Controller
                              else
                              {
                                   $data = Array(
-                             "ip" => $this->input->post("ip"),
+                             "ip" => $ip,
                              "user_type" => 'sub_admin',
                              'user_id' => '',
                              'status' => 'false'
@@ -261,7 +261,7 @@ class Login_admin extends CI_Controller
                 else
                     {
                     $data = Array(
-                    "ip" => $this->input->post("ip"),
+                    "ip" => $ip,
                     "user_type" => '',
                     'user_id' => '',
                     'status' => 'false'

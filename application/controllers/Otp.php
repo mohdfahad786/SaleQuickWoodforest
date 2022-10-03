@@ -97,6 +97,7 @@ public function otp()
     
              if ($this->input->post('btn_login') == "Reset")
                {
+                $ip=$_SERVER['REMOTE_ADDR'];
 
  
     $admin_id = $_POST['admin_id'];
@@ -129,7 +130,7 @@ public function otp()
                     //print_r($sessiondata);die;
             $this->session->set_userdata($sessiondata);
 
-            $data = Array("ip" => $this->input->post("ip"),  "user_type" => 'wf', 'user_id' => $usr_result['id'],  'status' => 'true'  );
+            $data = Array("ip" => $ip,  "user_type" => 'wf', 'user_id' => $usr_result['id'],  'status' => 'true'  );
      
                 $this->Home_model->insert_data("login_detail", $data);
                 redirect(base_url().'dashboard');
