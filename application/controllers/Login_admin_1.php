@@ -136,106 +136,87 @@ class Login_admin extends CI_Controller
             $this->load->view('admin/login_view');
 
         } else {
-            // echo $captcha_response;die;
-            $captcha_response = trim($this->input->post('g-recaptcha-response'));
+            if ($this->input->post('btn_login') == "Login") {
+                $ip=$_SERVER['REMOTE_ADDR'];
+                $usr_count = $this->login_model->get_ip($ip,$add_time,$endTime,$date);
+                if($usr_count > 50) {
+                    $this->session->set_flashdata('msg', '<div class="alert alert-danger text-center">Your Ip is Block!</div>');
+                    redirect(base_url().'admin');
+                } else {
+                    $usr_result = $this->login_model->get_user($username, $password);
+                    $usr_result2 = $this->login_model->get_subadmin($username, $password);
+                    //print_r($usr_result2); 
+                    //print_r($usr_result);die;
+                    // print_r($usr_result['user_type']);  die; 
+                    if($usr_result!="") {
+                        if (!empty($usr_result) && $usr_result['status']=='active' && $usr_result['user_type']=='wf') {
+                            // start otp
+                            $otp = rand(1000,9999);
+                            $sms_message = trim(" Hello your otp : " . $otp . "  ");
+                            $from = '+18325324983'; //trial account twilio number
+                            // $to = '+'.$sms_reciever; //sms recipient number
+                            //$sms_reciever='7133929414';
+                            $sms_reciever=$usr_result['phone'];
+                            $mob = str_replace(array('(', ')', '-', ' '), '', $sms_reciever);
+                            $to = '+1' . $mob;
+                            $response = $this->twilio->sms($from, $to, $sms_message);
 
-            if($captcha_response != '') {
-                $keySecret = '6LdsrTMiAAAAAOOGY0ncl1evCWIY9akEoFAff79_';
+                            // if($username=='developer'){
+                            //  print_r($response); die();
+                            //   }
 
-                $check = array(
-                    'secret'        =>  $keySecret,
-                    'response'      =>  $this->input->post('g-recaptcha-response')
-                );
+                            /////////////// Send email start
+                            $otp_data = array(
+                                'admin_name' => $usr_result['name'],
+                                'otp' => $otp
+                            );
 
-                $startProcess = curl_init();
+                            $MailTo = $usr_result['email_id'];
+            
+                            //print_r($htmlContent); 
+                            $config['mailtype'] = 'html';
+                            $this->email->initialize($config);
+                            $msg = $this->load->view('email/otp_mail', $otp_data, true);
+                            $MailSubject = 'Salequick Admin Otp';
+                            $this->email->from('info@salequick.com', 'Salequick Admin Otp');
+                            $this->email->to($usr_result['email_id']);
+                            $this->email->subject($MailSubject);
+                            $this->email->message($msg);
+                            $this->email->send();
+                        
+                 
 
-                curl_setopt($startProcess, CURLOPT_URL, "https://www.google.com/recaptcha/api/siteverify");
+                $getQuery_delete = $this->db->query(" DELETE FROM otp_detail where admin_id='".$usr_result['id']."' "); 
+                    $getQuery_a = $this->db->query("INSERT INTO otp_detail (admin_id, otp) VALUES ('".$usr_result['id']."', '".$otp."') ");
 
-                curl_setopt($startProcess, CURLOPT_POST, true);
-
-                curl_setopt($startProcess, CURLOPT_POSTFIELDS, http_build_query($check));
-
-                curl_setopt($startProcess, CURLOPT_SSL_VERIFYPEER, false);
-
-                curl_setopt($startProcess, CURLOPT_RETURNTRANSFER, true);
-
-                $receiveData = curl_exec($startProcess);
-
-                $finalResponse = json_decode($receiveData, true);
-
-                if($finalResponse['success']) {
-
-                    if ($this->input->post('btn_login') == "Login") {
-                        $ip=$_SERVER['REMOTE_ADDR'];
-                        $usr_count = $this->login_model->get_ip($ip,$add_time,$endTime,$date);
-                        if($usr_count > 50) {
-                            $this->session->set_flashdata('msg', '<div class="alert alert-danger text-center">Your Ip is Block!</div>');
-                            redirect(base_url().'admin');
-                        } else {
-                            $usr_result = $this->login_model->get_user($username, $password);
-                            $usr_result2 = $this->login_model->get_subadmin($username, $password);
-                            //print_r($usr_result2); 
-                            //print_r($usr_result);die;
-                            // print_r($usr_result['user_type']);  die; 
-                            if($usr_result!="") {
-                                if (!empty($usr_result) && $usr_result['status']=='active' && $usr_result['user_type']=='wf') {
-                                    // start otp
-                                    $otp = rand(1000,9999);
-                                    $sms_message = trim(" Hello your otp : " . $otp . "  ");
-                                    $from = '+18325324983'; //trial account twilio number
-                                    // $to = '+'.$sms_reciever; //sms recipient number
-                                    //$sms_reciever='7133929414';
-                                    $sms_reciever=$usr_result['phone'];
-                                    $mob = str_replace(array('(', ')', '-', ' '), '', $sms_reciever);
-                                    $to = '+1' . $mob;
-                                    $response = $this->twilio->sms($from, $to, $sms_message);
-
-                                    // if($username=='developer'){
-                                    //  print_r($response); die();
-                                    //   }
-
-                                    /////////////// Send email start
-                                    $otp_data = array(
-                                        'admin_name' => $usr_result['name'],
-                                        'otp' => $otp
-                                    );
-
-                                    $MailTo = $usr_result['email_id'];
-                    
-                                    //print_r($htmlContent); 
-                                    $config['mailtype'] = 'html';
-                                    $this->email->initialize($config);
-                                    $msg = $this->load->view('email/otp_mail', $otp_data, true);
-                                    $MailSubject = 'Salequick Admin Otp';
-                                    $this->email->from('info@salequick.com', 'Salequick Admin Otp');
-                                    $this->email->to($usr_result['email_id']);
-                                    $this->email->subject($MailSubject);
-                                    $this->email->message($msg);
-                                    $this->email->send();
-                                
-                                    $getQuery_delete = $this->db->query(" DELETE FROM otp_detail where admin_id='".$usr_result['id']."' "); 
-                                    $getQuery_a = $this->db->query("INSERT INTO otp_detail (admin_id, otp) VALUES ('".$usr_result['id']."', '".$otp."') ");
-
-                                   //redirect(base_url().'dashboard');
-                                    redirect(base_url().'otp/index'.'/'.$usr_result['id']);
-                                
-                                } else {
-                                    $data = Array(
-                                        "ip" => $ip,
-                                        "user_type" => 'admin', //wf
-                                        'user_id' => '',
-                                        'status' => 'false'
-                                    );
+                        
+                           //redirect(base_url().'dashboard');
+                            redirect(base_url().'otp/index'.'/'.$usr_result['id']);
+                    }
+                    else
+                    {
+                         $data = Array(
+                    "ip" => $ip,
+                    "user_type" => 'admin', //wf
+                    'user_id' => '',
+                    'status' => 'false'
+                   
+                         );
+               
+                    $this->Home_model->insert_data("login_detail", $data);
+                    $this->session->set_flashdata('msg', '<div class="alert alert-danger text-center">you have Block by another admin</div>');
                        
-                                    $this->Home_model->insert_data("login_detail", $data);
-                                    $this->session->set_flashdata('msg', '<div class="alert alert-danger text-center">you have Block by another admin</div>');
-                               
-                                    redirect(base_url().'admin');
-                                }
-
-                            } else if( $usr_result2!="") {
-                                if (!empty($usr_result2) && $usr_result2['status']=='active') {     
-                                    $sessiondata = array(
+                         redirect(base_url().'admin');
+                    }
+                }
+                else if( $usr_result2!="")
+                {
+                    
+           
+                              
+                            if (!empty($usr_result2) && $usr_result2['status']=='active') 
+                             {     
+                                 $sessiondata = array(
                                        'subadmin_id' => $usr_result2['id'],
                                        'time_zone' => 'America/Chicago',
                                        //  'username' => $usr_result['username'],
@@ -249,61 +230,62 @@ class Login_admin extends CI_Controller
                                        'subadmin_delete_permissions' => $usr_result2['delete_permissions'],
                                        //'image' => $usr_result['image'],
                                        'subadmin_loginuser' => TRUE
-                                    );
-                                          
-                                    $this->session->set_userdata($sessiondata);
-
-                                    $data = Array( "ip" => $ip,  "user_type" => 'sub_admin', 'user_id' => $usr_result2['id'],  'status' => 'true'  );
-                                    $this->Home_model->insert_data("login_detail", $data);
-                                    //  print_r($this->session->userdata()); die; 
-                                    //redirect(base_url().'subadmin/dashboard');
-                                    redirect(base_url().'subadmin/edit_profile');
+                                  );
+                                  
+                               $this->session->set_userdata($sessiondata);
                                 
-                                } else {
-                                    $data = Array(
-                                        "ip" => $ip,
-                                        "user_type" => 'sub_admin',
-                                        'user_id' => '',
-                                        'status' => 'false'
-                                    );
-                                
-                                    $this->Home_model->insert_data("login_detail", $data);
-                                    $this->session->set_flashdata('msg', '<div class="alert alert-danger text-center">you have Block by admin</div>');
-                                    redirect(base_url().'admin');
-                                }
-
-                            } else {
-                                $data = Array(
-                                    "ip" => $ip,
-                                    "user_type" => '',
-                                    'user_id' => '',
-                                    'status' => 'false'
-                                );
-                           
-                                $this->Home_model->insert_data("login_detail", $data);
-                                $this->session->set_flashdata('msg', '<div class="alert alert-danger text-center">Invalid username and password!</div>');
-                                   
-                                redirect(base_url().'admin');
-                            }
-                        }
-
-                    } else {
-                        redirect(base_url().'admin');
-                    }
-                } else {
-                    $this->session->set_flashdata('msg', '<div class="alert alert-danger text-center">Validation Fail Try Again!</div>');
-                    redirect(base_url().'admin');
+                               $data = Array( "ip" => $ip,  "user_type" => 'sub_admin', 'user_id' => $usr_result2['id'],  'status' => 'true'  );
+                               $this->Home_model->insert_data("login_detail", $data);
+                              //  print_r($this->session->userdata()); die; 
+                               //redirect(base_url().'subadmin/dashboard');
+                               redirect(base_url().'subadmin/edit_profile');
+                               
+                               
+                             }
+                             
+                             else
+                             {
+                                  $data = Array(
+                             "ip" => $ip,
+                             "user_type" => 'sub_admin',
+                             'user_id' => '',
+                             'status' => 'false'
+                            
+                                  );
+                        
+                             $this->Home_model->insert_data("login_detail", $data);
+                             $this->session->set_flashdata('msg', '<div class="alert alert-danger text-center">you have Block by admin</div>');
+                             redirect(base_url().'admin');
+                             }
                 }
+                else
+                    {
+                    $data = Array(
+                    "ip" => $ip,
+                    "user_type" => '',
+                    'user_id' => '',
+                    'status' => 'false'
+                         );
+               
+                    $this->Home_model->insert_data("login_detail", $data);
+                    $this->session->set_flashdata('msg', '<div class="alert alert-danger text-center">Invalid username and password!</div>');
+                       
+                         redirect(base_url().'admin');
+                    }
 
-            } else {
-                $this->session->set_flashdata('msg', '<div class="alert alert-danger text-center">Validation Fail Try Again!</div>');
+             }
+          }
+          else
+          {
+             
                 redirect(base_url().'admin');
-            }
-        }
-    }
+          }
+     }
+}
 
 
-    public function index_old2() {
+     public function index_old2()
+{
      
      $username = $this->input->post("username");
      $password1 = $this->input->post("password");

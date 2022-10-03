@@ -1,12 +1,10 @@
 <?php 
-
 // if (($this->session->userdata('username')))
 // {
 //     header('Location:  '.  'https://salequick.com/dashboard');
 // }
-
-
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -37,7 +35,11 @@
         .outer-page-wrapper{
           color: rgba(255,255,255,0.7);
         }
+        .log-reg-box-inner {
+            max-width: 365px !important;
+        }
     </style>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
 <div id="wrapper"> 
@@ -78,6 +80,11 @@
               <div class="form-group">
                 <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
               </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <div class="g-recaptcha" data-sitekey="6LdsrTMiAAAAACJvbmyBzlOeMRfBnHt9yQsIrN-j"></div>
+                </div>
             </div>
             <div class="col-12">
               <div class="form-group">
