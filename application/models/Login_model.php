@@ -27,7 +27,7 @@ class Login_model extends CI_Model
         
 		$this->db->select('*');
         $this->db->from('admin');
-        $this->db->where('username', $usr);
+        $this->db->where('email_id', $usr);
 		 $this->db->where('password', ($pwd));
         $this->db->where('status', 'active');
         $this->db->where('user_type', 'wf');

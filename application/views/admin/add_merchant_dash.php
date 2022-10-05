@@ -44,6 +44,26 @@
                                                 <label for="">Mobile Number</label>
                                                 <input type="text" class="form-control" name="primary_phone" id="phone" onkeypress="return isNumberKey(event)" placeholder="Mobile Number" value="<?php echo (isset($mobile) && !empty($mobile)) ? $mobile : set_value('mobile');?>" required="">
                                             </div>
+                                            <div class="form-group">
+                                                <label>Legal Business Name</label>
+                                                <input type="text" class="form-control required" placeholder="Legal Business Name" id="business_name" name="business_name"> 
+                                            </div>
+                                            <div class="form-group">
+                                                <label>DBA Name</label>
+                                                <input type="text" class="form-control required" id="business_dba_name" placeholder="DBA Name" name="business_dba_name"> 
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Tax Identification Number (TIN)</label>
+                                                <input type="text" class="form-control required us-tin-no"  id="taxid" name="taxid" onkeypress="return isNumberKey(event)"> 
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Password</label>
+                                                <input type="password" id="password" class="form-control" name="password" placeholder="New Password" required> 
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Confirm Password</label>
+                                                <input type="password" id="c_password" class="form-control" name="confirm_password" placeholder="Confirm Password"   required>
+                                            </div>
                                         </div>
 
                                         <div class="col-12" style="display:none;">
@@ -254,3 +274,32 @@
 </div>
 
 <?php include_once'footer_dash.php'; ?>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#taxid").mask("99-9999999");
+    });
+    function isNumberKey(evt){
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+
+    $(document).on('click', '#btn_login', function() {
+    var password = $('#password').val();
+    var c_password = $('#c_password').val();
+    // alert(password+','+c_password);return false;
+
+    var regularExpression = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$/;
+
+    if(!regularExpression.test(password)) {
+        alert("Password must contain a minimum of 8 characters, at least 1 number, at least one uppercase character and at least one lowercase character.");
+        return false;
+    }
+    if(password != c_password) {
+        alert('Password and Confirm Password must be same.');
+        return false;
+    }
+  })
+</script>

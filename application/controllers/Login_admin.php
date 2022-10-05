@@ -130,8 +130,8 @@ class Login_admin extends CI_Controller
 
         $password = $this->my_encrypt( $password1 , 'e' );
         $add_time = date("H:i:s");
-        $this->form_validation->set_rules("username", "Username", "trim|required");
-        $this->form_validation->set_rules("password", "Password", "trim|required");
+        $this->form_validation->set_rules("username", "Username", "trim|required|valid_email|max_length[50]");
+        $this->form_validation->set_rules("password", "Password", "trim|required|max_length[20]");
         if ($this->form_validation->run() == FALSE) {
             $this->load->view('admin/login_view');
 
@@ -173,7 +173,7 @@ class Login_admin extends CI_Controller
                             redirect(base_url().'admin');
                         } else {
                             $usr_result = $this->login_model->get_user($username, $password);
-                            $usr_result2 = $this->login_model->get_subadmin($username, $password);
+                           // $usr_result2 = $this->login_model->get_subadmin($username, $password);
                             //print_r($usr_result2); 
                             //print_r($usr_result);die;
                             // print_r($usr_result['user_type']);  die; 
@@ -303,7 +303,7 @@ class Login_admin extends CI_Controller
     }
 
 
-    public function index_old2() {
+    public function index_old28897hj() {
      
      $username = $this->input->post("username");
      $password1 = $this->input->post("password");
@@ -444,7 +444,7 @@ class Login_admin extends CI_Controller
      }
 }
 
-       public function subadmin()
+       public function subadmin_7y87y8hkjhkh8()
      {
     
           $username = $this->input->post("username");
@@ -535,7 +535,7 @@ class Login_admin extends CI_Controller
           }
      }
 	 
-public function merchant()
+public function merchant_676668768768()
      {
         $username = $this->input->post("username");
         $password1 = $this->input->post("password");

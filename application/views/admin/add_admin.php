@@ -262,7 +262,7 @@
                                                     <label for="">User Type</label>
                                                     <select name="user_type" class="form-control">
                                                         <option value="">Select User Type</option>
-                                                        <option value="admin" <?php echo ($user_type == 'admin') ? 'selected' : '' ?>>Admin</option>
+                                                        <option value="wf" <?php echo ($user_type == 'wf') ? 'selected' : '' ?>>Woodforest</option>
                                                         <!-- <option value="subadmin" <?php echo ($user_type == 'subadmin') ? 'selected' : '' ?>>Sub Admin</option> -->
                                                     </select>
                                                 </div>
@@ -271,7 +271,7 @@
                                                     <label for="">User Type</label>
                                                     <select name="user_type" class="form-control">
                                                         <option value="">Select User Type</option>
-                                                        <option value="admin">Admin</option>
+                                                        <option value="wf">Woodforest</option>
                                                         <!-- <option value="subadmin">Sub Admin</option> -->
                                                     </select>
                                                 </div>

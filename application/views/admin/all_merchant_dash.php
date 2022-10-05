@@ -342,7 +342,8 @@
                                 <!-- <th style="width: 10% !important;">Tokenized System</th> -->
                                 <th>Details</th>
                                 <th>Monthly Volume</th>
-                                <?php if( ($_SESSION['id'] == 1) || ($_SESSION['id'] == 2) || ($_SESSION['id'] == 4) || ($_SESSION['id'] == 8) ) { ?>
+                                
+                                <?php if( $_SESSION['user_type']=='wf' ) { ?>
                                     <th>Status Action</th>
                                 <?php } ?>
                                 <th></th>
@@ -1442,10 +1443,10 @@
                                 <li class="nav-item">
                                     <a class="nav-link" data-toggle="tab" href="#BusOwnInfo">Owner Info</a>
                                 </li>
-                                <li class="nav-item">
+                                <li class="nav-item d-none">
                                     <a class="nav-link" data-toggle="tab" href="#BankInfo">Banking Details</a>
                                 </li>
-                                <li class="nav-item">
+                                <li class="nav-item d-none">
                                     <a class="nav-link" data-toggle="tab" href="#Pricing">Pricing</a>
                                 </li>
                             </ul>
@@ -1455,23 +1456,23 @@
                                         <div class="col-sm-12">
                                             <div class="form-group">
                                                 <label>Name</label>
-                                                <input type="text" id="pc_name" class="form-control required" name="pc_name" /> 
+                                                <input type="text" id="pc_name" class="form-control required" placeholder="Name" name="pc_name" /> 
                                             </div>
                                             <div class="form-group">
                                                 <label>Title</label>
-                                                <input  type="text" id="pc_title" class="form-control required" name="pc_title" /> 
+                                                <input  type="text" id="pc_title" class="form-control required" placeholder="Title" name="pc_title" /> 
                                             </div>
                                             <div class="form-group">
                                                 <label>Email</label>
-                                                <input  type="text" id="pc_email" name="pc_email"  class="form-control required email" /> 
+                                                <input  type="text" id="pc_email" placeholder="Email" name="pc_email"  class="form-control required email" /> 
                                             </div>
                                             <div class="form-group">
                                                 <label>Phone</label>
-                                                <input  type="text" id="pc_phone" name="pc_phone"  class="form-control required us-phone-no" /> 
+                                                <input  type="text" id="pc_phone" placeholder="Phone Number" name="pc_phone"  class="form-control required us-phone-no" /> 
                                             </div>
                                             <div class="form-group">
                                                 <label>Address</label>
-                                                <input  type="text" id="pc_address" class="form-control required" name="pc_address" /> 
+                                                <input  type="text" id="pc_address" class="form-control required" placeholder="Address" name="pc_address" /> 
                                             </div>
                                         </div>
                                     </div>
@@ -1481,15 +1482,15 @@
                                         <div class="col-sm-12" >
                                             <div class="form-group">
                                                 <label>Legal Business Name</label>
-                                                <input type="text" class="form-control required" id="business_name"> 
+                                                <input type="text" placeholder="Enter the legal name of your business" class="form-control required" id="business_name"> 
                                             </div>
                                             <div class="form-group">
                                                 <label>DBA Name</label>
-                                                <input type="text" class="form-control required" id="business_dba_name"> 
+                                                <input type="text" placeholder="Enter the doing business as name for your business" class="form-control required" id="business_dba_name"> 
                                             </div>
                                             <div class="form-group">
                                                 <label>Tax Identification Number (TIN)</label>
-                                                <input type="text" class="form-control required us-tin-no" id="taxid" onkeypress="return isNumberKey(event)"> 
+                                                <input type="text" placeholder="Tax Identification Number (TIN)" class="form-control required us-tin-no" id="taxid" onkeypress="return isNumberKey(event)"> 
                                             </div>
                                             <div class="form-group">
                                                 <label>Physical Address</label>
@@ -1499,9 +1500,9 @@
                                                     <option value="Mexico">Mexico</option>
                                                     <option value="Canada">Canada</option>
                                                 </select>
-                                                <input type="text" class="form-control required" id="address1">
+                                                <input type="text" placeholder="Enter Address" class="form-control required" id="address1">
                                                 <!-- <input type="text" class="form-control" id="address2"> -->
-                                                <input type="text" class="form-control required" id="busi_city">
+                                                <input type="text" placeholder="Enter business city" class="form-control required" id="busi_city">
                                                 <select class="form-control required" id="busi_state" required autocomplete="off">
                                                     <option value="">Select State</option>
                                                     <option value="AL">Alabama</option>
@@ -1556,7 +1557,7 @@
                                                     <option value="WI">Wisconsin</option>
                                                     <option value="WY">Wyoming</option>
                                                 </select>
-                                                <input type="text" class="form-control required" id="busi_zip">
+                                                <input type="text" placeholder="zip code" class="form-control required" id="busi_zip">
                                             </div>
                                             <div class="form-group">
                                                 <label>Ownership Type</label>
@@ -1590,27 +1591,27 @@
                                             <div class="form-group">
                                                 <label>Business Establishment Date</label>
                                                 <!-- <input type="text" class="form-control required us-date-calendar" id="establishmentdate" placeholder='yyyy-mm-dd'> --> 
-                                                <input type="text" class="form-control required us-date-calendar" id="establishmentdate"> 
+                                                <input type="text" placeholder="Business Establishment Date" class="form-control required us-date-calendar" id="establishmentdate"> 
                                             </div>
                                             <div class="form-group">
                                                 <label>Business Phone Number</label>
-                                                <input type="text" class="form-control required us-phone-no" id="business_number"  > 
+                                                <input type="text" class="form-control required us-phone-no" id="business_number" placeholder="Business Phone Number" > 
                                             </div>
                                             <div class="form-group">
                                                 <label>Customer Service Phone Number</label>
-                                                <input type="text" class="form-control required us-phone-no" id="customer_service_phone" > 
+                                                <input type="text" class="form-control required us-phone-no" placeholder="Customer Service Phone Number" id="customer_service_phone" > 
                                             </div>
                                             <div class="form-group">
                                                 <label>Business Email</label>
-                                                <input type="text" class="form-control required email" id="business_email" > 
+                                                <input type="text" class="form-control required email" id="business_email" placeholder="Business Email"> 
                                             </div>
                                             <div class="form-group">
                                                 <label>Customer Service Email</label>
-                                                <input type="text" class="form-control required email" id="customer_service_email" > 
+                                                <input type="text" class="form-control required email" id="customer_service_email" placeholder="Customer Service Email"> 
                                             </div>
                                             <div class="form-group">
                                                 <label>Business Website</label>
-                                                <input type="text" class="form-control non_required" id="website"> 
+                                                <input type="text" class="form-control non_required" id="website" placeholder="Business Website"> 
                                             </div>
                                         </div>
                                     </div>
@@ -1622,13 +1623,13 @@
                                                 <label>Owner Name</label>
                                                 <div class="row">
                                                     <div class="col-4">
-                                                        <input type="text" class="form-control required" id="o_f_name">
+                                                        <input type="text" class="form-control required" placeholder="First" id="o_f_name">
                                                     </div>
                                                     <div class="col-4">
-                                                        <input type="text" class="form-control non_required" id="o_m_name">
+                                                        <input type="text" placeholder="Middle" class="form-control non_required" id="o_m_name">
                                                     </div>
                                                     <div class="col-4">
-                                                        <input type="text" class="form-control required" id="o_l_name">
+                                                        <input type="text" placeholder="Last" class="form-control required" id="o_l_name">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1640,26 +1641,26 @@
                                             </div>
                                             <div class="form-group">
                                                 <label>Social Security Number</label>
-                                                <input type="text" class="form-control required us-ssn-no-enc" id="o_ss_number"  onkeypress="return isNumberKey(event)" maxlength="11"> 
+                                                <input type="text" class="form-control required us-ssn-no-enc" id="o_ss_number"  placeholder="Social Security Number" onkeypress="return isNumberKey(event)" maxlength="11"> 
                                             </div>
                                             <div class="form-group">
                                                 <label>Ownership Percentage</label>
-                                                <input type="text" class="form-control required" id="o_perc" onkeypress="return isNumberKey(event)"> 
+                                                <input type="text" class="form-control required" id="o_perc" placeholder="Ownership Percentage" onkeypress="return isNumberKey(event)"> 
                                             </div>
                                             <div class="form-group">
                                                 <label>Date Of Birth</label>
                                                 <!-- <input type="text" class="form-control required us-date-calendar" id="o_dob" placeholder='yyyy-mm-dd'>  -->
-                                                <input type="text" class="form-control required us-date-calendar" id="o_dob"> 
+                                                <input type="text" class="form-control required us-date-calendar" placeholder="Date of Brith" id="o_dob"> 
                                             </div>
                                             <div class="form-group">
                                                 <label>Home Address</label>
-                                                <select class="form-control" id="o_country" required autocomplete="off">
+                                                <select class="form-control required" name="o_country" id="o_country" required autocomplete="off">
                                                     <option value="">Select Country</option>
                                                     <option value="USA">United States of America</option>
                                                 </select>
-                                                <input type="text" class="form-control required" id="o_address1">
+                                                <input type="text" class="form-control required" id="o_address1" placeholder="Address">
                                                 <!-- <input type="text" class="form-control" id="o_address2"> -->
-                                                <input type="text" class="form-control required" id="o_city">
+                                                <input type="text" placeholder="City" class="form-control required" id="o_city">
                                                 <select class="form-control required" id="o_state" required autocomplete="off">
                                                     <option value="">Select State</option>
                                                     <option value="AL">Alabama</option>
@@ -1714,27 +1715,27 @@
                                                     <option value="WI">Wisconsin</option>
                                                     <option value="WY">Wyoming</option>
                                                 </select>
-                                                <input type="text" class="form-control required" id="o_zip" onkeypress="return isNumberKey(event)">
+                                                <input type="text" class="form-control required" id="o_zip" placeholder="zip" onkeypress="return isNumberKey(event)">
                                             </div>
                                             <div class="form-group">
                                                 <label>Owner Phone</label>
-                                                <input type="text" class="form-control required us-phone-no" id="o_phone" > 
+                                                <input type="text" placeholder="Owner Phone" class="form-control required us-phone-no" id="o_phone" > 
                                             </div>
                                             <div class="form-group">
                                                 <label>Owner Email</label>
-                                                <input type="text" class="form-control required email" id="o_email" > 
+                                                <input type="text" placeholder="Owner Email" class="form-control required email" id="o_email" > 
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane container" id="BankInfo">
+                                <!-- <div class="tab-pane container" id="BankInfo">
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="form-group">
                                                 <label>Bank Account DDA Type</label>
-                                                <!-- <input type="text" class="form-control required" id="bank_dda" >  -->
+                                               
                                                 <div class="rel-div">
-                                                    <select class="form-control required" name="bank_dda" id="bank_dda" required="">
+                                                    <select class="form-control required" name="bank_dda" id="bank_dda" >
                                                         <option value="">Select Bank Account DDA Type</option>
                                                         <option value="CommercialChecking">Commercial Checking</option>
                                                         <option value="PrivateChecking">Private Checking</option>
@@ -1744,13 +1745,13 @@
                                             <div class="form-group">
                                                 <label>Bank Account ACH Type</label>
                                                 <div class="rel-div">
-                                                    <select class="form-control required" name="baccachtype" required="" id="bank_ach">
+                                                    <select class="form-control required" name="baccachtype"  id="bank_ach">
                                                         <option value="">Select Bank Account ACH Type</option>
                                                         <option value="CommercialChecking">Business Checking</option>
                                                         <option value="PrivateChecking">Personal Checking</option>
                                                     </select>
                                                 </div>
-                                                <!--  <input type="text" class="form-control required"  >  -->
+                                      
                                             </div>
                                             <div class="form-group">
                                                 <label>Routing Number</label>
@@ -1776,13 +1777,13 @@
                                             <div class="form-group d-none">
                                                 <label>V Billing Descriptor </label>
                                                 <input  type="text" id="billing_descriptor" class="form-control required" name="billing_descriptor"  /> 
-                                            </div>
+                                            </div>-->
                                             <input type="hidden" id="key" class="hidden_inputs" name='key' />
-                                            <input type="hidden" name="id" id="activation_id" class="hidden_inputs" value="">
+                                           <!-- <input type="hidden" name="id" id="activation_id" class="hidden_inputs" value="">
                                         </div>
                                     </div>
-                                </div>
-                                <div class="tab-pane container" id="Pricing">
+                                </div> -->
+                                <!-- <div class="tab-pane container" id="Pricing">
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <div class="row">
@@ -1869,14 +1870,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!-- <div class="form-group">
-                                                <label>Annual CC Sales vol</label>
-                                                <input type="text" id="annual_cc_sales_vol" class="form-control required" name="annual_cc_sales_vol" onkeypress="return isNumberKey1dc(this,event)"/>
-                                                </div> -->
-                                            <!-- <div class="form-group">
-                                                <label>Monthly Fee</label>
-                                                <input type="text" id="monthly_fee" name="monthly_fee" class="form-control required" onkeypress="return isNumberKey1dc(this,event)" /> 
-                                                </div> -->
+                                            
                                             <div class="form-group d-none">
                                                 <label>vm Card Rate </label>
                                                 <input type="text" id="vm_cardrate" name="vm_cardrate" class="form-control required" onkeypress="return isNumberKey(event)"/> 
@@ -1955,7 +1949,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -4517,6 +4511,7 @@
         if(validateMerchantApi($('#activation_dynamic-content1'))) {
             if(confirm('Do you want to update info of this Merchant?')) {
                 $('#saveMerchant').html('Saving');
+                // console.log(admin_getWholeData());return false;
 
                 $.ajax({
                     url : "<?php echo base_url('dashboard/update_merchant_details'); ?>",

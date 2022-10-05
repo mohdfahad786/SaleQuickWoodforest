@@ -356,7 +356,7 @@ class About extends CI_Controller {
 		$this->load->view('front/merchant_services_agreement');
 	}
 
-	public function save_enquiry() {
+	public function save_enquiry_144444654y() {
 		// echo $_SERVER['HTTP_REFERER'];die;
 		$name = !empty($this->input->post('name')) ? trim($this->input->post('name')) : '';
 		$mobile = !empty($this->input->post('mobile')) ? trim($this->input->post('mobile')) : '';

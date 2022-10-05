@@ -46,8 +46,13 @@ class Dashboard extends CI_Controller {
 		
 		$email = $this->input->post('memail') ? $this->input->post('memail') : "";
 		$pc_phone = $this->input->post('primary_phone') ? $this->input->post('primary_phone') : "";
-
-		$password1 = substr(md5(uniqid(rand(), true)), 0, 10);
+		$business_name = $this->input->post('business_name') ? $this->input->post('business_name') : "";
+		$business_dba_name = $this->input->post('business_dba_name') ? $this->input->post('business_dba_name') : "";
+		$taxid = $this->input->post('taxid') ? $this->input->post('taxid') : "";
+		$this->form_validation->set_rules('password', 'Password', 'required');
+		$this->form_validation->set_rules('c_password', 'Confirm password', 'required|matches[password]');
+		$password1 = $this->input->post('password') ? $this->input->post('password') : "";
+		// $password1 = substr(md5(uniqid(rand(), true)), 0, 10);
 		$password = $this->my_encrypt($password1, 'e');
 
 		$today1 = date("Ymdhisu");
@@ -85,6 +90,7 @@ class Dashboard extends CI_Controller {
 
 			$data = array(
 				"email" => $email,
+				"pc_email" => $email,
 				"password" => $password,
 				"auth_key" => $unique,
 			    "merchant_key" => $merchant_key,
@@ -93,6 +99,9 @@ class Dashboard extends CI_Controller {
 				'is_token_system_permission' => '1',
 				'is_tokenized' => '1',
 				'pc_phone' => $pc_phone,
+				'business_name'=>$business_name,
+				'business_dba_name'=>$business_dba_name,
+				'taxid'=>$taxid,
 				'wood_forest' => '1',
 				'view_permissions' => $view_permissions,
 				'edit_permissions' => $edit_permissions,
@@ -109,70 +118,87 @@ class Dashboard extends CI_Controller {
                     //print_r($usr_result); die;   
                     // $usr_result_merchant = $this->reset_model->get_merchant_detail($username);
                     // $password1 = time();
-                    $token = date("Ymdhmsu");
-                    $merchant_id=$last_merchantId;
+                    // $token = date("Ymdhmsu");
+                    // $merchant_id=$last_merchantId;
                              
-                    $getQuery_delete = $this->db->query(" DELETE FROM change_password where merchant_id='".$merchant_id."' "); 
-                    $getQuery_a = $this->db->query("INSERT INTO change_password (merchant_id, token) VALUES ('".$merchant_id."', '".$token."') ");
-                    //$password = $this->my_encrypt( $password1 , 'e' );
-                    //$usr_update = $this->reset_model->update_merchant($username,$password);
-                    $url = base_url().'reset/password/'.$merchant_id.'/'.$token;
+                    // $getQuery_delete = $this->db->query(" DELETE FROM change_password where merchant_id='".$merchant_id."' "); 
+                    // $getQuery_a = $this->db->query("INSERT INTO change_password (merchant_id, token) VALUES ('".$merchant_id."', '".$token."') ");
+                    // //$password = $this->my_encrypt( $password1 , 'e' );
+                    // //$usr_update = $this->reset_model->update_merchant($username,$password);
+                    // $url = base_url().'reset/password/'.$merchant_id.'/'.$token;
 
-                    set_time_limit(3000); 
-                    $MailTo = $email; 
-                    $MailSubject = 'Salequick Credentials'; 
-                    $header = "From: Salequick<info@salequick.com>\r\n".
-                    "MIME-Version: 1.0" . "\r\n" .
-                    "Content-type: text/html; charset=UTF-8" . "\r\n"; 
-                    // $msg = " Reset Link : ".$url." ";
-                    $htmlContent = '<!DOCTYPE html>
-                        <html>
-                        <head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-                        <title></title>
-                        <meta name="viewport" content="width=device-width, initial-scale=1">
-                        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800" rel="stylesheet">
-                        </head>
-                        <body style="padding: 0px;margin: 0;font-family:Open Sans, sans-serif;font-size: 14px !important;color: #333;">
-                        <div style="max-width: 751px;margin: 0 auto;background:#fafafa;">
-                        <div style="color:#fff;padding-top: 30px;padding-bottom: 5px;background-color: #2273dc;border-top-left-radius: 10px;border-top-right-radius: 10px;">
-                        <div style="width:80%;margin:0 auto;">
-                        <div style="width: 245px;text-align: center;height: 70px;border-radius: 50%;margin: 10px auto 20px;padding: 10px;box-shadow: 0px 0px 5px 10px #438cec8c;"><img src="https://salequick.com/front/images/logo-w.png" style="max-width: 90%;width: 100%;margin: 8px auto 0;display: block;"></div>
-                        </div>
-                        </div>
-                        <div style="max-width: 563px;text-align:right;margin: 0px auto 0;clear: both;width: 100%;display: table;">
-                        <p style="text-align: center !important;font-size: 20px !important;font-family: sans-serif !important;letter-spacing: 3px;color: #3c763d;font-weight: 600 !important;">Salequick Credentials</p>
-                        <p style="font-size: 16px !important;text-align: center !important;">Hi, Your password is <b>"'.$password1.'"</b> , If you want to reset it then click on link below to create a new password:</p>
-                        <p style="line-height: 1.432;text-align: center !important;">
-                        <a href="'.$url.'" style="max-height: 40px;padding: 10px 20px;display: inline-flex;justify-content: center;align-items: center;font-size: 0.875rem;font-weight: 600;letter-spacing: 0.03rem;color: #fff;background-color: #696ffb;text-decoration: none;border-radius: 20px;">Set a new password</a>
-                        </p> 
-                        <p style="font-size: 16px !important;text-align: center !important;">If you did not requested a password reset. you can ignore this email. Your password will not be changed.</p>
-                        </div>
-                        <div style="padding: 25px 0;overflow:hidden;">
-                        <div style="width: 100%;margin:0 auto;overflow:hidden;max-width: 80%;">
-                        <div style="width: 100%;margin:10px auto 20px;text-align:center;">
-                        </div>
-                        </div>
-                        <footer style="width:100%;padding: 35px 0 21px;background: #414141;margin-top: 0px;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
-                        <div style="text-align:center;width:80%;margin:0 auto;color: rgba(255, 255, 255, 0.75);">
-                        <h5 style="margin-top: 0;margin-bottom: 10px;font-size: 16px;font-weight:400;line-height: 1.432;">Feel free to contact us any time with question and concerns.</h5>
-                        <p style="text-align:center"><a href="https://salequick.com/" style="color: #6ea9ff;cursor:pointer;text-decoration:none !important;"><span style="color: rgba(255, 255, 255, 0.55);">Powered by:</span> SaleQuick.com</a></p>
-                        </div>
-                        </footer>
-                        </div>
-                        </body>
-                        </html>
-                    ';
+                    // set_time_limit(3000); 
+                    // $MailTo = $email; 
+                    // $MailSubject = 'Salequick Credentials'; 
+                    // $header = "From: Salequick<info@salequick.com>\r\n".
+                    // "MIME-Version: 1.0" . "\r\n" .
+                    // "Content-type: text/html; charset=UTF-8" . "\r\n"; 
+                    // // $msg = " Reset Link : ".$url." ";
+                    // $htmlContent = '<!DOCTYPE html>
+                    //     <html>
+                    //     <head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+                    //     <title></title>
+                    //     <meta name="viewport" content="width=device-width, initial-scale=1">
+                    //     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800" rel="stylesheet">
+                    //     </head>
+                    //     <body style="padding: 0px;margin: 0;font-family:Open Sans, sans-serif;font-size: 14px !important;color: #333;">
+                    //     <div style="max-width: 751px;margin: 0 auto;background:#fafafa;">
+                    //     <div style="color:#fff;padding-top: 30px;padding-bottom: 5px;background-color: #2273dc;border-top-left-radius: 10px;border-top-right-radius: 10px;">
+                    //     <div style="width:80%;margin:0 auto;">
+                    //     <div style="width: 245px;text-align: center;height: 70px;border-radius: 50%;margin: 10px auto 20px;padding: 10px;box-shadow: 0px 0px 5px 10px #438cec8c;"><img src="https://salequick.com/front/images/logo-w.png" style="max-width: 90%;width: 100%;margin: 8px auto 0;display: block;"></div>
+                    //     </div>
+                    //     </div>
+                    //     <div style="max-width: 563px;text-align:right;margin: 0px auto 0;clear: both;width: 100%;display: table;">
+                    //     <p style="text-align: center !important;font-size: 20px !important;font-family: sans-serif !important;letter-spacing: 3px;color: #3c763d;font-weight: 600 !important;">Salequick Credentials</p>
+                    //     <p style="font-size: 16px !important;text-align: center !important;">Hi, Your password is <b>"'.$password1.'"</b> , If you want to reset it then click on link below to create a new password:</p>
+                    //     <p style="line-height: 1.432;text-align: center !important;">
+                    //     <a href="'.$url.'" style="max-height: 40px;padding: 10px 20px;display: inline-flex;justify-content: center;align-items: center;font-size: 0.875rem;font-weight: 600;letter-spacing: 0.03rem;color: #fff;background-color: #696ffb;text-decoration: none;border-radius: 20px;">Set a new password</a>
+                    //     </p> 
+                    //     <p style="font-size: 16px !important;text-align: center !important;">If you did not requested a password reset. you can ignore this email. Your password will not be changed.</p>
+                    //     </div>
+                    //     <div style="padding: 25px 0;overflow:hidden;">
+                    //     <div style="width: 100%;margin:0 auto;overflow:hidden;max-width: 80%;">
+                    //     <div style="width: 100%;margin:10px auto 20px;text-align:center;">
+                    //     </div>
+                    //     </div>
+                    //     <footer style="width:100%;padding: 35px 0 21px;background: #414141;margin-top: 0px;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
+                    //     <div style="text-align:center;width:80%;margin:0 auto;color: rgba(255, 255, 255, 0.75);">
+                    //     <h5 style="margin-top: 0;margin-bottom: 10px;font-size: 16px;font-weight:400;line-height: 1.432;">Feel free to contact us any time with question and concerns.</h5>
+                    //     <p style="text-align:center"><a href="https://salequick.com/" style="color: #6ea9ff;cursor:pointer;text-decoration:none !important;"><span style="color: rgba(255, 255, 255, 0.55);">Powered by:</span> SaleQuick.com</a></p>
+                    //     </div>
+                    //     </footer>
+                    //     </div>
+                    //     </body>
+                    //     </html>
+                    // ';
 
-                    ini_set('sendmail_from', $email); 
-                    // mail($MailTo, $MailSubject, $msg, $header);
-                    $this->email->from('reply@salequick.com', 'Reset Password Link');
-                    $this->email->to($MailTo);
-                    $this->email->subject($MailSubject);
-                    $this->email->message($htmlContent);
-                    $this->email->send();
+                    // ini_set('sendmail_from', $email); 
+                    // // mail($MailTo, $MailSubject, $msg, $header);
+                    // $this->email->from('reply@salequick.com', 'Reset Password Link');
+                    // $this->email->to($MailTo);
+                    // $this->email->subject($MailSubject);
+                    // $this->email->message($htmlContent);
+                    // $this->email->send();
                     // $this->session->set_userdata($sessiondata);
-                    $this->session->set_flashdata('msg', '<div class="alert alert-success text-center">Merchant added successfully and email has been sent to reset the password.  </div>');
-                    redirect('dashboard/all_merchant');
+                    $merchants = $this->db->select('id')->from('merchant')->where('wood_forest', '1')->get()->result_array();
+					// echo $this->db->last_query();die;
+					foreach ($merchants as $key => $mer_val) {
+						$merchant_str .= $mer_val['id'].',';
+					}
+					// echo $merchant_str;die;
+					$merchant_str .= $id.',';
+					$merchant_str = rtrim($merchant_str, ',');
+					$wf_data = array(
+						'wf_merchants' => $merchant_str
+					);
+					// echo '<pre>Session before';print_r($_SESSION);
+					$this->db->where('user_type', 'wf')->update('admin', $wf_data);
+					$usr_result=$this->db->query("SELECT * from admin where id='".$_SESSION['id']."' and status='active'")->row_array();
+                    $sessiondata = array('wf_merchants'=>$usr_result['wf_merchants']);
+                    $this->session->set_userdata($sessiondata);
+     				// print_r($_SESSION);die;
+                    $this->session->set_flashdata('msg', '<div class="alert alert-success text-center">Merchant added successfully.  </div>');
+            		redirect('dashboard/all_merchant');
                 } else {
                     $this->session->set_flashdata('msg', '<div class="alert alert-danger text-center">Invalid Email-Id!</div>');
                     redirect('dashboard/all_merchant');
@@ -3365,7 +3391,7 @@ else if($month=='08' ){
             $row[] = '<a data-toggle="tooltip" class="badge '. $btncolor.'" style="font-size: 12px; color:white;" data-placement="top" title="'. $title.'">'.$dtext.'</a>';
 
             // $row[] = $member->business_dba_name;
-            $row[] = '<span class="companyInfoClick" data-legalname="'.$member->business_name.'" data-business_dba_name="'.$member->business_dba_name.'" data-controller_name="'.$member->name.' '.$member->m_name.' '.$member->l_name.'" title="Click to view">'.$member->business_dba_name.'</span>' ;
+            $row[] = '<span class="companyInfoClick" data-legalname="'.$member->business_name.'" data-business_dba_name="'.$member->business_dba_name.'" data-controller_name="'.$member->name.' '.$member->m_name.' '.$member->l_name.'" title="Click to view">'.$member->business_name.'</span>' ;
 
             $row[] = '<span class="contactClick" data-fullname="'.$member->name.' '.$member->m_name.' '.$member->l_name.'" data-email="'.$member->email.'" data-mobile="'.$member->business_number.'" title="Click to view">'.$member->email.'</span>' ;
 
@@ -3468,7 +3494,7 @@ else if($month=='08' ){
 
             $row[] = !empty($get_monthly_volume->$field_name) ? '$'.number_format($get_monthly_volume->$field_name,2) : '$0.00';
 
-            if( ($_SESSION['id'] == 1) || ($_SESSION['id'] == 2) || ($_SESSION['id'] == 4) || ($_SESSION['id'] == 8) ) {
+            if( $_SESSION['user_type']=='wf' ) {
 	            $row[] = '<select class="form-control" name="status" id="change_status" data-id="'.$member->id.'" style="font-family: Avenir-Heavy !important;">
 	            		<option value="pending" '.(($member->status == "pending") ? "selected" : "") .'>Pending</option>
 	                    <option value="Activate_Details" '.(($member->status == "Activate_Details") ? "selected" : "") .'> Activate Details</option>
@@ -5434,43 +5460,41 @@ else if($month=='08' ){
 			$o_email =$this->input->post('o_email')? strtolower($this->input->post('o_email')):'';
 
 			//banking
-			$bank_dda =$this->input->post('bank_dda')? $this->input->post('bank_dda'):'';
-			$bank_ach =$this->input->post('bank_ach')? $this->input->post('bank_ach'):'';
-			$bank_routing =$this->input->post('bank_routing')? $this->input->post('bank_routing'):'';
-			$bank_account =$this->input->post('bank_account')? $this->input->post('bank_account'):'';
-			$question =$this->input->post('question')? $this->input->post('question'):'';
-			$billing_descriptor =$this->input->post('billing_descriptor')? $this->input->post('billing_descriptor'):'';
+			// $bank_dda =$this->input->post('bank_dda')? $this->input->post('bank_dda'):'';
+			// $bank_ach =$this->input->post('bank_ach')? $this->input->post('bank_ach'):'';
+			// $bank_routing =$this->input->post('bank_routing')? $this->input->post('bank_routing'):'';
+			// $bank_account =$this->input->post('bank_account')? $this->input->post('bank_account'):'';
+			// $question =$this->input->post('question')? $this->input->post('question'):'';
+			// $billing_descriptor =$this->input->post('billing_descriptor')? $this->input->post('billing_descriptor'):'';
 
-			//pricing
-			$dis_trans_fee =$this->input->post('dis_trans_fee')? $this->input->post('dis_trans_fee'):'0';
-			$amexrate =$this->input->post('amexrate')? $this->input->post('amexrate'):'0';
-			$chargeback =$this->input->post('chargeback')? $this->input->post('chargeback'):'0';
-			$monthly_gateway_fee =$this->input->post('monthly_gateway_fee')? $this->input->post('monthly_gateway_fee'):'0';
-			$annual_cc_sales_vol =$this->input->post('annual_cc_sales_vol')? $this->input->post('annual_cc_sales_vol'):'0';
-			// $monthly_fee =$this->input->post('monthly_fee')? $this->input->post('monthly_fee'):'0';
-			$vm_cardrate =$this->input->post('vm_cardrate') ? $this->input->post('vm_cardrate'):'0';
-			$annual_processing_volume =$this->input->post('annual_processing_volume')? $this->input->post('annual_processing_volume'):'';
-			$cnp_percent =$this->input->post('cnp_percent')? $this->input->post('cnp_percent'):'';
-			$cp_percent =$this->input->post('cp_percent')? $this->input->post('cp_percent'):'';
-			$average_ticket =$this->input->post('average_ticket')? $this->input->post('average_ticket'):'';
-			$high_ticket =$this->input->post('high_ticket')? $this->input->post('high_ticket'):'';
+			// //pricing
+			// $dis_trans_fee =$this->input->post('dis_trans_fee')? $this->input->post('dis_trans_fee'):'0';
+			// $amexrate =$this->input->post('amexrate')? $this->input->post('amexrate'):'0';
+			// $chargeback =$this->input->post('chargeback')? $this->input->post('chargeback'):'0';
+			// $monthly_gateway_fee =$this->input->post('monthly_gateway_fee')? $this->input->post('monthly_gateway_fee'):'0';
+			// $annual_cc_sales_vol =$this->input->post('annual_cc_sales_vol')? $this->input->post('annual_cc_sales_vol'):'0';
+			// // $monthly_fee =$this->input->post('monthly_fee')? $this->input->post('monthly_fee'):'0';
+			// $vm_cardrate =$this->input->post('vm_cardrate') ? $this->input->post('vm_cardrate'):'0';
+			// $annual_processing_volume =$this->input->post('annual_processing_volume')? $this->input->post('annual_processing_volume'):'';
+			// $cnp_percent =$this->input->post('cnp_percent')? $this->input->post('cnp_percent'):'';
+			// $cp_percent =$this->input->post('cp_percent')? $this->input->post('cp_percent'):'';
+			// $average_ticket =$this->input->post('average_ticket')? $this->input->post('average_ticket'):'';
+			// $high_ticket =$this->input->post('high_ticket')? $this->input->post('high_ticket'):'';
 
-			$billing_structure =$this->input->post('billing_structure')? $this->input->post('billing_structure'):'';
-			$fee_structure =$this->input->post('fee_structure')? $this->input->post('fee_structure'):'';
-			$percentage_rate =$this->input->post('percentage_rate')? $this->input->post('percentage_rate'):'';
-			$transaction_rate =$this->input->post('transaction_rate')? $this->input->post('transaction_rate'):'';
+			// $billing_structure =$this->input->post('billing_structure')? $this->input->post('billing_structure'):'';
+			// $fee_structure =$this->input->post('fee_structure')? $this->input->post('fee_structure'):'';
+			// $percentage_rate =$this->input->post('percentage_rate')? $this->input->post('percentage_rate'):'';
+			// $transaction_rate =$this->input->post('transaction_rate')? $this->input->post('transaction_rate'):'';
 
-			//other
-			$checkbox =$this->input->post('mycheckbox')? $this->input->post('mycheckbox'):'';
+			// //other
+			// $checkbox =$this->input->post('mycheckbox')? $this->input->post('mycheckbox'):'';
 			$key =$this->input->post('key')? $this->input->post('key'):'';
-			$activation_id =$this->input->post('activation_id')? $this->input->post('activation_id'):'';
+			// $activation_id =$this->input->post('activation_id')? $this->input->post('activation_id'):'';
 
-            if($address1  && $amexrate >=0 &&  $annual_cc_sales_vol >=0 && $annual_processing_volume && $bank_account && 
-		  	$bank_ach && $bank_dda  && $bank_routing && $billing_descriptor &&  $business_dba_name &&  $business_email && $business_name 
-		  	&& $business_number && $business_type && $chargeback >=0 && $city && $country && $customer_service_email
-		   	&& $customer_service_phone &&  $dis_trans_fee >=0  && $establishmentdate && $key && $monthly_gateway_fee >=0 &&
-			$checkbox  && $name && $o_address1 && $o_dob && $o_email && $o_phone  && $o_ss_number && $ownershiptype && $pc_address 
-			&& $pc_email && $pc_name && $pc_phone  &&  $pc_title && $question && $taxid && $vm_cardrate >=0 ) {
+            if($address1  &&  $business_dba_name &&  $business_email && $business_name 
+		  	&& $business_number && $business_type &&  $city && $country && $customer_service_email
+		   	&& $customer_service_phone && $key && $establishmentdate &&   $name && $o_address1 && $o_dob && $o_email && $o_phone  && $o_ss_number && $ownershiptype && $pc_address 
+			&& $pc_email && $pc_name && $pc_phone  &&  $pc_title && $taxid ) {
 			   	$data=array(
 			   		'pc_name' =>$pc_name,
 					'pc_title' =>$pc_title,
@@ -5512,6 +5536,7 @@ else if($month=='08' ){
 					'o_dob_d' =>substr($o_dob,8,2),
 					'o_address' =>$o_address1,
 					'o_address1' =>$o_address1,
+					'o_country' =>$o_country,
 					// 'o_address2' =>$o_address2,
 					'o_city' =>$o_city,
 					'o_state' =>$o_state,

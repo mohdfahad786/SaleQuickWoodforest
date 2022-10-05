@@ -72,7 +72,7 @@
                                     <td><?php echo ucfirst($admin['user_type']); ?></td>
                                     <td><?php echo ucfirst($admin['status']); ?></td>
                                     <td>
-                                        <?php if($admin['id'] != '1') { ?>
+                                        <?php if($admin['id'] != '9') { ?>
                                             <a class="btn btn-sm btn-secondary btn_custom" href="<?php echo base_url('Multiadmin/edit_admin/'); ?><?php echo $admin['id']; ?>"><i class="fa fa-pencil"></i> Edit</a>
                                             <?php if($this->session->userdata('id') != $admin['id']) { ?>
                                                 <a class="btn btn-sm btn-danger btn_custom" href="#" onClick="del_admin(<?php echo $admin['id'];?>)"><i class="fa fa-trash"></i> Delete</a>

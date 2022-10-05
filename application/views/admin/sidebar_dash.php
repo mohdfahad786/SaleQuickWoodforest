@@ -51,7 +51,7 @@ if (empty($this->session->userdata('username'))) {
                 <p class="user-name">
                     <?php echo (!empty($this->session->userdata('name'))) ? ucfirst($this->session->userdata('name')) : ucfirst($this->session->userdata('username')); ?>
                 </p>
-               <!--  <p class="ml-2 text-muted" style="font-family: Avenir-Heavy !important;"><?php echo ucfirst($this->session->userdata('user_type')); ?></p> -->
+                <p class="ml-2 text-muted" style="font-family: Avenir-Heavy !important;"><?php echo ucfirst($this->session->userdata('user_type')); ?></p>
             </div>
         </div>
 
@@ -71,7 +71,7 @@ if (empty($this->session->userdata('username'))) {
                     <li>
                         <a href="<?php echo base_url('Admin_Graph/trends'); ?>" title="Sales Trends">Sales Trends</a>
                     </li>
-                   <!--  <li>
+                    <!-- <li>
                         <a href="<?php echo base_url('Admin_Chart/trends_original'); ?>" title="Funding">ghayas</a>
                     </li> -->
                    <!--  <li>
@@ -79,6 +79,7 @@ if (empty($this->session->userdata('username'))) {
                     </li> -->
                 </ul>
             </li>
+            
 
             <li>
                 <a href="#merchant_master" data-toggle="collapse" aria-expanded="false">
@@ -98,7 +99,20 @@ if (empty($this->session->userdata('username'))) {
                 </ul>
             </li>
 
-           
+           <li>
+                <a href="#admin_master" data-toggle="collapse" aria-expanded="false">
+                    <span class="link-title">Admins</span>
+                    <img class="img-ss mb-1 mr-2" src="<?php echo base_url('new_assets/img/new-icons/dashboard-icon.png'); ?>" alt="sidebar-icon">
+                </a>
+                <ul class="collapse navigation-submenu" id="admin_master">
+                    <li>
+                        <a href="<?php echo base_url('multiadmin/add_admin'); ?>" title="View Merchant">Add Admin</a>
+                    </li>
+                    <li>
+                        <a href="<?php echo base_url('multiadmin/all_admin'); ?>" title="View Sub User">All Admin</a>
+                    </li>
+                </ul>
+            </li>
 
            
 

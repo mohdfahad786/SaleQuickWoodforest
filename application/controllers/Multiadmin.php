@@ -74,6 +74,7 @@ class Multiadmin extends CI_Controller {
 			} else {
 				$pswdToMail = substr(str_shuffle('123456789ABCDEFGHJKLMNPQRSTUVWXYZ@$!#'), 1, 10);
 				// echo $npsw;die;
+				$wf_merchants=$this->session->userdata('wf_merchants');
 				$password = $this->my_encrypt($pswdToMail, 'e');
 	          	$ins_data['password'] = $password;
 
@@ -84,13 +85,14 @@ class Multiadmin extends CI_Controller {
 				$ins_data['user_type'] = $user_type;
 				$ins_data['address'] = $address;
 				$ins_data['status'] = $status;
+				$ins_data['wf_merchants'] = $wf_merchants;
 
 				if($_FILES['image']['name'] != '') {
 					$path = $_FILES['image']['name'];
 					$ext = pathinfo($path, PATHINFO_EXTENSION);
 					$filename='image_'.date('YmdHi').'.'.$ext; 
 					$_FILES['image']['name'] = $filename;
-					$config['upload_path'] = 'logo/';
+					$config['upload_path'] = 'uploads/';
 					$config['allowed_types'] = 'gif|jpg|jpeg|png';
 					$config['max_width'] = 70000;
 					$config['max_height'] = 70000;
@@ -143,7 +145,8 @@ class Multiadmin extends CI_Controller {
 
 	public function all_admin() {
 		$data['meta'] = 'All Admin';
-		$data['adminArr'] = $this->db->get('admin')->result_array();
+		$data['adminArr'] = $this->db->query("select * from admin where user_type='wf'")->result_array();
+		// echo $this->db->last_query();die;
 		// echo '<pre>';print_r($data['adminArr']);die;
 
 		$this->load->view('admin/all_admin', $data);
@@ -167,7 +170,7 @@ class Multiadmin extends CI_Controller {
 		$data['meta'] = 'Edit Admin';
 		$data['loc'] = 'edit_admin';
 		$data['action'] = 'Update';
-		$data['upload_loc'] = base_url('logo');
+		$data['upload_loc'] = base_url('uploads');
 
 		if($_POST) {
 			// echo '<pre>';print_r($_FILES); die;
@@ -217,7 +220,7 @@ class Multiadmin extends CI_Controller {
 					$ext = pathinfo($path, PATHINFO_EXTENSION);
 					$filename='image_'.date('YmdHi').'.'.$ext; 
 					$_FILES['image']['name'] = $filename;
-					$config['upload_path'] = 'logo/';
+					$config['upload_path'] = 'uploads/';
 					$config['allowed_types'] = 'gif|jpg|jpeg|png';
 					$config['max_width'] = 70000;
 					$config['max_height'] = 70000;
