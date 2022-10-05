@@ -3496,12 +3496,9 @@ else if($month=='08' ){
 
             if( $_SESSION['user_type']=='wf' ) {
 	            $row[] = '<select class="form-control" name="status" id="change_status" data-id="'.$member->id.'" style="font-family: Avenir-Heavy !important;">
-	            		<option value="pending" '.(($member->status == "pending") ? "selected" : "") .'>Pending</option>
-	                    <option value="Activate_Details" '.(($member->status == "Activate_Details") ? "selected" : "") .'> Activate Details</option>
-	                    <option value="Waiting_For_Approval" '.(($member->status == "Waiting_For_Approval") ? "selected" : "") .'>Waiting For Approval</option>
-	                    <option value="confirm" '.(($member->status == "confirm") ? "selected" : "") .'>Confirm</option>
+	            		<option value="pending" '.(( ($member->status == "pending") || ($member->status == "pending_signup") ) ? "selected" : "") .'>Pending</option>
 	                    <option value="active" '.(($member->status == "active") ? "selected" : "") .'>Active</option>
-	                    <option value="block" '.(($member->status == "block") ? "selected" : "") .'>Block</option>
+	                    <option value="deactivate" '.(($member->status == "deactivate") ? "selected" : "") .'>Closed</option>
 	                </select>';
 	        }
 

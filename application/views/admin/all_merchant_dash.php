@@ -315,7 +315,7 @@
                         <li><a class="status_tab_anchor" href="javascript:void(0)" data-val="confirm">Confirm</a></li>
                         <li><a class="status_tab_anchor" href="javascript:void(0)" data-val="active">Active</a></li>
                         <li><a class="status_tab_anchor" href="javascript:void(0)" data-val="block">Block</a></li> -->
-                        <li><a class="status_tab_anchor" href="javascript:void(0)" data-val="deactivate">Deactivated</a></li>
+                        <li><a class="status_tab_anchor" href="javascript:void(0)" data-val="deactivate">Closed</a></li>
                     </ul>
                 </div>
                 <div class="col-sm-6 col-md-6 col-lg-6">
