@@ -118,7 +118,7 @@ class Multiadmin extends CI_Controller {
 					$header = "From: Salequick<info@salequick.com>\r\n".
 						"MIME-Version: 1.0" . "\r\n" .
 						"Content-type: text/html; charset=UTF-8" . "\r\n";
-					$msg = "Your Username is ".$username." and Password is ".$pswdToMail.". Please use these Credentials for login into SaleQuick via URL https://salequick.com/admin.<br><br>Regards,<br>Team SaleQuick";
+					$msg = "Your Username is ".$username." and Password is ".$pswdToMail.". Please use these Credentials for login into SaleQuick via URL https://woodforest.salequick.com/admin.<br><br>Regards,<br>Team SaleQuick";
 					// ini_set('sendmail_from', $email);
 					ini_set('sendmail_from', $MailTo);
 
