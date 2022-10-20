@@ -100,6 +100,7 @@ class Dashboard extends CI_Controller {
 				'is_tokenized' => '1',
 				'pc_phone' => $pc_phone,
 				'business_name'=>$business_name,
+				'name'=>$business_name,
 				'business_dba_name'=>$business_dba_name,
 				'taxid'=>$taxid,
 				'wood_forest' => '1',

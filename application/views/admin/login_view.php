@@ -72,7 +72,7 @@
 
             <div class="col-12">
               <div class="form-group">
-                <input type="text" class="form-control"  placeholder="Email" required id="username" name="username">
+                <input type="email" class="form-control"  placeholder="Email" required id="username" name="username">
                 <input type="hidden" class="form-control" name="ip" value="<?php echo $_SERVER['REMOTE_ADDR'] ?>">
               </div>
             </div>
