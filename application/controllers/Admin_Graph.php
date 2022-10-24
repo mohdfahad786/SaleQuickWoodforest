@@ -467,7 +467,7 @@ class Admin_Graph extends CI_Controller {
 		if( ($start_date == $date_c) && ($end_date == $date_cc) ) {
 			if($employee == 'all') {
 				$getDashboard = $this->db->query("SELECT * from admin_sales_summery_graph_wf order by id desc limit 0,1");
-				 echo $this->db->last_query();die;
+				// echo $this->db->last_query();die;
 
 			} else {
 			 	$getDashboard = $this->db->query("SELECT 
