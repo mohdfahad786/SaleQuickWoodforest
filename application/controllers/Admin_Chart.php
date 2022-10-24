@@ -194,7 +194,7 @@ class Admin_Chart extends CI_Controller {
 			(SELECT sum(tax) as LastSaturdayTax from ( SELECT day1,time1,tax from customer_payment_request where   date_c <= '".$this_week_ed1."' and date_c >= '".$this_week_sd1."' $stmt and day1 = '6' and status='confirm'   union all SELECT day1,time1,tax from pos where   date_c <= '".$this_week_ed1."' and date_c >= '".$this_week_sd1."' $stmt and day1 = '6' and status='confirm' )x group by day1 )  ,
 			(SELECT sum(tax) as LastSundayTax from ( SELECT day1,time1,tax from customer_payment_request where   date_c <= '".$this_week_ed1."' and date_c >= '".$this_week_sd1."' $stmt and day1 = '7' and status='confirm'    union all SELECT day1,time1,tax from pos where   date_c <= '".$this_week_ed1."' and date_c >= '".$this_week_sd1."' $stmt and day1 = '7' and status='confirm' )x group by day1 )  )
 		");
-		 echo $this->db->last_query();die;
+		// echo $this->db->last_query();die;
 		
 	}
 
