@@ -431,10 +431,15 @@ class Admin_Graph extends CI_Controller {
 		$user = array();
 		$getA_merchantData->csv_Customer_name = '';
 
+
+		$start_date = date("Y-m-d",strtotime("-29 days"));
+		$end_date = date("Y-m-d",strtotime("0 days"));
+
 		$date_c = $this->input->post('start');
 		$date_cc = $this->input->post('end');
 		$date_c = date("Y-m-d", strtotime($date_c));
 		$date_cc = date("Y-m-d", strtotime($date_cc));
+		
 
 		$employee = $this->input->post('employee');
 		$stmtQuery="";
