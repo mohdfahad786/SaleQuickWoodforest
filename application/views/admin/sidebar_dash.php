@@ -51,8 +51,8 @@ if (empty($this->session->userdata('username'))) {
                 <p class="user-name">
                     <?php echo (!empty($this->session->userdata('name'))) ? ucfirst($this->session->userdata('name')) : ucfirst($this->session->userdata('username')); ?>
                 </p>
-                <p class="ml-2 text-muted" style="font-family: Avenir-Heavy !important;"><?php echo ucfirst($this->session->userdata('user_type')); ?></p>
-            </div>
+<!--                 <p class="ml-2 text-muted" style="font-family: Avenir-Heavy !important;"><?php echo ucfirst($this->session->userdata('user_type')); ?></p>
+ -->            </div>
         </div>
 
         <ul class="navigation-menu">
