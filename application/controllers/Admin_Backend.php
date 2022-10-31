@@ -113,19 +113,19 @@ class Admin_Backend extends CI_Controller {
 		$processor_id = $this->input->post('processor_id') ? $this->input->post('processor_id') : "";
 		$PinNumber = $this->input->post('PinNumber') ? $this->input->post('PinNumber') : "";
 		$is_vts = $this->input->post('is_vts') ? $this->input->post('is_vts') : "";
-		$wood_forest = $this->input->post('wood_forest') ? $this->input->post('wood_forest') : "0";
+		// $wood_forest = $this->input->post('wood_forest') ? $this->input->post('wood_forest') : "0";
 		// echo ','.$wood_forest.',';die;
 		$package_value = $this->input->post('package_value') ? $this->input->post('package_value') : "";
 		$security_key_value = $this->input->post('security_key_value') ? $this->input->post('security_key_value') : "";
 		// $admin_id=$_SESSION['id'];
-		$merchant_id=$_POST['id'];
-		$status=$this->db->query("SELECT status from merchant where id=".$merchant_id)->row();
+		// $merchant_id=$_POST['id'];
+		// $status=$this->db->query("SELECT status from merchant where id=".$merchant_id)->row();
 		 
-		if($wood_forest=='1'){
-			$status=$status->status;
-		}else{
-			$status='deactivate';
-		}
+		// if($wood_forest=='1'){
+		// 	$status=$status->status;
+		// }else{
+		// 	$status='deactivate';
+		// }
 		if($package_value == '') {
 			$monthly_value = '';
 			$per_transaction_value = '';
@@ -230,7 +230,7 @@ class Admin_Backend extends CI_Controller {
 			'payroc' => $payroc_val,
 			'package_value' => $package_value,
 			// 'wood_forest' => $wood_forest,
-			'status'=>$status,
+			// 'status'=>$status,
 			'monthly_value' => $monthly_value,
 			'per_transaction_value' => $per_transaction_value,
 			'security_key_value' => $security_key_value,
@@ -247,6 +247,170 @@ class Admin_Backend extends CI_Controller {
 		}
 	}
 
+	function update_wf_details() {
+		// echo '<pre>';print_r($_POST);die;
+		// $id=$_POST['uid'];
+		$responseArr = array();
+		$merchant_id = !empty($this->input->post('uid')) ? $this->input->post('uid') : '';
+		$wood_forest = !empty($this->input->post('wood_forest')) ? $this->input->post('wood_forest') : '0';
+		// echo $wood_forest;die;
+		// echo $_SESSION['wf_merchants'];die;
+		if(!empty($merchant_id)) {
+			if($wood_forest == '1') {
+				$data = array('wood_forest' => $wood_forest);
+				// $data = array('wood_forest' => $wood_forest, 'status' => 'active');
+				$this->db->where('id', $merchant_id)->update('merchant', $data);
+
+				$merchant_str = '';
+				$merchants = $this->db->select('id')->from('merchant')->where('wood_forest', '1')->where('status !=', 'deactivate')->where('id !=', $merchant_id)->get()->result_array();
+				// echo $this->db->last_query();die;
+				foreach ($merchants as $key => $mer_val) {
+					$merchant_str .= $mer_val['id'].',';
+				}
+				$merchant_str .= $merchant_id.',';
+				$merchant_str = rtrim($merchant_str, ',');
+				// echo $merchant_str;die;
+
+				// echo '1';die;
+
+			} else if($wood_forest == '0') {
+				$data = array('status' => 'deactivate');
+				$this->db->where('id', $merchant_id)->update('merchant', $data);
+
+				$condition = array('merchant_id' => $merchant_id);
+				$get_merchant_attr = $this->db->get_where('merchant_attributes', $condition)->row();
+				// print_r($get_merchant_attr);die;
+				if(!empty($get_merchant_attr)) {
+					$data2 = array(
+						'wf_deactive_d' => date('d'),
+						'wf_deactive_m' => date('m'),
+						'wf_deactive_y' => date('Y'),
+					);
+					$this->db->where('merchant_id', $merchant_id)->update('merchant_attributes', $data2);
+					
+				} else {
+					$data2 = array(
+						'merchant_id' => $merchant_id,
+						'wf_deactive_d' => date('d'),
+						'wf_deactive_m' => date('m'),
+						'wf_deactive_y' => date('Y'),
+					);
+					$this->db->insert('merchant_attributes', $data2);
+				}
+
+				$merchants = $this->db->select('id')->from('merchant')->where('wood_forest', '1')->where('status !=', 'deactivate')->where('id !=', $merchant_id)->get()->result_array();
+				// echo $this->db->last_query();die;
+				// echo '<pre>';print_r($merchants);die;
+				foreach ($merchants as $key => $mer_val) {
+					$merchant_str .= $mer_val['id'].',';
+				}
+				$merchant_str = rtrim($merchant_str, ',');
+				// echo $merchant_str;die;
+				// echo '2';die;
+			}
+
+			$wf_data = array(
+				'wf_merchants' => $merchant_str
+			);
+			$this->db->where('user_type', 'wf')->update('admin', $wf_data);
+			// echo $this->db->last_query();die;
+		}
+	}
+
+	function update_merchant_status() {
+		$responseArr = array();
+		$merchant_id = !empty($this->input->post('uid')) ? $this->input->post('uid') : '';
+		$status = !empty($this->input->post('status')) ? $this->input->post('status') : '';
+		// print_r($get_merchant);die;
+		// echo $status;die;
+
+		if(!empty($merchant_id)) {
+			$data = array('status' => $status);
+
+			$this->db->where('id', $merchant_id);
+			$this->db->update('merchant', $data);
+
+			if($this->db->affected_rows() > 0) {
+				$get_merchant = $this->db->query("SELECT wood_forest FROM merchant WHERE id = ".$merchant_id)->row();
+
+				if($get_merchant->wood_forest == '1') {
+					if( ($status == 'active') || ($status == 'deactivate') ) {
+						$condition = array('merchant_id' => $merchant_id);
+						$get_merchant_attr = $this->db->get_where('merchant_attributes', $condition)->row();
+
+						if($status == 'active') {
+							if(!empty($get_merchant_attr)) {
+								$data2 = array(
+									'wf_active_d' => date('d'),
+									'wf_active_m' => date('m'),
+									'wf_active_y' => date('Y'),
+								);
+								$this->db->where('merchant_id', $merchant_id)->update('merchant_attributes', $data2);
+								
+							} else {
+								$data2 = array(
+									'merchant_id' => $merchant_id,
+									'wf_active_d' => date('d'),
+									'wf_active_m' => date('m'),
+									'wf_active_y' => date('Y'),
+								);
+								$this->db->insert('merchant_attributes', $data2);
+							}
+
+						} else if($status == 'deactivate') {
+							if(!empty($get_merchant_attr)) {
+								$data2 = array(
+									'wf_deactive_d' => date('d'),
+									'wf_deactive_m' => date('m'),
+									'wf_deactive_y' => date('Y'),
+								);
+								$this->db->where('merchant_id', $merchant_id)->update('merchant_attributes', $data2);
+								
+							} else {
+								$data2 = array(
+									'merchant_id' => $merchant_id,
+									'wf_deactive_d' => date('d'),
+									'wf_deactive_m' => date('m'),
+									'wf_deactive_y' => date('Y'),
+								);
+								$this->db->insert('merchant_attributes', $data2);
+							}
+							$merchants = $this->db->select('id')->from('merchant')->where('wood_forest', '1')->where('status !=', 'deactivate')->where('id !=', $id)->get()->result_array();
+							// echo $this->db->query();die;
+							// echo '<pre>';print_r($merchants);die;
+							foreach ($merchants as $key => $mer_val) {
+								$merchant_str .= $mer_val['id'].',';
+							}
+							// echo $merchant_str;die;
+							$merchant_str = rtrim($merchant_str, ',');
+
+							$wf_data = array(
+								'wf_merchants' => $merchant_str
+							);
+							$this->db->where('user_type', 'wf')->update('admin', $wf_data);
+						}
+					}
+				}
+
+				$responseArr = array(
+					'status' => '200',
+					'message' => 'Merchant Status Updated Successfully'
+				);
+			} else {
+				$responseArr = array(
+					'status' => '500',
+					'message' => 'Technical Issue in Updation'
+				);
+			}
+			
+		} else {
+			$responseArr = array(
+				'status' => '500',
+				'message' => 'No Merchant Selected. Please try again later.'
+			);
+		}
+		echo json_encode($responseArr);die;
+	}
 	public function search_record_update_new() {
 		$id = $this->input->post('id');
 		$auth_code = $this->input->post('auth_code') ? $this->input->post('auth_code') : "";

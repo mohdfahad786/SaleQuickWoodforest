@@ -1383,10 +1383,10 @@
                                                 <label>Billing Package</label>
                                                 <select class="form-control" id="package_value" name="package_value">
                                                     <option value="">Please select</option>
-                                                    <option value="1">Mobile App Only</option>
-                                                    <option value="2">Mobile Only With Other Charges</option>
-                                                    <option value="3">All in one (Access to all our products)</option>
-                                                    <option value="4">All in one + Other charges (Access to all our products)</option>
+                                                    <option value="1">Mobile Standard</option>
+                                                    <option value="2">Mobile With Other Charges</option>
+                                                    <option value="3">Pro</option>
+                                                    <option value="4">Pro With Other Charges</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -3054,6 +3054,7 @@
             //     }
             // });
     })
+
     function updateCredentialFn(e){
         // console.log($('.cred_nav_link.active').attr('href'));return false;
         var cred_nav_link = $('.cred_nav_link.active').attr('href');
@@ -3083,6 +3084,7 @@
             //     return false;
             // }
         }  else if(cred_nav_link == '#wfDetail') {
+            var payroc_val = $('#payroc_value').val();
             if ($('#wood_forest').is(':checked')) {
                 if(package_value == '') {
                     alert('Please select Billing package');
@@ -3206,7 +3208,7 @@
                 t1_max_value : t1_max_value ,t1_fixed : t1_fixed,t2_code_name : t2_code_name , t2_code_value : t2_code_value , t2_min_value : t2_min_value ,
                 t2_max_value : t2_max_value ,t2_fixed : t2_fixed,t3_code_name : t3_code_name , t3_code_value : t3_code_value , t3_min_value : t3_min_value ,
                 t3_max_value : t3_max_value ,t3_fixed : t3_fixed  , url_cr : url_cr , username_cr : username_cr ,password_cr : password_cr ,api_key_cr : api_key_cr ,
-                account_id : account_id,account_token : account_token,application_id : application_id,acceptor_id : acceptor_id,terminal_id : terminal_id, pax_pos_mid : pax_pos_mid, pax_v_no : pax_v_no, pax_bin : pax_bin, pax_agent : pax_agent, pax_chain : pax_chain, pax_store_no : pax_store_no, pax_terminal_no : pax_terminal_no, pax_currency_code : pax_currency_code, pax_country_code : pax_country_code, pax_location_no : pax_location_no, pax_timezone : pax_timezone, pax_mcc_sic : pax_mcc_sic, processor_id : processor_id, PinNumber : PinNumber, payroc_val : payroc_val, is_vts : is_vts_value, package_value : package_value, wood_forest : wood_forest, security_key_value : security_key_value
+                account_id : account_id,account_token : account_token,application_id : application_id,acceptor_id : acceptor_id,terminal_id : terminal_id, pax_pos_mid : pax_pos_mid, pax_v_no : pax_v_no, pax_bin : pax_bin, pax_agent : pax_agent, pax_chain : pax_chain, pax_store_no : pax_store_no, pax_terminal_no : pax_terminal_no, pax_currency_code : pax_currency_code, pax_country_code : pax_country_code, pax_location_no : pax_location_no, pax_timezone : pax_timezone, pax_mcc_sic : pax_mcc_sic, processor_id : processor_id, PinNumber : PinNumber, payroc_val : payroc_val, is_vts : is_vts_value, package_value : package_value, security_key_value : security_key_value
             },
             type:'post',
             success: function (dataJson) {
@@ -3223,6 +3225,29 @@
             }
         });
     };
+
+    $(document).on('click', '#wood_forest', function() {
+        if ($('#wood_forest').is(':checked')) {
+            var wood_forest = '1';
+        } else {
+            var wood_forest = '0';
+        }
+        var uid = $('#m_id').val();
+
+        var postData = {
+            'wood_forest': wood_forest,
+            'uid': uid
+        };
+        
+        $.ajax({
+            type: 'POST',
+            url: "<?php  echo base_url('Admin_Backend/update_wf_details'); ?>",
+            data: postData,
+            success: function (dataJson) {
+                
+            }
+        });
+    })
 
     $(document).on('click', '.del_merchant', function() {
         var thisBtn = $(this);
@@ -3299,71 +3324,6 @@
             }
         })
     })
-
-    // function merchant_delete(id) {
-    //     var tableRowId = id;
-    //     // console.log($('#row_'+tableRowId));return false;
-
-    //     swal({
-    //         title: '<span class="h4">Are you sure, want to delete this Merchant?</span>',
-    //         text: '<p>If you are sure, enter your password below:</p><p><input type="text" class="form-control merchant_delete_pass" value=""  placeholder="Password" autocomplete="off"> </p>',
-    //         type: "warning",
-    //         showCancelButton: true,
-    //         confirmButtonClass: "btn btn-first ",
-    //         confirmButtonText: "Delete",
-    //         cancelButtonClass: "btn danger-btn ",
-    //         cancelButtonText: "Cancel",
-    //         closeOnConfirm: false,
-    //         html: true,
-    //         closeOnCancel: true
-    //     },
-    //     function(isConfirm) {
-    //         // console.log(isConfirm);
-    //         // console.log($('.merchant_delete_pass').val());
-    //         if(isConfirm){
-    //             var pass=$('.merchant_delete_pass').val();
-    //             var admin_id="<?php echo $this->session->userdata('id'); ?>";
-    //             if(pass){
-    //                 $.ajax({     //  //  /"+id+'/'+'/'+pass 
-    //                     url : "<?php echo base_url('dashboard/merchant_delete')?>",
-    //                     type: "POST",
-    //                     data:{'merchant_id':id,'pass':pass,'admin_id':admin_id},
-    //                     dataType: "JSON",
-    //                     success: function(data) {
-    //                         // console.log(data);
-    //                         //location.reload();
-    //                         if(data.status){
-    //                             // $('#row_'+tableRowId).remove();
-    //                             // console.log('#row_'+tableRowId);
-    //                             $('#row_'+tableRowId).parent().parent().next().remove();
-    //                             $('#row_'+tableRowId).parent().parent().remove();
-    //                             swal(
-    //                                 'Deleted',
-    //                                 'Merchant Deleted Successfully',
-    //                                 'success'
-    //                             )
-    //                         } else {
-    //                             $('.merchant_delete_pass').val('');
-    //                             $('.merchant_delete_pass').after('<span id="incorrectPassMsg" class="text-danger">'+data.message+'</span>');
-    //                             setTimeout(function(){$('#incorrectPassMsg').remove();},3000)
-    //                         }
-    //                     },
-    //                     error: function (jqXHR, textStatus, errorThrown) {
-    //                         // alert('Error deleting data'); 
-    //                         swal(
-    //                             'Something went wrong!',
-    //                             'Please try again later.',
-    //                             'error'
-    //                         )
-    //                     }
-    //                 });
-    //             } else {
-    //                 $('.merchant_delete_pass').focus();
-    //             }
-    //         } else {
-    //         }
-    //     })
-    // }
 
     $(document)
     .on('click', '#getcredt', function(e){
@@ -3462,7 +3422,7 @@
             type:'post',
             success: function (dataJson) {
                 data = JSON.parse(dataJson)
-                // console.log(data)
+                console.log(data);
                 $(data).each(function (index, element) {
                     var payment_method_name = (element.payroc == 1) ? 'TSYS' : 'WorldPay/FIS';
                     $('#payment_method_name').html('<a class="badge badge-success" style="font-size: 12px; color:white;">'+payment_method_name+'</a>')
@@ -3547,11 +3507,17 @@
                     $('#payroc_value').val(element.payroc);
                     $('#package_value').val(element.package_value);
                     $('#security_key_value').val(element.security_key_value);
-                    console.log(element.is_vts);
+                    // console.log(element.is_vts);
                     var is_vts_checked = (element.is_vts == 1) ? 'checked' : '';
                     var is_wf_checked = (element.wood_forest == 1) ? 'checked' : '';
                     $('.vts_switch_section').html('<label class="switch switch_type1" role="switch"><input type="checkbox" name="is_vts" '+is_vts_checked+' id="is_vts" value="" class="switch__toggle"><span class="switch__label"></span></label>')
-                    $('.wf_switch_section').html('<label class="switch switch_type1" role="switch"><input type="checkbox" name="wood_forest" '+is_wf_checked+' id="wood_forest" value="" class="switch__toggle"><span class="switch__label"></span></label>')
+                    
+                    if(element.status == 'deactivate') {
+                        $('.wf_switch_section').html('<label class="switch switch_type1" role="switch"><input type="checkbox" name="wood_forest" id="wood_forest" value="" class="switch__toggle"><span class="switch__label"></span></label>');
+                        
+                    } else {
+                        $('.wf_switch_section').html('<label class="switch switch_type1" role="switch"><input type="checkbox" name="wood_forest" '+is_wf_checked+' id="wood_forest" value="" class="switch__toggle"><span class="switch__label"></span></label>');
+                    }
                 });
             }
         });
@@ -4134,7 +4100,7 @@
             if(isConfirm){
                 if(uid){
                     $.ajax({
-                        url : "<?php echo base_url('dashboard/update_merchant_status')?>",
+                        url : "<?php echo base_url('Admin_Backend/update_merchant_status')?>",
                         type: "POST",
                         dataType: "JSON",
                         data:{'uid':uid,'status':status},
