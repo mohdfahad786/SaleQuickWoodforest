@@ -3399,7 +3399,7 @@ else if($month=='08' ){
             $row[] = '<a data-toggle="tooltip" class="badge '. $btncolor.'" style="font-size: 12px; color:white;" data-placement="top" title="'. $title.'">'.$dtext.'</a>';
 
             // $row[] = $member->business_dba_name;
-            $row[] = '<span class="companyInfoClick" data-legalname="'.$member->business_name.'" data-business_dba_name="'.$member->business_dba_name.'" data-controller_name="'.$member->name.' '.$member->m_name.' '.$member->l_name.'" title="Click to view">'.$member->business_name.'</span>' ;
+            $row[] = '<span class="companyInfoClick" data-legalname="'.$member->business_name.'" data-business_dba_name="'.$member->business_dba_name.'" data-controller_name="'.$member->name.' '.$member->m_name.' '.$member->l_name.'" title="Click to view">'.$member->business_dba_name.'</span>' ;
 
             $row[] = '<span class="contactClick" data-fullname="'.$member->name.' '.$member->m_name.' '.$member->l_name.'" data-email="'.$member->email.'" data-mobile="'.$member->business_number.'" title="Click to view">'.$member->email.'</span>' ;
 
