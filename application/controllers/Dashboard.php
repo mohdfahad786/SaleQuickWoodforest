@@ -113,6 +113,13 @@ class Dashboard extends CI_Controller {
 			if ($email) {
 				$last_merchantId = $this->Home_model->insert_data("merchant", $data);
 				// echo $last_merchantId;die;
+				$ins_merchant_graph = array(
+					'id' => NULL,
+					'merchant_id' => $last_merchantId
+				);
+				$this->db->insert('merchant_year_graph', $ins_merchant_graph);
+				$this->db->insert('merchant_year_graph_two', $ins_merchant_graph);
+				// echo $last_merchantId;die;
 				// $usr_result = $this->reset_model->get_merchant($username); 
                 //echo $this->db->last_query();
                 if (!empty($last_merchantId)) {

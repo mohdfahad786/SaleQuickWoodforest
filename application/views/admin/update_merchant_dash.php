@@ -97,7 +97,7 @@
                                     <li class="nav-item">
                                         <a class="nav-link" data-toggle="tab" href="#pricing">Pricing</a>
                                     </li>
-                                    <li class="nav-item">
+                                    <li class="nav-item d-none">
                                         <a class="nav-link" data-toggle="tab" href="#permission">Permissions</a>
                                     </li>
                                 </ul>
@@ -335,6 +335,7 @@
                                                     <div class="form-group">
                                                         <label for="">Status</label>
                                                         <select class="form-control" name="status" id="status" required="">
+                                                            <option value="active" <?php if ($status == 'pending_signup') {echo 'selected';}?>> Select an option </option>
                                                             <option value="active" <?php if ($status == 'active') {echo 'selected';}?>> Active </option>
                                                             <option value="block" <?php if ($status == 'block') {echo 'selected';}?>>
                                                                 Block </option>
@@ -490,7 +491,7 @@
                                         </div>
                                     </div>
 
-                                    <div id="permission" class="tab-pane container">
+                                    <div id="permission" class="tab-pane container d-none">
                                         <div class="col-sm-6 col-md-6 col-lg-6">
                                             <div class="form-group">
                                                 <label for="">Dashboard</label>

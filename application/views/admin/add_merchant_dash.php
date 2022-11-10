@@ -18,7 +18,7 @@
             </div>
 
             <div class="row">
-                <div class="col-sm-6 col-md-12 col-lg-12">
+                <div class="col-sm-6 col-md-6 col-lg-6" style="margin: auto !important;">
                     <?php
                         echo form_open('dashboard/'.$loc, array('id' => "my_form",'class'=>"row"));
                         echo isset($bct_id) ? form_hidden('bct_id', $bct_id) : "";
@@ -34,16 +34,8 @@
                             <div class="grid-body d-flex flex-column">
                                 <div class="mt-auto">
                                     <div class="row">
-                                        <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="col-sm-12 col-md-12 col-lg-12">
                                             <div class="form-title">Merchant Info</div>
-                                            <div class="form-group">
-                                                <label for="">Email</label>
-                                                <input type="email" class="form-control"  <?php if($loc=='edit_employee')  {  echo 'readonly'; } ?> name="memail" id="email" pattern="[ a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,5}$"  placeholder="Email"  value="<?php echo (isset($email) && !empty($email)) ? $email : set_value('email');?>" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="">Mobile Number</label>
-                                                <input type="text" class="form-control" name="primary_phone" id="phone" onkeypress="return isNumberKey(event)" placeholder="Mobile Number" value="<?php echo (isset($mobile) && !empty($mobile)) ? $mobile : set_value('mobile');?>" required="">
-                                            </div>
                                             <div class="form-group">
                                                 <label>Legal Business Name</label>
                                                 <input type="text" class="form-control required" placeholder="Legal Business Name" id="business_name" name="business_name"> 
@@ -52,6 +44,15 @@
                                                 <label>DBA Name</label>
                                                 <input type="text" class="form-control required" id="business_dba_name" placeholder="DBA Name" name="business_dba_name"> 
                                             </div>
+                                            <div class="form-group">
+                                                <label for="">Email</label>
+                                                <input type="email" class="form-control"  <?php if($loc=='edit_employee')  {  echo 'readonly'; } ?>  name="memail" id="email" pattern="[ a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,5}$"  placeholder="Email" autocomplete="off" value="<?php echo (isset($email) && !empty($email)) ? $email : set_value('email');?>" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="">Mobile Number</label>
+                                                <input type="text" class="form-control" name="primary_phone" id="phone" onkeypress="return isNumberKey(event)" placeholder="Mobile Number" value="<?php echo (isset($mobile) && !empty($mobile)) ? $mobile : set_value('mobile');?>" required="">
+                                            </div>
+                                            
                                             <div class="form-group">
                                                 <label>Tax Identification Number (TIN)</label>
                                                 <input type="text" class="form-control required us-tin-no"  id="taxid" name="taxid" onkeypress="return isNumberKey(event)"> 
@@ -63,6 +64,9 @@
                                             <div class="form-group">
                                                 <label>Confirm Password</label>
                                                 <input type="password" id="c_password" class="form-control" name="confirm_password" placeholder="Confirm Password"   required>
+                                            </div>
+                                            <div class="form-group text-right">
+                                                <input type="submit" id="btn_login" name="submit" class="btn btn-first" value="<?php echo $action ?>" style="border-radius: 8px !important;" />
                                             </div>
                                         </div>
 
@@ -118,7 +122,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="col-sm-6 col-md-6 col-lg-6 d-none">
                                             <div class="form-title">Merchant Permissions</div>
                                                     
                                             <div class="form-group">
