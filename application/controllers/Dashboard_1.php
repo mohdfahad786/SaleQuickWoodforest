@@ -3016,11 +3016,9 @@ else if($month=='08' ){
 			$address2 = $this->input->post('address2') ? $this->input->post('address2') : "";
 			$email1 = $this->input->post('email1') ? strtolower($this->input->post('email1')) : "";
 			$business_number = $this->input->post('business_number') ? $this->input->post('business_number') : "";
-			// echo $business_number;die;
 			$report_email = $this->input->post('report_email') ? $this->input->post('report_email') : "";
 			$batch_report_time = $this->input->post('batch_report_time') ? $this->input->post('batch_report_time') : "";
 			$business_name = $this->input->post('business_name') ? $this->input->post('business_name') : "";
-			$pc_phone = $this->input->post('pc_phone') ? $this->input->post('pc_phone') : "";
 			$business_dba_name = $this->input->post('business_dba_name') ? $this->input->post('business_dba_name') : "";
 			$business_type = $this->input->post('business_type') ? $this->input->post('business_type') : "";
 			$ien_no = $this->input->post('ien_no') ? $this->input->post('ien_no') : "";
@@ -3110,7 +3108,6 @@ else if($month=='08' ){
 				'business_type' => $business_type,
 				'ien_no' => $ien_no,
 				'address1' => $address1,
-				'pc_phone' => $pc_phone,
 				'city' => $city,
 				'country' => $country,
 				'zip' => $zip,
@@ -3144,6 +3141,7 @@ else if($month=='08' ){
 				'f_swap_Invoice' => $f_swap_Invoice,
 				'f_swap_Recurring' => $f_swap_Recurring,
 				'f_swap_Text' => $f_swap_Text,
+				'business_number' => $mobile,
 				'view_permissions' => $view_permissions,
                 'edit_permissions' => $edit_permissions,
                 'create_pay_permissions' => $create_pay_permissions,
@@ -3165,12 +3163,10 @@ else if($month=='08' ){
 			redirect('dashboard/update_merchant/' . $id);
 
 		} else {
-			// echo '<pre>';print_r($branch);die;
 			foreach ($branch as $sub) {
 				$data['bct_id'] = $sub->id;
 				$data['name'] = $sub->name;
 				$data['address2'] = $sub->address2;
-				$data['pc_phone'] = $sub->pc_phone;
 				$data['email1'] = strtolower($sub->email1);
 				$data['business_number'] = $sub->business_number;
 				$data['report_email'] = $sub->report_email;
