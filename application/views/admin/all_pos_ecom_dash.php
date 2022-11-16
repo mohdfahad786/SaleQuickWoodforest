@@ -73,7 +73,7 @@
             </div>
 
             <?php $count = 0; ?>
-            <form class="row" method="post" action="<?php echo base_url('pos/all_ecommerce'); ?>" style="margin-bottom: 20px !important;">
+            <form class="row" method="post" action="<?php echo base_url('admin/all_ecommerce'); ?>" style="margin-bottom: 20px !important;">
                 <div class="table_custom_range_selector" style="width: auto;margin-right: 10px;margin-left: 5px !important;">
                     <div id="pos_list_daterange" class="form-control date-range-style" style="border: none !important;margin-top: 5px;color: rgb(110, 110, 110) !important;font-family: Avenir-Heavy !important;">
                         <span>
@@ -462,7 +462,7 @@ jQuery(function($){
             $('#invoice-receipt-modal').modal('show');
             $('#invoice-receipt-modal .modal-content').html($('#loader-content').html()); // leave it blank before ajax call
             $.ajax({
-             url: "<?php echo base_url('merchant/search_record_column_pos'); ?>",
+             url: "<?php echo base_url('admin/search_record_column_pos_ecommerce'); ?>",
              type: 'POST',
              data: 'id='+uid,
              dataType: 'html'

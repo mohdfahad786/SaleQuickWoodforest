@@ -964,8 +964,8 @@ class Admin extends CI_Controller {
 		$data = array();
 		// $merchant_id = $this->session->userdata('merchant_id');
 		// $merchant_data = $this->profile_model->get_merchant_details($merchant_id);
-
 		if ($this->input->post('mysubmit')) {
+
 			$start_date = $_POST['start_date'];
 			$end_date = $_POST['end_date'];
 			$status = $_POST['status'];
@@ -974,8 +974,8 @@ class Admin extends CI_Controller {
 				// $refund_data = $this->admin_model->get_search_refund_data('pos', $merchant_id, $start_date, $end_date, $status);
 				$this->db->select('mt.*,r.add_date as refund_dt,r.amount as refund_amount,r.id as refund_row_id, r.transaction_id as refund_transaction');
 				$this->db->from("refund r");
-				$this->db->where('r.date_c >=', $start_date);
-				$this->db->where('r.date_c <=', $end_date);
+				$this->db->where('r.date_c >=', $start);
+				$this->db->where('r.date_c <=', $end);
 				$this->db->where('mt.status', $status);
 				// $this->db->where('r.merchant_id', $merchant_id);
 				$this->db->join('pos mt', 'mt.invoice_no = r.invoice_no');
@@ -1014,6 +1014,61 @@ class Admin extends CI_Controller {
 			$data["end_date"] = $_POST['end_date'];
 			$data["status"] = $_POST['status'];
 					
+		} elseif ($this->input->post('search_Submit')) {
+			$start_date = $_POST['start_date'];
+			$end_date = $_POST['end_date'];
+			$status = $_POST['status'];
+			
+			if ($status == "Chargeback_Confirm") {
+				// $refund_data = $this->admin_model->get_search_refund_data('pos', $merchant_id, $start_date, $end_date, $status);
+				$this->db->select('mt.*,r.add_date as refund_dt,r.amount as refund_amount,r.id as refund_row_id, r.transaction_id as refund_transaction');
+				$this->db->from("refund r");
+				$this->db->where('r.date_c >=', $start);
+				$this->db->where('r.date_c <=', $end);
+				$this->db->where('mt.status', $status);
+				// $this->db->where('r.merchant_id', $merchant_id);
+				$this->db->join('pos mt', 'mt.invoice_no = r.invoice_no');
+				$this->db->order_by("r.id", "desc");
+				$refund_data = $this->db->get()->result();
+
+			} else {
+				// $package_data = $this->admin_model->get_search_merchant_pos_wb($start_date, $end_date, $status, $merchant_id, 'pos','yes');
+				if ($start_date != '') {
+					$this->db->where('date_c >=', $start_date);
+					$this->db->where('date_c <=', $end_date);
+				} else if ($start_date==$end_date) {
+					$this->db->where('date_c', $end_date);
+				} else {
+					$date = date('Y-m-d', strtotime('-30 days'));
+					$this->db->where('date_c >=', $date);
+					$this->db->where('date_c <=', date('Y-m-d'));
+				}
+				if ($status != '') {
+					$this->db->where('status', $status);
+				}
+				$this->db->where('woocommerce', 'yes');
+				// if($merchant_id!=""){ $this->db->where('merchant_id', $merchant_id); }
+				$this->db->order_by("id", "desc");
+				$package_data = $this->db->get('pos')->result();
+
+				if($status=='') {
+				    $refund_data = [];
+			    }   
+			}
+		
+			// $refund_data_search = $this->Inventory_model->get_full_refund_data_search_pdf($start_date, $end_date,'pos', $merchant_id);
+			$this->db->select('mt.*,r.id as refund_row_id,r.add_date as refund_dt,r.amount as refund_amount, r.transaction_id as refund_transaction');
+			$this->db->from("refund r");
+			$this->db->where('r.date_c >=', $start_date);
+			$this->db->where('r.date_c <=', $end_date);
+			// if($merchant_id!=""){ $this->db->where('r.merchant_id', $merchant_id); }
+			$this->db->join('pos mt', 'mt.invoice_no = r.invoice_no');
+			$refund_data_search = $this->db->get()->result_array();
+			
+			$data["start_date"] = $_POST['start_date'];
+			$data["end_date"] = $_POST['end_date'];
+			$data["status"] = $_POST['status'];
+		
 		} else {
 			// $package_data = $this->admin_model->get_full_details_pos_wb('pos', $merchant_id,'yes');
 			$date = date('Y-m-d', strtotime('-30 days'));
@@ -1159,23 +1214,6 @@ class Admin extends CI_Controller {
 		$this->load->view('admin/all_pos_ecom_dash', $data);
 		$this->load->view('merchant/footer_dash_list', $data);
 	}
-
-	public function search_record_column_pos_ecommerce() {
-      // echo '<pre>'; print_r($_POST);die();
-
-      $searchby = $this->input->post('id');
-      $data['item'] = $this->admin_model->data_get_where_pos_itemsList("pos", $searchby);
-      $data['pay_report'] = $this->admin_model->search_record_pos($searchby);
-      // echo '<pre>';print_r($data['pay_report']);die();
-      $data['refundData'] = $this->admin_model->data_get_refund("pos", $searchby);
-
-      $merchant_id = !empty($data['pay_report']) ? $data['pay_report'][0]->merchant_id : '0';
-      $merchant_details = $this->db->get_where('merchant', ['id' => $merchant_id])->result_array();
-      $data['merchant_details'] = $merchant_details;
-      // echo '<pre>'; print_r($merchant_details);die();
-       
-      echo $this->load->view('admin/show_result_pos_dash', $data, true);
-  }
 
 }
 
