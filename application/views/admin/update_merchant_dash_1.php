@@ -108,10 +108,10 @@
                                         echo form_open('dashboard/' . $loc, array('id' => "my_form"));
                                         echo isset($bct_id) ? form_hidden('bct_id', $bct_id) : ""; ?>
                                         <?php if(isset($view_menu_permissions) && $view_menu_permissions!="") {
-                                                $view_menu_permissions_Array=explode(',',$view_menu_permissions); 
-                                            } else {
-                                                $view_menu_permissions_Array=array();
-                                            } ?>
+                                                                $view_menu_permissions_Array=explode(',',$view_menu_permissions); 
+                                                            } else {
+                                                                $view_menu_permissions_Array=array();
+                                                            }?>
 
                                             <div class="row">
                                                 <div class="col-12">
@@ -171,8 +171,8 @@
                                                     <div class="col-sm-6 col-md-6 col-lg-6">
                                                         <div class="form-group">
                                                             <label for="">Phone Number </label>
-                                                            <input type="text" class="form-control" name="pc_phone" id="pc_phone" maxlength="10" onKeyPress="return isNumberKey(event)"
-                                                            placeholder="Mobile No" value="<?php echo (isset($pc_phone) && !empty($pc_phone)) ? $pc_phone : set_value('pc_phone'); ?>">
+                                                            <input type="text" class="form-control" name="business_number" id="business_number" maxlength="10" onKeyPress="return isNumberKey(event)"
+                                                            placeholder="Mobile No" value="<?php echo (isset($business_number) && !empty($business_number)) ? $business_number : set_value('business_number'); ?>">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -268,7 +268,7 @@
                                                     <div class="col-6">
                                                         <div class="form-group">
                                                             <label class="">Business Phone No.</label>
-                                                            <input type="text" class="form-control" name="business_number" id="business_number" placeholder="Business Phone Number" value="<?php echo (isset($business_number) && !empty($business_number)) ? $business_number : set_value('business_number'); ?>">
+                                                            <input type="text" class="form-control" name="mobile" id="mobile" placeholder="Business Phone Number" value="<?php echo (isset($mobile) && !empty($mobile)) ? $mobile : set_value('mobile'); ?>">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -651,7 +651,6 @@
 <script>
     $(function() {
         $("#business_number").mask("(999) 999-9999");
-        $("#pc_phone").mask("(999) 999-9999");
         $("#mobile").mask("(999) 999-9999");
         $("#o_phone").mask("(999) 999-9999");
         $("#business_number").on("blur", function() {
