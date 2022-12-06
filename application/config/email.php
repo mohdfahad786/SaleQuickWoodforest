@@ -11,8 +11,11 @@
 $config['protocol'] = 'smtp';
 $config['smtp_host'] = 'ssl://in.mailjet.com';
 $config['smtp_port'] = '465';
+// $config['smtp_user'] = 'bd44f3f110259eb60f880abdc2de47e3';
+// $config['smtp_pass'] = '571258666c3347fbf47fbf12850f00e7';
+
 $config['smtp_user'] = 'bd44f3f110259eb60f880abdc2de47e3';
-$config['smtp_pass'] = '571258666c3347fbf47fbf12850f00e7';
+$config['smtp_pass'] = 'ba3bfdc0084854f30c0a6da271d30428';
 $config['charset'] = 'utf-8';
 $config['mailtype'] = 'html';
 $config['newline'] = "\r\n";

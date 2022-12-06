@@ -197,13 +197,13 @@ class Multiadmin extends CI_Controller {
 					$password = $this->my_encrypt($pswdToMail, 'e');
 		          	$ins_data['password'] = $password;
 					
-					set_time_limit(3000); 
+					// set_time_limit(3000); 
 					$MailTo = $data['email_id'];  
-					$MailSubject = 'SaleQuick Login Credentials'; 
+					$MailSubject = 'Woodforest Login Credentials'; 
 					$header = "From: Salequick<info@salequick.com>\r\n".
 						"MIME-Version: 1.0" . "\r\n" .
 						"Content-type: text/html; charset=UTF-8" . "\r\n";
-					$msg = "The password for your username ".$data['username']." has been changed that is ".$pswdToMail.". Please use these Credentials for login into SaleQuick via URL https://salequick.com/admin.<br><br>Regards,<br>Team SaleQuick";
+					$msg = "The password for your username ".$data['email_id']." has been changed that is ".$pswdToMail.". Please use these Credentials for login into SaleQuick via URL https://woodforest.salequick.com/.<br><br>Regards,<br>Team SaleQuick";
 					// ini_set('sendmail_from', $email);
 					ini_set('sendmail_from', $MailTo);
 
