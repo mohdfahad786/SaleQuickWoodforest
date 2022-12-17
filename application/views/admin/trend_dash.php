@@ -59,23 +59,25 @@ include_once 'sidebar_dash.php';
                 </div>
             </div>
 
+                <?php
+    $monday = strtotime("last monday");
+    $monday = date('w', $monday)==date('w') ? $monday+7*86400 : $monday;
+    $sunday = strtotime(date("Y-m-d",$monday)." +6 days");
+    $sunday1 = strtotime(date("Y-m-d",$monday)." -7 days");
+    $sunday2 = strtotime(date("Y-m-d",$sunday1)." +6 days");
+    $this_week_sd1 = date("M ,d",$sunday2);
+    $this_week_ed1 = date("M ,d",$sunday1);
+    $this_week_sd = date("M ,d",$monday);
+    $this_week_ed = date("M ,d",$sunday);
+    ?>
+
             <div class="row" style="margin-top: 20px !important;">
                 <div class="col-12 equel-grid">
                     <div class="grid grid-chart">
                         <div class="grid-body d-flex flex-column h-100">
                             <div class="wrapper">
                                 <div class="d-flex justify-content-between">
-                                    <?php
-                                    $monday = strtotime("last monday");
-                                    $monday = date('w', $monday)==date('w') ? $monday+7*86400 : $monday;
-                                    $sunday = strtotime(date("Y-m-d",$monday)." +6 days");
-                                    $sunday1 = strtotime(date("Y-m-d",$monday)." -7 days");
-                                    $sunday2 = strtotime(date("Y-m-d",$sunday1)." +6 days");
-                                    $this_week_sd1 = date("M ,d",$sunday2);
-                                    $this_week_ed1 = date("M ,d",$sunday1);
-                                    $this_week_sd = date("M ,d",$monday);
-                                    $this_week_ed = date("M ,d",$sunday);
-                                    ?>
+
                                     <div class="split-header">
                                         <div class="split-sub-header">
                                             <div class="row">
@@ -83,20 +85,7 @@ include_once 'sidebar_dash.php';
                                                     <p class="h4-custom">Daily Gross Sales</p>
                                                 </div>
                                                 <div class="col-sm-6 col-md-6 col-lg-6 text-right">
-                                                    <!-- <div class="row pull-right" style="margin-right: 10px;">
-                                                        <div class="custom-chart-label">
-                                                            <span>
-                                                                <div class="rectangle"></div>
-                                                                Gross Sales - Today
-                                                            </span>
-                                                        </div>
-                                                        <div class="custom-chart-label year_chart_margin_right">
-                                                            <span>
-                                                                <div class="rectangle-darked"></div>
-                                                                Gross Sales - Yesterday
-                                                            </span>
-                                                        </div>
-                                                    </div> -->
+                                                   
                                                 </div>
                                             </div>
                                         </div>
