@@ -58,7 +58,14 @@ include_once 'sidebar_dash.php';
                     <!-- <h4 class="h4-custom">Sales Trends</h4> -->
                 </div>
             </div>
-            <?php
+
+            <div class="row" style="margin-top: 20px !important;">
+                <div class="col-12 equel-grid">
+                    <div class="grid grid-chart">
+                        <div class="grid-body d-flex flex-column h-100">
+                            <div class="wrapper">
+                                <div class="d-flex justify-content-between">
+                                    <?php
                                     $monday = strtotime("last monday");
                                     $monday = date('w', $monday)==date('w') ? $monday+7*86400 : $monday;
                                     $sunday = strtotime(date("Y-m-d",$monday)." +6 days");
@@ -69,8 +76,40 @@ include_once 'sidebar_dash.php';
                                     $this_week_sd = date("M ,d",$monday);
                                     $this_week_ed = date("M ,d",$sunday);
                                     ?>
-
-
+                                    <div class="split-header">
+                                        <div class="split-sub-header">
+                                            <div class="row">
+                                                <div class="col-sm-6 col-md-6 col-lg-6">
+                                                    <p class="h4-custom">Daily Gross Sales</p>
+                                                </div>
+                                                <div class="col-sm-6 col-md-6 col-lg-6 text-right">
+                                                    <!-- <div class="row pull-right" style="margin-right: 10px;">
+                                                        <div class="custom-chart-label">
+                                                            <span>
+                                                                <div class="rectangle"></div>
+                                                                Gross Sales - Today
+                                                            </span>
+                                                        </div>
+                                                        <div class="custom-chart-label year_chart_margin_right">
+                                                            <span>
+                                                                <div class="rectangle-darked"></div>
+                                                                Gross Sales - Yesterday
+                                                            </span>
+                                                        </div>
+                                                    </div> -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-auto dailyGrossSale_chart_wrapper">
+                                <div id="dailyGrossSale" height="350"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="row" style="margin-top: 20px !important;">
                 <div class="col-12 equel-grid">
