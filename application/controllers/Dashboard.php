@@ -931,6 +931,7 @@ else if($month=='08' ){
       $getamount = $amount->result_array();
 
       print_r($getamount);
+      echo $getamount[0]['Totaldec'];
 
           $fee = $this->db->query("SELECT avg(amount) as Totaldecf from ( SELECT month,amount from customer_payment_request where  month = '12' and year = '" . $today2 . "' ".$stmt." and status='confirm'    union all SELECT month,amount from pos where  month = '12' and year = '" . $today2 . "' ".$stmt." and status='confirm' )x group by month ");
 
