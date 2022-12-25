@@ -641,7 +641,7 @@ class Dashboard extends CI_Controller {
 
 		}
 
-         echo $stmt;die;
+        // echo $stmt;die;
     	if($month=='01' ){
          	$amount = $this->db->query("SELECT sum(amount) as Totaljan from ( SELECT month,amount from customer_payment_request where  month = '01' and year = '" . $today2 . "'".$stmt." and status='confirm'    union all SELECT month,amount from pos where  month = '01' and year = '" . $today2 . "'".$stmt." and status='confirm' )x group by month  ");
  
@@ -929,6 +929,8 @@ else if($month=='08' ){
          $amount = $this->db->query("SELECT sum(amount) as Totaldec from ( SELECT month,amount from customer_payment_request where  month = '12' and year = '" . $today2 . "' ".$stmt." and status='confirm'    union all SELECT month,amount from pos where  month = '12' and year = '" . $today2 . "' ".$stmt." and status='confirm' )x group by month  ");
           
       $getamount = $amount->result_array();
+
+      print_r($getamount);
 
           $fee = $this->db->query("SELECT avg(amount) as Totaldecf from ( SELECT month,amount from customer_payment_request where  month = '12' and year = '" . $today2 . "' ".$stmt." and status='confirm'    union all SELECT month,amount from pos where  month = '12' and year = '" . $today2 . "' ".$stmt." and status='confirm' )x group by month ");
 
