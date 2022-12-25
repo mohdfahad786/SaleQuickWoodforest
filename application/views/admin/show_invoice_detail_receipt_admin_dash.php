@@ -230,7 +230,7 @@
                 <table class="item-details-table" style="width: 100%">
                     <tbody>
                         <?php
-                        $itemLength=count(json_decode($invoice_detail_receipt_item[0]['quantity']));
+                        $itemLength=!empty($invoice_detail_receipt_item[0]['quantity'])?count(json_decode($invoice_detail_receipt_item[0]['quantity'])):0;
                         for($i=0; $i<$itemLength; $i++) {
                             $quantity=json_decode($invoice_detail_receipt_item[0]['quantity']);
                             $price=json_decode($invoice_detail_receipt_item[0]['price']);
@@ -348,7 +348,7 @@
                 <table class="payment-details-table" style="width: 100%">
                     <tbody>
                         <?php 
-                        $late_grace_period = $merchant_data[0]->late_grace_period;
+                        $late_grace_period = !empty($merchant_data[0]->late_grace_period)?$merchant_data[0]->late_grace_period:'0';
                         if(!empty($invoice_detail_receipt[0]->late_fee)) { ?>
                             <tr>
                                 <td width="50%" class="left">Late Fee</td>
@@ -400,7 +400,7 @@
         </div>
 
         <?php if(($invoice_detail_receipt[0]->status == 'confirm' || $invoice_detail_receipt[0]->status == 'Chargeback_Confirm') && $refundedAmt < $invoice_detail_receipt[0]->amount) { ?>
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col-sm-12 col-md-12 col-lg-12">
                     <div class="irm-pay-title" style="padding-left: 0px;"><span>Refund Type </span></div>
                 </div>
@@ -445,7 +445,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         <?php } ?>
     </div>
 </div>

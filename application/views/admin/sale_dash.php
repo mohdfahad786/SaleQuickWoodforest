@@ -207,7 +207,7 @@ include_once 'sidebar_dash.php';
                 </div>
             </div>
 
-           <!--  <div class="row" style="margin-top: 10px !important">
+            <div class="row" style="margin-top: 10px !important">
                 <div class="col-12 equel-grid">
                     <div class="grid grid-chart">
                         <div class="grid-body d-flex flex-column h-100">
@@ -224,7 +224,7 @@ include_once 'sidebar_dash.php';
                         </div>
                     </div>
                 </div>
-            </div> -->
+            </div>
 
             <div class="row" style="margin-top: 10px !important">
                 <div class="col-12 equel-grid">

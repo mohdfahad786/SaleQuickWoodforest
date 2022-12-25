@@ -16,8 +16,8 @@ class Admin_Chart extends CI_Controller {
 		$this->load->library('form_validation');
 		$this->load->library('email');
 		date_default_timezone_set("America/Chicago");
-		ini_set('display_errors', 1);
-	    error_reporting(E_ALL);
+		// ini_set('display_errors', 1);
+	 //    error_reporting(E_ALL);
 	}
 
 	public function trends_original() {

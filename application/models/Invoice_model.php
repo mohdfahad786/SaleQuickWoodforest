@@ -32,25 +32,27 @@ $end_date = date('Y-m-d', strtotime($end_date));
         }
         else
         {    
+            $stmtQuery=" mt.merchant_id IN('";
             $wf_merchants=$this->session->userdata('wf_merchants');
-            $x=explode(",",$wf_merchants);
-            $len=sizeof($x);
+
             if(!empty($wf_merchants)) {
+                $x=explode(",",$wf_merchants);
+                $len=sizeof($x);
                 for ($i=0; $i <$len ; $i++) { 
                     if($i==0){
-                        $mysqlQry.='(mt.merchant_id='.$x[$i].' or ';
-                    }else if($i==$len-1){
-                         $mysqlQry.='mt.merchant_id='.$x[$i].')';
+                        $stmtQuery.=$x[$i];
+                    }else{
+                        $stmtQuery.="','".$x[$i];
                     }
-                    else{
-                        $mysqlQry.='mt.merchant_id='.$x[$i].' or ';
-                    }
-               
+                
                 }
-                $this->db->where($mysqlQry);
+                $stmtQuery.="')";
+
             }else{
-                    $mysqlQry=' and mt.merchant_id is null ';
+                $stmtQuery='  mt.merchant_id is null ';
+
             }
+            $this->db->where($stmtQuery);
         }
         // $this->db->where('mt.date_c >=', $date);
         if (!empty($start_date)) {

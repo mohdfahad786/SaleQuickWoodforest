@@ -1443,12 +1443,12 @@
                                 <li class="nav-item">
                                     <a class="nav-link" data-toggle="tab" href="#BusOwnInfo">Owner Info</a>
                                 </li>
-                                <li class="nav-item d-none">
+                                <!-- <li class="nav-item d-none">
                                     <a class="nav-link" data-toggle="tab" href="#BankInfo">Banking Details</a>
                                 </li>
                                 <li class="nav-item d-none">
                                     <a class="nav-link" data-toggle="tab" href="#Pricing">Pricing</a>
-                                </li>
+                                </li> -->
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane container active" id="primaryInfo">

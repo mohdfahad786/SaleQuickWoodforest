@@ -365,25 +365,27 @@ class Admin extends CI_Controller {
 
 		 	if($pos->transaction_type == "split") {
 
-		 		$wf_merchants=$this->session->userdata('wf_merchants');
-		 		if(!empty($wf_merchants)) {
-					$x=explode(",",$wf_merchants);
-					$len=sizeof($x);
-					$str="";
-					for ($i=0; $i <$len ; $i++) { 
-						if($i==0){
-							$str="(merchant_id=".$x[$i];
-						}else{
-							$str.=" or merchant_id=".$x[$i];
-						}
-					
-					}
-					$str.=")";
+		 		$stmtQuery="merchant_id IN('";
+				$wf_merchants=$this->session->userdata('wf_merchants');
+
+				if(!empty($wf_merchants)) {
+				      $x=explode(",",$wf_merchants);
+				      $len=sizeof($x);
+				      for ($i=0; $i <$len ; $i++) { 
+				          if($i==0){
+				              $stmtQuery.=$x[$i];
+				          }else{
+				              $stmtQuery.="','".$x[$i];
+				          }
+				      
+				      }
+				      $stmtQuery.="')";
+
+				}else{
+					$stmtQuery=' merchant_id is null ';
+
 				}
-				else{
-					$str=' and merchant_id is null ';
-				}
-				$this->db->where($str);
+				$this->db->where($stmtQuery);
 		 		$get_item_data = $this->db->where('transaction_id', $pos_invoice_no)->get('adv_pos_cart_item')->num_rows();
 
 		 		$transaction_id = $pos->invoice_no;
@@ -391,24 +393,27 @@ class Admin extends CI_Controller {
 				$card_no = "";
 				$card_type = "SPLIT";
 		 	} else {
-		 		$wf_merchants=$this->session->userdata('wf_merchants');
-		 		if(!empty($wf_merchants)) {
-						$x=explode(",",$wf_merchants);
-						$len=sizeof($x);
-						$str="";
-						for ($i=0; $i <$len ; $i++) { 
-							if($i==0){
-								$str="(merchant_id=".$x[$i];
-							}else{
-								$str.=" or merchant_id=".$x[$i];
-							}
-						
-						}
-						$str.=")";
+		 		$stmtQuery="merchant_id IN('";
+				$wf_merchants=$this->session->userdata('wf_merchants');
+
+				if(!empty($wf_merchants)) {
+				      $x=explode(",",$wf_merchants);
+				      $len=sizeof($x);
+				      for ($i=0; $i <$len ; $i++) { 
+				          if($i==0){
+				              $stmtQuery.=$x[$i];
+				          }else{
+				              $stmtQuery.="','".$x[$i];
+				          }
+				      
+				      }
+				      $stmtQuery.="')";
+
 				}else{
-						$str=' and merchant_id is null ';
+					$stmtQuery=' merchant_id is null ';
+
 				}
-				$this->db->where($str);
+				$this->db->where($stmtQuery);
 				$get_item_data = $this->db->where('transaction_id', $pos_transaction_id)->get('adv_pos_cart_item')->num_rows();
 				// echo $this->db->last_query();
 				$transaction_id = $pos->transaction_id;
@@ -1149,15 +1154,15 @@ class Admin extends CI_Controller {
 			}
 		}
 		array_multisort(array_column($mem, 'date'), SORT_DESC, $mem);
-		// echo '<pre>'; print_r($mem) ; die; 
 		$data['mem'] = $mem;
+		// echo '<pre>'; print_r($data) ; die; 
 	
 		// $data['merchant_data'] = $merchant_data;
 		$data['meta'] = 'Ecommerce Transactions';
 		
-		$this->load->view('merchant/header_dash_list', $data);
+		$this->load->view('admin/header_dash_list', $data);
 		$this->load->view('admin/all_pos_ecom_dash', $data);
-		$this->load->view('merchant/footer_dash_list', $data);
+		$this->load->view('admin/footer_dash_list', $data);
 	}
 
 	public function search_record_column_pos_ecommerce() {

@@ -485,7 +485,7 @@ jQuery(function($){
             $('#invoice-receipt-modal').modal('show');
             $('#invoice-receipt-modal .modal-content').html($('#loader-content').html()); // leave it blank before ajax call
             $.ajax({
-             url: "<?php echo base_url('dashboard/search_record_column_pos_refund'); ?>",
+             url: "<?php echo base_url('merchant/search_record_column_pos_refund'); ?>",
              type: 'POST',
              data: 'id='+uid+'&'+'row_id='+row_id,
              dataType: 'html'

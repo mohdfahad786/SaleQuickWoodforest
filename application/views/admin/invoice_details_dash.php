@@ -222,7 +222,7 @@
                                     <td>
                                         <?php if($a_data['status'] == 'confirm' || $status=='confirm' || $a_data['status'] == 'Chargeback_Confirm') { ?>
                                             <span class="transaction_recur_vw_btn pos_Status_c badge-btn" style="cursor:pointer;" data-id="<?php echo $a_data['id'];  ?>"><span class="fa fa-eye"></span>  Receipt</span>
-                                        <?php } else if($a_data['status']!='confirm' && $status!='confirm' && $a_data['recurring_pay_start_date']!=$prev_ConversionDate) { ?>
+                                        <?php } else if($a_data['status']!='confirm' && $status!='confirm' && $a_data['recurring_pay_start_date']!=!empty($prev_ConversionDate)) { ?>
                                             <button type="submit" id="resend-invoice" name="submit" onclick="resendinvoice(this,<?php echo $a_data['id']; ?> )" class="pos_Status_c badge-btn" style="border: none !important;">Re-Send Invoice</button>  
                                         <?php } ?> 
                                     </td>

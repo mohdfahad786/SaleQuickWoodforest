@@ -15,6 +15,8 @@
 			$this->load->library('email');
 			$this->load->library('twilio');
 			date_default_timezone_set("America/Chicago");
+			ini_set('display_errors', 1);
+	    error_reporting(E_ALL);
 		}
 		
 		  

@@ -41,186 +41,192 @@ class Dashboard extends CI_Controller {
   	public function create_merchant() {
   		// echo '<pre>';print_r($_POST);die;
 
-  		$this->form_validation->set_rules('email', 'Email Address', 'required|valid_email|is_unique[merchant.email]');
-		$this->form_validation->set_rules('mobile', 'Mobile No', 'required|is_unique[merchant.mob_no]');
-		
-		$email = $this->input->post('memail') ? $this->input->post('memail') : "";
-		$pc_phone = $this->input->post('primary_phone') ? $this->input->post('primary_phone') : "";
-		$business_name = $this->input->post('business_name') ? $this->input->post('business_name') : "";
-		$business_dba_name = $this->input->post('business_dba_name') ? $this->input->post('business_dba_name') : "";
-		$taxid = $this->input->post('taxid') ? $this->input->post('taxid') : "";
+  		$this->form_validation->set_rules('memail', 'Email Address', 'required|valid_email|is_unique[merchant.email]');
+		$this->form_validation->set_rules('primary_phone', 'Mobile No', 'required|is_unique[merchant.mob_no]');
+		$this->form_validation->set_rules('business_dba_name', 'DBA Name', 'required|regex_match[/^([A-Z0-9a-z .,#&"-])+$/i]|max_length[100]');
+		$this->form_validation->set_rules('business_name', 'Legal Business Name', 'required|regex_match[/^([A-Z0-9a-z .,#])+$/i]|max_length[100]');
 		$this->form_validation->set_rules('password', 'Password', 'required');
-		$this->form_validation->set_rules('c_password', 'Confirm password', 'required|matches[password]');
-		$password1 = $this->input->post('password') ? $this->input->post('password') : "";
-		// $password1 = substr(md5(uniqid(rand(), true)), 0, 10);
-		$password = $this->my_encrypt($password1, 'e');
+		$this->form_validation->set_rules('confirm_password', 'Confirm password', 'required|matches[password]');
 
-		$today1 = date("Ymdhisu");
-		$unique = "SAL" . $today1;
-		$merchant_key = substr("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", mt_rand(0, 51), 1) . substr(md5(time()), 1);
-		
-		$usr_result = $this->db->query("SELECT * FROM merchant WHERE email='$email'")->row_array();
-		// echo $this->db->last_query();die;
-		// print_r($usr_result);die;
-		
-		if(empty($usr_result)) {
-			$view_permissions = $this->input->post('view_permissions') ? $this->input->post('view_permissions') : '0' . "";
-			$edit_permissions = $this->input->post('edit_permissions') ? $this->input->post('edit_permissions') : '0' . "";
-			$create_pay_permissions = $this->input->post('create_pay_permissions') ? $this->input->post('create_pay_permissions') : '0' . "";
+		if ($this->form_validation->run() == FALSE) {
+			$this->session->set_flashdata("error", validation_errors());
+			redirect('dashboard/add_merchant');
 
-			$view_menu_permissions='';
-			$view_menu_permissions .=$this->input->post('ViewPermissions') ? $this->input->post('ViewPermissions').',' : "";  
-			$view_menu_permissions .=$this->input->post('AddPermissions') ? $this->input->post('AddPermissions').',' : "";  
-			$view_menu_permissions .=$this->input->post('EditPermissions') ? $this->input->post('EditPermissions').',' : "";  
-			$view_menu_permissions .=$this->input->post('DeletePermissions') ? $this->input->post('DeletePermissions').',' : ""; 
-			$view_menu_permissions .=$this->input->post('Dashboard') ? $this->input->post('Dashboard').',' : "";  
-			$view_menu_permissions .=$this->input->post('TransactionSummary') ? $this->input->post('TransactionSummary').',' : "";  
-			$view_menu_permissions .=$this->input->post('SalesTrends') ? $this->input->post('SalesTrends').',' : "";  
-			$view_menu_permissions .= $this->input->post('TInstoreMobile') ? $this->input->post('TInstoreMobile').',' : "";  
-			$view_menu_permissions .= $this->input->post('TInvoice') ? $this->input->post('TInvoice').',' : "";  
-			$view_menu_permissions .= $this->input->post('TRecurring') ? $this->input->post('TRecurring').',' : "";  
-			$view_menu_permissions .= $this->input->post('VirtualTerminal') ? $this->input->post('VirtualTerminal').',' : "";  
-			$view_menu_permissions .= $this->input->post('IInvoicing') ? $this->input->post('IInvoicing').',' : "";  
-			$view_menu_permissions .= $this->input->post('IRecurring') ? $this->input->post('IRecurring').',' : "";  
-			$view_menu_permissions .= $this->input->post('RInstoreMobile') ? $this->input->post('RInstoreMobile').',' : "";
-			$view_menu_permissions .= $this->input->post('RInvoice') ? $this->input->post('RInvoice').',' : "";
-			$view_menu_permissions .= $this->input->post('ItemsManagement') ? $this->input->post('ItemsManagement').',' : "";  
-			$view_menu_permissions .= $this->input->post('Reports') ? $this->input->post('Reports').',' : "";  
-			$view_menu_permissions .= $this->input->post('Settings') ? $this->input->post('Settings') : "";
+		} else {
+			$email = $this->input->post('memail') ? $this->input->post('memail') : "";
+			$pc_phone = $this->input->post('primary_phone') ? $this->input->post('primary_phone') : "";
+			$business_name = $this->input->post('business_name') ? $this->input->post('business_name') : "";
+			$business_dba_name = $this->input->post('business_dba_name') ? $this->input->post('business_dba_name') : "";
+			$taxid = $this->input->post('taxid') ? $this->input->post('taxid') : "";
+			
+			$password1 = $this->input->post('password') ? $this->input->post('password') : "";
+			// $password1 = substr(md5(uniqid(rand(), true)), 0, 10);
+			$password = $this->my_encrypt($password1, 'e');
 
-			$data = array(
-				"email" => $email,
-				"pc_email" => $email,
-				"password" => $password,
-				"auth_key" => $unique,
-			    "merchant_key" => $merchant_key,
-			    'user_type'=>'merchant',
-				'status' => 'pending_signup',
-				'is_token_system_permission' => '1',
-				'is_tokenized' => '1',
-				'pc_phone' => $pc_phone,
-				'business_name'=>$business_name,
-				'name'=>$business_name,
-				'business_dba_name'=>$business_dba_name,
-				'taxid'=>$taxid,
-				'wood_forest' => '1',
-				'view_permissions' => $view_permissions,
-				'edit_permissions' => $edit_permissions,
-				'create_pay_permissions' => $create_pay_permissions,
-				'view_menu_permissions' => $view_menu_permissions,
-			);
+			$today1 = date("Ymdhisu");
+			$unique = "SAL" . $today1;
+			$merchant_key = substr("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", mt_rand(0, 51), 1) . substr(md5(time()), 1);
+			
+			$usr_result = $this->db->query("SELECT * FROM merchant WHERE email='$email'")->row_array();
+			// echo $this->db->last_query();die;
+			// print_r($usr_result);die;
+			
+			if(empty($usr_result)) {
+				$view_permissions = $this->input->post('view_permissions') ? $this->input->post('view_permissions') : '0' . "";
+				$edit_permissions = $this->input->post('edit_permissions') ? $this->input->post('edit_permissions') : '0' . "";
+				$create_pay_permissions = $this->input->post('create_pay_permissions') ? $this->input->post('create_pay_permissions') : '0' . "";
 
-			if ($email) {
-				$last_merchantId = $this->Home_model->insert_data("merchant", $data);
-				// echo $last_merchantId;die;
-				$ins_merchant_graph = array(
-					'id' => NULL,
-					'merchant_id' => $last_merchantId
+				$view_menu_permissions='';
+				$view_menu_permissions .=$this->input->post('ViewPermissions') ? $this->input->post('ViewPermissions').',' : "";  
+				$view_menu_permissions .=$this->input->post('AddPermissions') ? $this->input->post('AddPermissions').',' : "";  
+				$view_menu_permissions .=$this->input->post('EditPermissions') ? $this->input->post('EditPermissions').',' : "";  
+				$view_menu_permissions .=$this->input->post('DeletePermissions') ? $this->input->post('DeletePermissions').',' : ""; 
+				$view_menu_permissions .=$this->input->post('Dashboard') ? $this->input->post('Dashboard').',' : "";  
+				$view_menu_permissions .=$this->input->post('TransactionSummary') ? $this->input->post('TransactionSummary').',' : "";  
+				$view_menu_permissions .=$this->input->post('SalesTrends') ? $this->input->post('SalesTrends').',' : "";  
+				$view_menu_permissions .= $this->input->post('TInstoreMobile') ? $this->input->post('TInstoreMobile').',' : "";  
+				$view_menu_permissions .= $this->input->post('TInvoice') ? $this->input->post('TInvoice').',' : "";  
+				$view_menu_permissions .= $this->input->post('TRecurring') ? $this->input->post('TRecurring').',' : "";  
+				$view_menu_permissions .= $this->input->post('VirtualTerminal') ? $this->input->post('VirtualTerminal').',' : "";  
+				$view_menu_permissions .= $this->input->post('IInvoicing') ? $this->input->post('IInvoicing').',' : "";  
+				$view_menu_permissions .= $this->input->post('IRecurring') ? $this->input->post('IRecurring').',' : "";  
+				$view_menu_permissions .= $this->input->post('RInstoreMobile') ? $this->input->post('RInstoreMobile').',' : "";
+				$view_menu_permissions .= $this->input->post('RInvoice') ? $this->input->post('RInvoice').',' : "";
+				$view_menu_permissions .= $this->input->post('ItemsManagement') ? $this->input->post('ItemsManagement').',' : "";  
+				$view_menu_permissions .= $this->input->post('Reports') ? $this->input->post('Reports').',' : "";  
+				$view_menu_permissions .= $this->input->post('Settings') ? $this->input->post('Settings') : "";
+
+				$data = array(
+					"email" => $email,
+					"pc_email" => $email,
+					"password" => $password,
+					"auth_key" => $unique,
+				    "merchant_key" => $merchant_key,
+				    'user_type'=>'merchant',
+					'status' => 'pending_signup',
+					'is_token_system_permission' => '1',
+					'is_tokenized' => '1',
+					'pc_phone' => $pc_phone,
+					'business_name'=>$business_name,
+					'name'=>$business_name,
+					'business_dba_name'=>$business_dba_name,
+					'taxid'=>$taxid,
+					'wood_forest' => '1',
+					'view_permissions' => $view_permissions,
+					'edit_permissions' => $edit_permissions,
+					'create_pay_permissions' => $create_pay_permissions,
+					'view_menu_permissions' => $view_menu_permissions,
 				);
-				$this->db->insert('merchant_year_graph', $ins_merchant_graph);
-				$this->db->insert('merchant_year_graph_two', $ins_merchant_graph);
-				// echo $last_merchantId;die;
-				// $usr_result = $this->reset_model->get_merchant($username); 
-                //echo $this->db->last_query();
-                if (!empty($last_merchantId)) {
-                    //print_r($usr_result); die;   
-                    // $usr_result_merchant = $this->reset_model->get_merchant_detail($username);
-                    // $password1 = time();
-                    // $token = date("Ymdhmsu");
-                    // $merchant_id=$last_merchantId;
-                             
-                    // $getQuery_delete = $this->db->query(" DELETE FROM change_password where merchant_id='".$merchant_id."' "); 
-                    // $getQuery_a = $this->db->query("INSERT INTO change_password (merchant_id, token) VALUES ('".$merchant_id."', '".$token."') ");
-                    // //$password = $this->my_encrypt( $password1 , 'e' );
-                    // //$usr_update = $this->reset_model->update_merchant($username,$password);
-                    // $url = base_url().'reset/password/'.$merchant_id.'/'.$token;
 
-                    // set_time_limit(3000); 
-                    // $MailTo = $email; 
-                    // $MailSubject = 'Salequick Credentials'; 
-                    // $header = "From: Salequick<info@salequick.com>\r\n".
-                    // "MIME-Version: 1.0" . "\r\n" .
-                    // "Content-type: text/html; charset=UTF-8" . "\r\n"; 
-                    // // $msg = " Reset Link : ".$url." ";
-                    // $htmlContent = '<!DOCTYPE html>
-                    //     <html>
-                    //     <head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-                    //     <title></title>
-                    //     <meta name="viewport" content="width=device-width, initial-scale=1">
-                    //     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800" rel="stylesheet">
-                    //     </head>
-                    //     <body style="padding: 0px;margin: 0;font-family:Open Sans, sans-serif;font-size: 14px !important;color: #333;">
-                    //     <div style="max-width: 751px;margin: 0 auto;background:#fafafa;">
-                    //     <div style="color:#fff;padding-top: 30px;padding-bottom: 5px;background-color: #2273dc;border-top-left-radius: 10px;border-top-right-radius: 10px;">
-                    //     <div style="width:80%;margin:0 auto;">
-                    //     <div style="width: 245px;text-align: center;height: 70px;border-radius: 50%;margin: 10px auto 20px;padding: 10px;box-shadow: 0px 0px 5px 10px #438cec8c;"><img src="https://salequick.com/front/images/logo-w.png" style="max-width: 90%;width: 100%;margin: 8px auto 0;display: block;"></div>
-                    //     </div>
-                    //     </div>
-                    //     <div style="max-width: 563px;text-align:right;margin: 0px auto 0;clear: both;width: 100%;display: table;">
-                    //     <p style="text-align: center !important;font-size: 20px !important;font-family: sans-serif !important;letter-spacing: 3px;color: #3c763d;font-weight: 600 !important;">Salequick Credentials</p>
-                    //     <p style="font-size: 16px !important;text-align: center !important;">Hi, Your password is <b>"'.$password1.'"</b> , If you want to reset it then click on link below to create a new password:</p>
-                    //     <p style="line-height: 1.432;text-align: center !important;">
-                    //     <a href="'.$url.'" style="max-height: 40px;padding: 10px 20px;display: inline-flex;justify-content: center;align-items: center;font-size: 0.875rem;font-weight: 600;letter-spacing: 0.03rem;color: #fff;background-color: #696ffb;text-decoration: none;border-radius: 20px;">Set a new password</a>
-                    //     </p> 
-                    //     <p style="font-size: 16px !important;text-align: center !important;">If you did not requested a password reset. you can ignore this email. Your password will not be changed.</p>
-                    //     </div>
-                    //     <div style="padding: 25px 0;overflow:hidden;">
-                    //     <div style="width: 100%;margin:0 auto;overflow:hidden;max-width: 80%;">
-                    //     <div style="width: 100%;margin:10px auto 20px;text-align:center;">
-                    //     </div>
-                    //     </div>
-                    //     <footer style="width:100%;padding: 35px 0 21px;background: #414141;margin-top: 0px;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
-                    //     <div style="text-align:center;width:80%;margin:0 auto;color: rgba(255, 255, 255, 0.75);">
-                    //     <h5 style="margin-top: 0;margin-bottom: 10px;font-size: 16px;font-weight:400;line-height: 1.432;">Feel free to contact us any time with question and concerns.</h5>
-                    //     <p style="text-align:center"><a href="https://salequick.com/" style="color: #6ea9ff;cursor:pointer;text-decoration:none !important;"><span style="color: rgba(255, 255, 255, 0.55);">Powered by:</span> SaleQuick.com</a></p>
-                    //     </div>
-                    //     </footer>
-                    //     </div>
-                    //     </body>
-                    //     </html>
-                    // ';
-
-                    // ini_set('sendmail_from', $email); 
-                    // // mail($MailTo, $MailSubject, $msg, $header);
-                    // $this->email->from('reply@salequick.com', 'Reset Password Link');
-                    // $this->email->to($MailTo);
-                    // $this->email->subject($MailSubject);
-                    // $this->email->message($htmlContent);
-                    // $this->email->send();
-                    // $this->session->set_userdata($sessiondata);
-                    $merchants = $this->db->select('id')->from('merchant')->where('wood_forest', '1')->get()->result_array();
-					// echo $this->db->last_query();die;
-					foreach ($merchants as $key => $mer_val) {
-						$merchant_str .= $mer_val['id'].',';
-					}
-					// echo $merchant_str;die;
-					$merchant_str .= $id.',';
-					$merchant_str = rtrim($merchant_str, ',');
-					$wf_data = array(
-						'wf_merchants' => $merchant_str
+				if ($email) {
+					$last_merchantId = $this->Home_model->insert_data("merchant", $data);
+					$ins_merchant_graph = array(
+						'id' => NULL,
+						'merchant_id' => $last_merchantId
 					);
-					// echo '<pre>Session before';print_r($_SESSION);
-					$this->db->where('user_type', 'wf')->update('admin', $wf_data);
-					$usr_result=$this->db->query("SELECT * from admin where id='".$_SESSION['id']."' and status='active'")->row_array();
-                    $sessiondata = array('wf_merchants'=>$usr_result['wf_merchants']);
-                    $this->session->set_userdata($sessiondata);
-     				// print_r($_SESSION);die;
-                    $this->session->set_flashdata('msg', '<div class="alert alert-success text-center">Merchant added successfully.  </div>');
-            		redirect('dashboard/all_merchant');
-                } else {
-                    $this->session->set_flashdata('msg', '<div class="alert alert-danger text-center">Invalid Email-Id!</div>');
-                    redirect('dashboard/all_merchant');
-                }
+					$this->db->insert('merchant_year_graph', $ins_merchant_graph);
+					$this->db->insert('merchant_year_graph_two', $ins_merchant_graph);
+	                if (!empty($last_merchantId)) {
+	                    //print_r($usr_result); die;   
+	                    // $usr_result_merchant = $this->reset_model->get_merchant_detail($username);
+	                    // $password1 = time();
+	                    // $token = date("Ymdhmsu");
+	                    // $merchant_id=$last_merchantId;
+	                             
+	                    // $getQuery_delete = $this->db->query(" DELETE FROM change_password where merchant_id='".$merchant_id."' "); 
+	                    // $getQuery_a = $this->db->query("INSERT INTO change_password (merchant_id, token) VALUES ('".$merchant_id."', '".$token."') ");
+	                    // //$password = $this->my_encrypt( $password1 , 'e' );
+	                    // //$usr_update = $this->reset_model->update_merchant($username,$password);
+	                    // $url = base_url().'reset/password/'.$merchant_id.'/'.$token;
 
+	                    // set_time_limit(3000); 
+	                    // $MailTo = $email; 
+	                    // $MailSubject = 'Salequick Credentials'; 
+	                    // $header = "From: Salequick<info@salequick.com>\r\n".
+	                    // "MIME-Version: 1.0" . "\r\n" .
+	                    // "Content-type: text/html; charset=UTF-8" . "\r\n"; 
+	                    // // $msg = " Reset Link : ".$url." ";
+	                    // $htmlContent = '<!DOCTYPE html>
+	                    //     <html>
+	                    //     <head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	                    //     <title></title>
+	                    //     <meta name="viewport" content="width=device-width, initial-scale=1">
+	                    //     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,800" rel="stylesheet">
+	                    //     </head>
+	                    //     <body style="padding: 0px;margin: 0;font-family:Open Sans, sans-serif;font-size: 14px !important;color: #333;">
+	                    //     <div style="max-width: 751px;margin: 0 auto;background:#fafafa;">
+	                    //     <div style="color:#fff;padding-top: 30px;padding-bottom: 5px;background-color: #2273dc;border-top-left-radius: 10px;border-top-right-radius: 10px;">
+	                    //     <div style="width:80%;margin:0 auto;">
+	                    //     <div style="width: 245px;text-align: center;height: 70px;border-radius: 50%;margin: 10px auto 20px;padding: 10px;box-shadow: 0px 0px 5px 10px #438cec8c;"><img src="https://salequick.com/front/images/logo-w.png" style="max-width: 90%;width: 100%;margin: 8px auto 0;display: block;"></div>
+	                    //     </div>
+	                    //     </div>
+	                    //     <div style="max-width: 563px;text-align:right;margin: 0px auto 0;clear: both;width: 100%;display: table;">
+	                    //     <p style="text-align: center !important;font-size: 20px !important;font-family: sans-serif !important;letter-spacing: 3px;color: #3c763d;font-weight: 600 !important;">Salequick Credentials</p>
+	                    //     <p style="font-size: 16px !important;text-align: center !important;">Hi, Your password is <b>"'.$password1.'"</b> , If you want to reset it then click on link below to create a new password:</p>
+	                    //     <p style="line-height: 1.432;text-align: center !important;">
+	                    //     <a href="'.$url.'" style="max-height: 40px;padding: 10px 20px;display: inline-flex;justify-content: center;align-items: center;font-size: 0.875rem;font-weight: 600;letter-spacing: 0.03rem;color: #fff;background-color: #696ffb;text-decoration: none;border-radius: 20px;">Set a new password</a>
+	                    //     </p> 
+	                    //     <p style="font-size: 16px !important;text-align: center !important;">If you did not requested a password reset. you can ignore this email. Your password will not be changed.</p>
+	                    //     </div>
+	                    //     <div style="padding: 25px 0;overflow:hidden;">
+	                    //     <div style="width: 100%;margin:0 auto;overflow:hidden;max-width: 80%;">
+	                    //     <div style="width: 100%;margin:10px auto 20px;text-align:center;">
+	                    //     </div>
+	                    //     </div>
+	                    //     <footer style="width:100%;padding: 35px 0 21px;background: #414141;margin-top: 0px;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
+	                    //     <div style="text-align:center;width:80%;margin:0 auto;color: rgba(255, 255, 255, 0.75);">
+	                    //     <h5 style="margin-top: 0;margin-bottom: 10px;font-size: 16px;font-weight:400;line-height: 1.432;">Feel free to contact us any time with question and concerns.</h5>
+	                    //     <p style="text-align:center"><a href="https://salequick.com/" style="color: #6ea9ff;cursor:pointer;text-decoration:none !important;"><span style="color: rgba(255, 255, 255, 0.55);">Powered by:</span> SaleQuick.com</a></p>
+	                    //     </div>
+	                    //     </footer>
+	                    //     </div>
+	                    //     </body>
+	                    //     </html>
+	                    // ';
+
+	                    // ini_set('sendmail_from', $email); 
+	                    // // mail($MailTo, $MailSubject, $msg, $header);
+	                    // $this->email->from('reply@salequick.com', 'Reset Password Link');
+	                    // $this->email->to($MailTo);
+	                    // $this->email->subject($MailSubject);
+	                    // $this->email->message($htmlContent);
+	                    // $this->email->send();
+	                    // $this->session->set_userdata($sessiondata);
+	                    $merchants = $this->db->select('id')->from('merchant')->where('wood_forest', '1')->get()->result_array();
+						// echo $this->db->last_query();die;
+						foreach ($merchants as $key => $mer_val) {
+							$merchant_str .= $mer_val['id'].',';
+						}
+						// echo $merchant_str;die;
+						$merchant_str .= $id.',';
+						$merchant_str = rtrim($merchant_str, ',');
+						$wf_data = array(
+							'wf_merchants' => $merchant_str
+						);
+						// echo '<pre>Session before';print_r($_SESSION);
+						$this->db->where('user_type', 'wf')->update('admin', $wf_data);
+						$usr_result=$this->db->query("SELECT * from admin where id='".$_SESSION['id']."' and status='active'")->row_array();
+	                    $sessiondata = array('wf_merchants'=>$usr_result['wf_merchants']);
+	                    $this->session->set_userdata($sessiondata);
+	     				// print_r($_SESSION);die;
+	                    $this->session->set_flashdata('msg', '<div class="alert alert-success text-center">Merchant added successfully.  </div>');
+	            		redirect('dashboard/all_merchant');
+	                } else {
+	                    $this->session->set_flashdata('msg', '<div class="alert alert-danger text-center">Invalid Email-Id!</div>');
+	                    redirect('dashboard/all_merchant');
+	                }
+
+				} else {
+					$this->session->set_flashdata("error", "Unauthorized email account. Please try another.");
+					redirect('dashboard/add_merchant');
+				}
+			
 			} else {
-				$this->session->set_flashdata("error", "Unauthorized email account. Please try another.");
+				$this->session->set_flashdata("error", "This email is already registered. Please try another.");
 				redirect('dashboard/add_merchant');
 			}
-		
-		} else {
-			$this->session->set_flashdata("error", "This email is already registered. Please try another.");
-			redirect('dashboard/add_merchant');
 		}
+		
 	}
 	public function add_subuser() {
 		$merchant_id=$this->uri->segment(3);
@@ -580,6 +586,29 @@ class Dashboard extends CI_Controller {
 			// return $this->load->view('admin/dashboard', $data);
 		}
 	}
+	public function search_record_column_pos_refund() {
+    $searchby = $this->input->post('id');
+    $row_id = $this->input->post('row_id');
+    $pos = $this->admin_model->data_get_where_1("pos", array("id" => $searchby));
+        $invoice_no=$pos[0]['invoice_no']; 
+    $transaction_type=$pos[0]['transaction_type']; 
+      
+      if ($transaction_type == "split") {
+        $getQuery1 = $this->db->query("SELECT c.quantity,c.price,i.name, i.title, IFNULL(c.discount,0) as discount FROM `adv_pos_cart_item` c join adv_pos_item i on c.item_id=i.id where c.status='2' and c.transaction_id='" . $invoice_no . "'");
+        
+        } else {
+        $getQuery1 = $this->db->query("SELECT c.quantity,p.tax,c.price,i.name, i.title, IFNULL(c.discount,0) as discount FROM `adv_pos_cart_item` c join adv_pos_item i on c.item_id=i.id join pos p on c.transaction_id=p.transaction_id where c.status='2' and p.invoice_no='" . $invoice_no . "'");
+        }
+        $itemslist = $getQuery1->result_array();
+    $data['item'] = $itemslist;
+    $data['pay_report'] = $this->admin_model->search_record_pos($searchby);
+    // print_r($this->db->last_query());
+    // print_r($data['pay_report']);
+    //  die('jo');  
+    $data['refundData'] = $this->admin_model->get_refund_by_id($row_id);
+    // echo $this->load->view('merchant/show_result_pos_refund', $data, true);
+    echo $this->load->view('admin/show_result_pos_refund_dash', $data, true);
+  }
 
 	public function index() {
 		// echo '<pre>';die;
@@ -591,7 +620,7 @@ class Dashboard extends CI_Controller {
     	 $first_date = date('Y-m-01');
          $last_date = date('Y-m-t');
 
-        $stmt="";
+        $stmt=" and merchant_id IN('";
 		$wf_merchants=$this->session->userdata('wf_merchants');
 
 		if(!empty($wf_merchants)) {
@@ -599,20 +628,20 @@ class Dashboard extends CI_Controller {
 	        $len=sizeof($x);
 	        for ($i=0; $i <$len ; $i++) { 
 	            if($i==0){
-	                $stmt.=" and (merchant_id=".$x[$i];
+	                $stmt.=$x[$i];
 	            }else{
-	                $stmt.=" or merchant_id=".$x[$i];
+	                $stmt.="','".$x[$i];
 	            }
 	        
 	        }
-	        $stmt.=")";
+	        $stmt.="')";
 
 		}else{
 			$stmt=' and merchant_id is null ';
 
 		}
 
-        // echo $month;die;
+        // echo $stmt;die;
     	if($month=='01' ){
          	$amount = $this->db->query("SELECT sum(amount) as Totaljan from ( SELECT month,amount from customer_payment_request where  month = '01' and year = '" . $today2 . "'".$stmt." and status='confirm'    union all SELECT month,amount from pos where  month = '01' and year = '" . $today2 . "'".$stmt." and status='confirm' )x group by month  ");
  
@@ -629,7 +658,7 @@ class Dashboard extends CI_Controller {
 
            
           
-           	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totaljan='".$getamount[0]['Totaljan']."' ,Totaljanf='".$getfee[0]['Totaljanf']."',Totaljantax='".$gettax[0]['Totaljantax']."'  ");
+           	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totaljan='".!empty($getamount[0]['Totaljan'])."' ,Totaljanf='".!empty($getfee[0]['Totaljanf'])."',Totaljantax='".!empty($gettax[0]['Totaljantax'])."'  ");
 
  		}
 
@@ -649,7 +678,7 @@ class Dashboard extends CI_Controller {
 
            
           
-           	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totalfeb='".$getamount[0]['Totalfeb']."' ,Totalfebf='".$getfee[0]['Totalfebf']."',Totalfebtax='".$gettax[0]['Totalfebtax']."'  ");
+           	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totalfeb='".!empty($getamount[0]['Totalfeb'])."' ,Totalfebf='".!empty($getfee[0]['Totalfebf'])."',Totalfebtax='".!empty($gettax[0]['Totalfebtax'])."'  ");
 
           // echo $this->db->last_query();die;
  }
@@ -670,7 +699,7 @@ class Dashboard extends CI_Controller {
 
            
           
-           	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totalmarch='".$getamount[0]['Totalmarch']."' ,Totalmarchf='".$getfee[0]['Totalmarchf']."',Totalmarchtax='".$gettax[0]['Totalmarchtax']."'  ");
+           	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totalmarch='".!empty($getamount[0]['Totalmarch'])."' ,Totalmarchf='".!empty($getfee[0]['Totalmarchf'])."',Totalmarchtax='".!empty($gettax[0]['Totalmarchtax'])."'  ");
 
           // echo $this->db->last_query();die;
  }
@@ -687,7 +716,7 @@ class Dashboard extends CI_Controller {
 
            	$gettax = $tax->result_array();
 
-           	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totalaprl='".$getamount[0]['Totalaprl']."' ,Totalaprlf='".$getfee[0]['Totalaprlf']."',Totalaprltax='".$gettax[0]['Totalaprltax']."'  ");
+           	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totalaprl='".!empty($getamount[0]['Totalaprl'])."' ,Totalaprlf='".!empty($getfee[0]['Totalaprlf'])."',Totalaprltax='".!empty($gettax[0]['Totalaprltax'])."'  ");
 
  }
 
@@ -702,7 +731,7 @@ class Dashboard extends CI_Controller {
 $date_cc1='2022-04-30';
  	$amount_r = $this->db->query("SELECT sum(amount) as RAmountPOS1 from refund  where date_c>='".$date_c1."' and date_c <= '".$date_cc1."'".$stmt."  and   status='confirm'  ");
       	$getamount_r = $amount_r->result_array();
-      	$new_amount1 = $getamount[0]['Totalaprl']-$getamount_r[0]['RAmountPOS1'];
+      	$new_amount1 = !empty($getamount[0]['Totalaprl'])-!empty($getamount_r[0]['RAmountPOS1']);
 
 
           	$fee = $this->db->query("SELECT avg(`amount`-`p_ref_amount`) as Totalaprlf from ( SELECT month,amount,p_ref_amount from customer_payment_request where  month = '04' and year = '" . $today2 . "'".$stmt." and (status='confirm' or partial_refund=1)    union all SELECT month,amount,p_ref_amount from pos where  month = '04' and year = '" . $today2 . "'".$stmt." and (status='confirm' or partial_refund=1) )x group by month  ");
@@ -713,7 +742,7 @@ $date_cc1='2022-04-30';
 
            	$gettax = $tax->result_array();
 
-           	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totalaprl='".$new_amount1."' ,Totalaprlf='".$getfee[0]['Totalaprlf']."',Totalaprltax='".$gettax[0]['Totalaprltax']."'  ");
+           	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totalaprl='".$new_amount1."' ,Totalaprlf='".!empty($getfee[0]['Totalaprlf'])."',Totalaprltax='".!empty($gettax[0]['Totalaprltax'])."'  ");
      ////////////////////////////////////////
            	
  	$amount = $this->db->query("SELECT sum(amount) as Totalmay from ( SELECT month,amount,p_ref_amount from customer_payment_request where  month = '05' and year = '" . $today2 . "'".$stmt." and (status='confirm'  or status='Chargeback_Confirm')    union all SELECT month,amount,p_ref_amount from pos where  month = '05' and year = '" . $today2 . "'".$stmt." and (status='confirm'  or status='Chargeback_Confirm') )x group by month  ");
@@ -724,7 +753,7 @@ $date_c='2022-05-01';
 $date_cc='2022-05-31';
  	$amount_r = $this->db->query("SELECT sum(amount) as RAmountPOS from refund  where date_c>='".$date_c."' and date_c <= '".$date_cc."'".$stmt."  and   status='confirm'  ");
       	$getamount_r = $amount_r->result_array();
-      	$new_amount = $getamount[0]['Totalmay']-$getamount_r[0]['RAmountPOS'];
+      	$new_amount = !empty($getamount[0]['Totalmay'])-!empty($getamount_r[0]['RAmountPOS']);
       
 
 
@@ -736,7 +765,7 @@ $date_cc='2022-05-31';
 
            	$gettax = $tax->result_array();
 
-           	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totalmay='".$new_amount."' ,Totalmayf='".$getfee[0]['Totalmayf']."',Totalmaytax='".$gettax[0]['Totalmaytax']."'  ");
+           	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totalmay='".$new_amount."' ,Totalmayf='".!empty($getfee[0]['Totalmayf'])."',Totalmaytax='".!empty($gettax[0]['Totalmaytax'])."'  ");
 
  }
 
@@ -753,7 +782,7 @@ $date_c='2022-05-01';
 $date_cc='2022-05-31';
  	$amount_r = $this->db->query("SELECT sum(amount) as RAmountPOS from refund  where date_c>='".$date_c."' and date_c <= '".$date_cc."' and merchant_id!='413' ".$stmt." and   status='confirm'  ");
       	$getamount_r = $amount_r->result_array();
-      	$new_amount = $getamount[0]['Totalmay']-$getamount_r[0]['RAmountPOS'];
+      	$new_amount = !empty($getamount[0]['Totalmay'])-!empty($getamount_r[0]['RAmountPOS']);
       
 
 
@@ -765,7 +794,7 @@ $date_cc='2022-05-31';
 
            	$gettax = $tax->result_array();
 
-           	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totalmay='".$new_amount."' ,Totalmayf='".$getfee[0]['Totalmayf']."',Totalmaytax='".$gettax[0]['Totalmaytax']."'  ");
+           	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totalmay='".$new_amount."' ,Totalmayf='".!empty($getfee[0]['Totalmayf'])."',Totalmaytax='".!empty($gettax[0]['Totalmaytax'])."'  ");
 
            	////////////////////////////////////////
 
@@ -781,7 +810,7 @@ $date_cc1='2022-06-30';
 
  	$amount_r = $this->db->query("SELECT sum(amount) as RAmountPOS1 from refund  where date_c>='".$date_c1."' and date_c <= '".$date_cc1."' and merchant_id!='413' ".$stmt." and   status='confirm'  ");
       	$getamount_r = $amount_r->result_array();
-      	$new_amount1 = $getamount[0]['Totaljune']-$getamount_r[0]['RAmountPOS1'];
+      	$new_amount1 = !empty($getamount[0]['Totaljune'])-!empty($getamount_r[0]['RAmountPOS1']);
 
 
           	$fee = $this->db->query("SELECT avg(`amount`-`p_ref_amount`) as Totaljunef from ( SELECT month,amount,p_ref_amount from customer_payment_request where  month = '06' and year = '" . $today2 . "' ".$stmt." and merchant_id!='413' and (status='confirm' or partial_refund=1)    union all SELECT month,amount,p_ref_amount from pos where  month = '06' and year = '" . $today2 . "' and merchant_id!='413' ".$stmt." and (status='confirm' or partial_refund=1) )x group by month  ");
@@ -792,7 +821,7 @@ $date_cc1='2022-06-30';
        
            	$gettax = $tax->result_array();
 
-           	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totaljune='".$new_amount1."' ,Totaljunef='".$getfee[0]['Totaljunef']."',Totaljunetax='".$gettax[0]['Totaljunetax']."'  ");
+           	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totaljune='".$new_amount1."' ,Totaljunef='".!empty($getfee[0]['Totaljunef'])."',Totaljunetax='".!empty($gettax[0]['Totaljunetax'])."'  ");
      
 
  }
@@ -808,7 +837,7 @@ $date_cc1='2022-06-30';
 
  	$amount_r = $this->db->query("SELECT sum(amount) as RAmountPOS1 from refund  where date_c>='".$date_c1."' and date_c <= '".$date_cc1."' and merchant_id!='413' ".$stmt." and   status='confirm'  ");
       	$getamount_r = $amount_r->result_array();
-      	$new_amount1 = $getamount[0]['Totaljuly']-$getamount_r[0]['RAmountPOS1'];
+      	$new_amount1 = !empty($getamount[0]['Totaljuly'])-!empty($getamount_r[0]['RAmountPOS1']);
 
 
           	$fee = $this->db->query("SELECT avg(`amount`-`p_ref_amount`) as Totaljulyf from ( SELECT month,amount,p_ref_amount from customer_payment_request where  month = '07' and year = '" . $today2 . "' and merchant_id!='413' ".$stmt." and (status='confirm' or partial_refund=1)    union all SELECT month,amount,p_ref_amount from pos where  month = '07' and year = '" . $today2 . "' and merchant_id!='413' ".$stmt." and (status='confirm' or partial_refund=1) )x group by month  ");
@@ -819,7 +848,7 @@ $date_cc1='2022-06-30';
 
            	$gettax = $tax->result_array();
 
-           	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totaljuly='".$new_amount1."' ,Totaljulyf='".$getfee[0]['Totaljulyf']."',Totaljulytax='".$gettax[0]['Totaljulytax']."'  ");
+           	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totaljuly='".$new_amount1."' ,Totaljulyf='".!empty($getfee[0]['Totaljulyf'])."',Totaljulytax='".!empty($gettax[0]['Totaljulytax'])."'  ");
  }
 
 else if($month=='08' ){
@@ -833,7 +862,7 @@ else if($month=='08' ){
 
  	$amount_r = $this->db->query("SELECT sum(amount) as RAmountPOS1 from refund  where date_c>='".$date_c1."' and date_c <= '".$date_cc1."' and merchant_id!='413'".$stmt."  and   status='confirm'  ");
       	$getamount_r = $amount_r->result_array();
-      	$new_amount1 = $getamount[0]['Totalaugust']-$getamount_r[0]['RAmountPOS1'];
+      	$new_amount1 = !empty($getamount[0]['Totalaugust'])-!empty($getamount_r[0]['RAmountPOS1']);
 
   
           	$fee = $this->db->query("SELECT avg(`amount`-`p_ref_amount`) as Totalaugustf from ( SELECT month,amount,p_ref_amount from customer_payment_request where  month = '08' and year = '" . $today2 . "' and merchant_id!='413'".$stmt." and (status='confirm' or partial_refund=1)    union all SELECT month,amount,p_ref_amount from pos where  month = '08' and year = '" . $today2 . "' and merchant_id!='413'".$stmt." and (status='confirm' or partial_refund=1) )x group by month  ");
@@ -844,7 +873,7 @@ else if($month=='08' ){
 
            	$gettax = $tax->result_array();
 
-           	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totalaugust='".$new_amount1."' ,Totalaugustf='".$getfee[0]['Totalaugustf']."',Totalaugusttax='".$gettax[0]['Totalaugusttax']."'  ");
+           	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totalaugust='".$new_amount1."' ,Totalaugustf='".!empty($getfee[0]['Totalaugustf'])."',Totalaugusttax='".!empty($gettax[0]['Totalaugusttax'])."'  ");
            	// echo $this->db->last_query();die;
  }
 		else if($month=='09') {
@@ -860,7 +889,7 @@ else if($month=='08' ){
 
            	$gettax = $tax->result_array();
           
-           	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totalsep='".$getamount[0]['Totalsep']."' ,Totalsepf='".$getfee[0]['Totalsepf']."',Totalseptax='".$gettax[0]['Totalseptax']."'  ");
+           	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totalsep='".!empty($getamount[0]['Totalsep'])."' ,Totalsepf='".!empty($getfee[0]['Totalsepf'])."',Totalseptax='".!empty($gettax[0]['Totalseptax'])."'  ");
            	// echo $this->db->last_query();die;
 
 		} else if($month=='10' ) {
@@ -876,7 +905,7 @@ else if($month=='08' ){
 
            	$gettax = $tax->result_array();
           
-           	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totaloct='".$getamount[0]['Totaloct']."' ,Totaloctf='".$getfee[0]['Totaloctf']."',Totalocttax='".$gettax[0]['Totalocttax']."'  ");
+           	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totaloct='".!empty($getamount[0]['Totaloct'])."' ,Totaloctf='".!empty($getfee[0]['Totaloctf'])."',Totalocttax='".!empty($gettax[0]['Totalocttax'])."'  ");
 
 		} else if($month=='11') {
          	$amount = $this->db->query("SELECT sum(amount) as Totalnov from ( SELECT month,amount from customer_payment_request where  month = '11' and year = '" . $today2 . "' ".$stmt." and status='confirm'    union all SELECT month,amount from pos where  month = '11' and year = '" . $today2 . "' ".$stmt." and status='confirm' )x group by month  ");
@@ -891,7 +920,7 @@ else if($month=='08' ){
 
            	$gettax = $tax->result_array();
           
-           	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totalnov='".$getamount[0]['Totalnov']."' ,Totalnovf='".$getfee[0]['Totalnovf']."',Totalnovtax='".$gettax[0]['Totalnovtax']."'  ");
+           	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totalnov='".!empty($getamount[0]['Totalnov'])."' ,Totalnovf='".!empty($getfee[0]['Totalnovf'])."',Totalnovtax='".!empty($gettax[0]['Totalnovtax'])."'  ");
 		}
 
 		else if($month=='12'){
@@ -909,7 +938,7 @@ else if($month=='08' ){
 
            $gettax = $tax->result_array();
           
-           $amount = $this->db->query("UPDATE admin_year_graph_wf SET Totaldec='".$getamount[0]['Totaldec']."' ,Totaldecf='".$getfee[0]['Totaldecf']."',Totaldectax='".$gettax[0]['Totaldectax']."'  ");
+           $amount = $this->db->query("UPDATE admin_year_graph_wf SET Totaldec='".!empty($getamount[0]['Totaldec'])."' ,Totaldecf='".!empty($getfee[0]['Totaldecf'])."',Totaldectax='".!empty($gettax[0]['Totaldectax'])."'  ");
 
 
 }
@@ -936,7 +965,7 @@ else if($month=='08' ){
 		$last_date = date("Y-m-d", strtotime("-30 days"));
 		$date = date("Y-m-d");
 
-		$stmtQuery="";
+		$stmtQuery=" and merchant_id IN('";
 		$wf_merchants=$this->session->userdata('wf_merchants');
 
 		if(!empty($wf_merchants)) {
@@ -944,16 +973,17 @@ else if($month=='08' ){
 	        $len=sizeof($x);
 	        for ($i=0; $i <$len ; $i++) { 
 	            if($i==0){
-	                // $stmt.=$this->db->where('merchant_id', $x[$i]);
-	                $stmtQuery.=" and (merchant_id=".$x[$i];
+	                $stmtQuery.=$x[$i];
 	            }else{
-	                $stmtQuery.=" or merchant_id=".$x[$i];
+	                $stmtQuery.="','".$x[$i];
 	            }
 	        
 	        }
-	        $stmtQuery.=")";
-	    }else{
+	        $stmtQuery.="')";
+
+		}else{
 			$stmtQuery=' and merchant_id is null ';
+
 		}
 
 		if ($_POST['employee'] == 'all') {
@@ -1348,7 +1378,7 @@ else if($month=='08' ){
 		$data['item3']=json_encode(array_merge($arr, $data['item4']));
 		$data['item5']=json_encode($data['item5']);
 
-		echo json_encode($data);
+		echo json_encode($data);die;
 	}
 
 	public function getDashboardExportData() {
@@ -1618,7 +1648,7 @@ else if($month=='08' ){
 
 		$arr = array_merge($data['item'], $data['item1'], $data['item2'], $data['item_refund']);
 		// echo '<pre>';print_r($arr);die;
-		array_multisort(array_map('strtotime',array_column($arr,'Date')),SORT_DESC, $arr);
+		// array_multisort(array_map('strtotime',array_column($arr,'Date')),SORT_DESC, $arr);
 
 		$data['item3'] = json_encode(array_merge($arr, $data['item4']));
 		$data['item5'] = json_encode($data['item5']);
@@ -3016,11 +3046,9 @@ else if($month=='08' ){
 			$address2 = $this->input->post('address2') ? $this->input->post('address2') : "";
 			$email1 = $this->input->post('email1') ? strtolower($this->input->post('email1')) : "";
 			$business_number = $this->input->post('business_number') ? $this->input->post('business_number') : "";
-			// echo $business_number;die;
 			$report_email = $this->input->post('report_email') ? $this->input->post('report_email') : "";
 			$batch_report_time = $this->input->post('batch_report_time') ? $this->input->post('batch_report_time') : "";
 			$business_name = $this->input->post('business_name') ? $this->input->post('business_name') : "";
-			$pc_phone = $this->input->post('pc_phone') ? $this->input->post('pc_phone') : "";
 			$business_dba_name = $this->input->post('business_dba_name') ? $this->input->post('business_dba_name') : "";
 			$business_type = $this->input->post('business_type') ? $this->input->post('business_type') : "";
 			$ien_no = $this->input->post('ien_no') ? $this->input->post('ien_no') : "";
@@ -3110,7 +3138,6 @@ else if($month=='08' ){
 				'business_type' => $business_type,
 				'ien_no' => $ien_no,
 				'address1' => $address1,
-				'pc_phone' => $pc_phone,
 				'city' => $city,
 				'country' => $country,
 				'zip' => $zip,
@@ -3144,6 +3171,7 @@ else if($month=='08' ){
 				'f_swap_Invoice' => $f_swap_Invoice,
 				'f_swap_Recurring' => $f_swap_Recurring,
 				'f_swap_Text' => $f_swap_Text,
+				'business_number' => $mobile,
 				'view_permissions' => $view_permissions,
                 'edit_permissions' => $edit_permissions,
                 'create_pay_permissions' => $create_pay_permissions,
@@ -3165,12 +3193,10 @@ else if($month=='08' ){
 			redirect('dashboard/update_merchant/' . $id);
 
 		} else {
-			// echo '<pre>';print_r($branch);die;
 			foreach ($branch as $sub) {
 				$data['bct_id'] = $sub->id;
 				$data['name'] = $sub->name;
 				$data['address2'] = $sub->address2;
-				$data['pc_phone'] = $sub->pc_phone;
 				$data['email1'] = strtolower($sub->email1);
 				$data['business_number'] = $sub->business_number;
 				$data['report_email'] = $sub->report_email;
@@ -3403,7 +3429,7 @@ else if($month=='08' ){
             $row[] = '<a data-toggle="tooltip" class="badge '. $btncolor.'" style="font-size: 12px; color:white;" data-placement="top" title="'. $title.'">'.$dtext.'</a>';
 
             // $row[] = $member->business_dba_name;
-            $row[] = '<span class="companyInfoClick" data-legalname="'.$member->business_name.'" data-business_dba_name="'.$member->business_dba_name.'" data-controller_name="'.$member->name.' '.$member->m_name.' '.$member->l_name.'" title="Click to view">'.$member->business_dba_name.'</span>' ;
+            $row[] = '<span class="companyInfoClick" data-legalname="'.$member->business_name.'" data-business_dba_name="'.$member->business_dba_name.'" data-controller_name="'.$member->name.' '.$member->m_name.' '.$member->l_name.'" title="Click to view">'.$member->business_name.'</span>' ;
 
             $row[] = '<span class="contactClick" data-fullname="'.$member->name.' '.$member->m_name.' '.$member->l_name.'" data-email="'.$member->email.'" data-mobile="'.$member->business_number.'" title="Click to view">'.$member->email.'</span>' ;
 
@@ -3900,7 +3926,7 @@ else if($month=='08' ){
 
 				$invoice_type = ($invoice->invoice_type == 'custom') ? 'payment' : 'spayment';
 				if ($invoice->status == 'pending') {
-					$invoice_receipt = '<a href="'.base_url().$invoice_type.'/' . $invoice->payment_id . '/' . $invoice->merchant_id . '" target="_blank" class="dropdown-item"><i class="fa fa-eye"></i> Invoice</a>';
+					// $invoice_receipt = '<a href="'.base_url().$invoice_type.'/' . $invoice->payment_id . '/' . $invoice->merchant_id . '" target="_blank" class="dropdown-item"><i class="fa fa-eye"></i> Invoice</a>';
 				} elseif ($invoice->status == 'declined') {
 					$invoice_receipt = '<a href="'.base_url().$invoice_type.'/' . $invoice->payment_id . '/' . $invoice->merchant_id . '" target="_blank" class="dropdown-item"><i class="fa fa-eye"></i> Invoice</a>';
 				} elseif ($invoice->status == 'confirm') {
@@ -4595,6 +4621,7 @@ else if($month=='08' ){
 		// echo $this->load->view('admin/show_invoice_detail_receipt_admin', $data, true);
 		echo $this->load->view('admin/show_invoice_detail_receipt_admin_dash', $data, true);
 	}
+	
 	//Refund Amount from admin
 	public function refund() {
 		// echo "<pre>";print_r(($_POST)); die();
@@ -4780,6 +4807,7 @@ else if($month=='08' ){
 		//   redirect(base_url().'pos/all_customer_request');
 		//   }
 	}
+	
 	//Resend invoice
 	public function re_invoice() {
 		$rowid = $this->input->post('rowid');
@@ -4828,7 +4856,7 @@ else if($month=='08' ){
 			    $getDashboard_m = $this->db->query(" SELECT business_name,logo,address1,business_dba_name,business_number,color,late_fee,late_fee_status,late_grace_period FROM merchant WHERE id = '" . $merchantid . "' ");
 				$getDashboardData_m = $getDashboard_m->result_array();
 			}
-			//print_r($getEmail);  die(); 
+			// print_r($getrequest);  die(); 
 			if($getrequest && $getDashboardData_m) {  
                 $data['getDashboardData_m'] = $getDashboardData_m;
 				$data['business_name'] = $getDashboardData_m[0]['business_name'];
@@ -4891,6 +4919,7 @@ else if($month=='08' ){
 			}
 		}
 	}
+	
 	//Resend Receipt
 	public function re_receipt(){
      	$rowid = $this->input->post('rowid');   
@@ -5213,36 +5242,36 @@ else if($month=='08' ){
 			$o_email =$this->input->post('o_email')? strtolower($this->input->post('o_email')):'';
 
 			//banking
-			$bank_dda =$this->input->post('bank_dda')? $this->input->post('bank_dda'):'';
-			$bank_ach =$this->input->post('bank_ach')? $this->input->post('bank_ach'):'';
-			$bank_routing =$this->input->post('bank_routing')? $this->input->post('bank_routing'):'';
-			$bank_account =$this->input->post('bank_account')? $this->input->post('bank_account'):'';
-			$question =$this->input->post('question')? $this->input->post('question'):'';
-			$billing_descriptor =$this->input->post('billing_descriptor')? $this->input->post('billing_descriptor'):'';
+			// $bank_dda =$this->input->post('bank_dda')? $this->input->post('bank_dda'):'';
+			// $bank_ach =$this->input->post('bank_ach')? $this->input->post('bank_ach'):'';
+			// $bank_routing =$this->input->post('bank_routing')? $this->input->post('bank_routing'):'';
+			// $bank_account =$this->input->post('bank_account')? $this->input->post('bank_account'):'';
+			// $question =$this->input->post('question')? $this->input->post('question'):'';
+			// $billing_descriptor =$this->input->post('billing_descriptor')? $this->input->post('billing_descriptor'):'';
 
-			//pricing
-			$dis_trans_fee =$this->input->post('dis_trans_fee')? $this->input->post('dis_trans_fee'):'0';
-			$amexrate =$this->input->post('amexrate')? $this->input->post('amexrate'):'0';
-			$chargeback =$this->input->post('chargeback')? $this->input->post('chargeback'):'0';
-			$monthly_gateway_fee =$this->input->post('monthly_gateway_fee')? $this->input->post('monthly_gateway_fee'):'0';
-			$annual_cc_sales_vol =$this->input->post('annual_cc_sales_vol')? $this->input->post('annual_cc_sales_vol'):'0';
-			// $monthly_fee =$this->input->post('monthly_fee')? $this->input->post('monthly_fee'):'0';
-			$vm_cardrate =$this->input->post('vm_cardrate') ? $this->input->post('vm_cardrate'):'0';
-			$annual_processing_volume =$this->input->post('annual_processing_volume')? $this->input->post('annual_processing_volume'):'';
-			$cnp_percent =$this->input->post('cnp_percent')? $this->input->post('cnp_percent'):'';
-			$cp_percent =$this->input->post('cp_percent')? $this->input->post('cp_percent'):'';
-			$average_ticket =$this->input->post('average_ticket')? $this->input->post('average_ticket'):'';
-			$high_ticket =$this->input->post('high_ticket')? $this->input->post('high_ticket'):'';
+			// //pricing
+			// $dis_trans_fee =$this->input->post('dis_trans_fee')? $this->input->post('dis_trans_fee'):'0';
+			// $amexrate =$this->input->post('amexrate')? $this->input->post('amexrate'):'0';
+			// $chargeback =$this->input->post('chargeback')? $this->input->post('chargeback'):'0';
+			// $monthly_gateway_fee =$this->input->post('monthly_gateway_fee')? $this->input->post('monthly_gateway_fee'):'0';
+			// $annual_cc_sales_vol =$this->input->post('annual_cc_sales_vol')? $this->input->post('annual_cc_sales_vol'):'0';
+			// // $monthly_fee =$this->input->post('monthly_fee')? $this->input->post('monthly_fee'):'0';
+			// $vm_cardrate =$this->input->post('vm_cardrate') ? $this->input->post('vm_cardrate'):'0';
+			// $annual_processing_volume =$this->input->post('annual_processing_volume')? $this->input->post('annual_processing_volume'):'';
+			// $cnp_percent =$this->input->post('cnp_percent')? $this->input->post('cnp_percent'):'';
+			// $cp_percent =$this->input->post('cp_percent')? $this->input->post('cp_percent'):'';
+			// $average_ticket =$this->input->post('average_ticket')? $this->input->post('average_ticket'):'';
+			// $high_ticket =$this->input->post('high_ticket')? $this->input->post('high_ticket'):'';
 
-			$billing_structure =$this->input->post('billing_structure')? $this->input->post('billing_structure'):'';
-			$fee_structure =$this->input->post('fee_structure')? $this->input->post('fee_structure'):'';
-			$percentage_rate =$this->input->post('percentage_rate')? $this->input->post('percentage_rate'):'';
-			$transaction_rate =$this->input->post('transaction_rate')? $this->input->post('transaction_rate'):'';
+			// $billing_structure =$this->input->post('billing_structure')? $this->input->post('billing_structure'):'';
+			// $fee_structure =$this->input->post('fee_structure')? $this->input->post('fee_structure'):'';
+			// $percentage_rate =$this->input->post('percentage_rate')? $this->input->post('percentage_rate'):'';
+			// $transaction_rate =$this->input->post('transaction_rate')? $this->input->post('transaction_rate'):'';
 
-			//other
-			$checkbox =$this->input->post('mycheckbox')? $this->input->post('mycheckbox'):'';
+			// //other
+			// $checkbox =$this->input->post('mycheckbox')? $this->input->post('mycheckbox'):'';
 			$key =$this->input->post('key')? $this->input->post('key'):'';
-			$activation_id =$this->input->post('activation_id')? $this->input->post('activation_id'):'';
+			// $activation_id =$this->input->post('activation_id')? $this->input->post('activation_id'):'';
 
             // echo json_encode($checkbox);
 			// die();
@@ -5251,12 +5280,11 @@ else if($month=='08' ){
 			// if($pc_name && $pc_title && $pc_address && $pc_email && $pc_phone && $monthly_fee && $vm_cardrate && $dis_trans_fee && $amexrate
 			//  && $chargeback && $monthly_gateway_fee && $annual_cc_sales_vol && $checkbox && $question && $billing_descriptor ) {
 	       	//echo json_encode(array('Status'=>$this->input->post('amexrate')));die; 
-			if($address1  && $amexrate >=0 &&  $annual_cc_sales_vol >=0 && $annual_processing_volume && $bank_account && 
-		  	$bank_ach && $bank_dda  && $bank_routing && $billing_descriptor &&  $business_dba_name &&  $business_email && $business_name 
-		  	&& $business_number && $business_type && $chargeback >=0 && $city && $country && $customer_service_email
-		   	&& $customer_service_phone &&  $dis_trans_fee >=0  && $establishmentdate && $key && $monthly_gateway_fee >=0 &&
-			$checkbox  && $name && $o_address1 && $o_dob && $o_email && $o_phone  && $o_ss_number && $ownershiptype && $pc_address 
-			&& $pc_email && $pc_name && $pc_phone  &&  $pc_title && $question && $taxid && $vm_cardrate >=0 ) {
+			if($address1   &&  $business_dba_name &&  $business_email && $business_name 
+		  	&& $business_number && $business_type &&  $city && $country && $customer_service_email
+		   	&& $customer_service_phone &&  $establishmentdate && $key && 
+			$name && $o_address1 && $o_dob && $o_email && $o_phone  && $o_ss_number && $ownershiptype && $pc_address 
+			&& $pc_email && $pc_name && $pc_phone  &&  $pc_title && $o_question && $taxid ) { 
 			   	$data=array(
 			   		'pc_name' =>$pc_name,
 					'pc_title' =>$pc_title,
@@ -5305,38 +5333,38 @@ else if($month=='08' ){
 					'o_phone' =>$o_phone,
 					'o_email' =>$o_email,
 
-					'bank_dda' =>$bank_dda,
-					'bank_ach' =>$bank_ach,
-					'bank_routing' =>$bank_routing,
-					'bank_account' =>$bank_account,
-					'question' =>$question,
-					'billing_descriptor' =>$billing_descriptor,
+					// 'bank_dda' =>$bank_dda,
+					// 'bank_ach' =>$bank_ach,
+					// 'bank_routing' =>$bank_routing,
+					// 'bank_account' =>$bank_account,
+					// 'question' =>$question,
+					// 'billing_descriptor' =>$billing_descriptor,
 					
-					'dis_trans_fee' =>$dis_trans_fee,
-					'amexrate' =>$amexrate,
-					'chargeback' =>$chargeback,
-					'monthly_gateway_fee'=> $monthly_gateway_fee,
+					// 'dis_trans_fee' =>$dis_trans_fee,
+					// 'amexrate' =>$amexrate,
+					// 'chargeback' =>$chargeback,
+					// 'monthly_gateway_fee'=> $monthly_gateway_fee,
 					// 'annual_cc_sales_vol' =>$annual_cc_sales_vol,
 					// 'monthly_fee' =>$monthly_fee,
-					'vm_cardrate' =>$vm_cardrate,
-					'annual_processing_volume' =>$annual_processing_volume,
-					'cnp_percent' =>$cnp_percent,
-					'cp_percent' =>$cp_percent,
-					'average_ticket' =>$average_ticket,
-					'high_ticket' =>$high_ticket,
-					'billing_structure' =>$billing_structure,
-					'fee_structure' =>$fee_structure,
-					'percentage_rate' =>$percentage_rate,
-					'transaction_rate' =>$transaction_rate,
+					// 'vm_cardrate' =>$vm_cardrate,
+					// 'annual_processing_volume' =>$annual_processing_volume,
+					// 'cnp_percent' =>$cnp_percent,
+					// 'cp_percent' =>$cp_percent,
+					// 'average_ticket' =>$average_ticket,
+					// 'high_ticket' =>$high_ticket,
+					// 'billing_structure' =>$billing_structure,
+					// 'fee_structure' =>$fee_structure,
+					// 'percentage_rate' =>$percentage_rate,
+					// 'transaction_rate' =>$transaction_rate,
 					// 'key' =>$key,
-					'checkbox' => $checkbox ? 'true':'false',
+					// 'checkbox' => $checkbox ? 'true':'false',
 			   	);
 			   	// echo '<pre>';print_r($data);die;
 
 				$id=$this->input->post('key')?$this->input->post('key'):'';
-			   	// echo $id;die;
 				$this->db->where('id', $id);
 				$up=$this->db->update('merchant', $data);
+			   	// echo $this->db->last_query();die;
 
 				$getdata=$this->db->select('email')->where('id', $id)->get('merchant')->row();
 				// print_r($getdata);die;
@@ -5349,7 +5377,8 @@ else if($month=='08' ){
 
 					// $mail_count = $this->db->where('merchant_id', $id)->get('agreement_verification')->num_rows();
 					$mail_arr = $this->db->where('merchant_id', $id)->get('agreement_verification')->row();
-					if(count($mail_arr) > 0) {
+					
+					if(!empty($mail_arr)) {
 						if($mail_arr->verification_status == 'done') {
 							$up_mail = array(
 								'mail_verify_key' => $mail_verify_key,

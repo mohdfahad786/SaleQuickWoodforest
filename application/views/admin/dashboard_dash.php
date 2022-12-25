@@ -24,7 +24,7 @@ include_once 'sidebar_dash.php';
 ?>
 
 <?php  
-$total =  $getDashboardData[0]['TotalAmount'] + $getDashboardData[0]['TotalAmountRe'] + $getDashboardData[0]['TotalAmountPOS'];
+$total =  !empty($getDashboardData[0]['TotalAmount']) + !empty($getDashboardData[0]['TotalAmountRe']) + !empty($getDashboardData[0]['TotalAmountPOS']);
 if($total!=0) {
 	$straight = number_format(($getDashboardData[0]['TotalAmount']/$total)*100,2);
 	$recurring = number_format(( $getDashboardData[0]['TotalAmountRe']/$total)*100,2) ;
@@ -764,16 +764,16 @@ if($total!=0) { ?>
                 	orderCharts(orderChartData);
                 	summaryDetails(summaryBoxData);
                 	
-                    $.ajax({
-                        type    : 'POST',
-                        url     : "<?= base_url('dashboard/getDashboardExportData'); ?>",
-                        data    : graphData,
-                        success : function (data){
-                            var data = JSON.parse(data);
-                            // console.log(data);return false;
-                            saleSummeryPdfTableConvertor($('#salesChartExportDt'),data.item3,data.item5);
-                        }
-                    });
+                    // $.ajax({
+                    //     type    : 'POST',
+                    //     url     : "<?= base_url('dashboard/getDashboardExportData'); ?>",
+                    //     data    : graphData,
+                    //     success : function (data){
+                    //         var data = JSON.parse(data);
+                    //         // console.log(data);return false;
+                    //         saleSummeryPdfTableConvertor($('#salesChartExportDt'),data.item3,data.item5);
+                    //     }
+                    // });
                 }
             }
         });

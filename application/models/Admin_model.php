@@ -132,23 +132,27 @@ class Admin_model extends CI_Model {
 	}
 	public function data_get_where_1($table, $condition) {
 		$this->db->order_by("id", "desc");
+		$stmtQuery=" id IN('";
 		$wf_merchants=$this->session->userdata('wf_merchants');
+
 		if(!empty($wf_merchants)) {
 	        $x=explode(",",$wf_merchants);
 	        $len=sizeof($x);
 	        for ($i=0; $i <$len ; $i++) { 
 	            if($i==0){
-	               $this->db->where('id', $x[$i]);
+	                $stmtQuery.=$x[$i];
 	            }else{
-	                $this->db->or_where('id', $x[$i]);
+	                $stmtQuery.="','".$x[$i];
 	            }
 	        
-	        } 
-	     }else{
+	        }
+	        $stmtQuery.="')";
+	        $this->db->where($stmtQuery);
+		}else{
 	     	$this->db->where('id IS NULL', null, false);
 	     }
 		$q = $this->db->get_where($table, $condition);
-		
+		// echo $this->db->last_query();
 		return $q->result_array();
 	}
 	
@@ -2469,22 +2473,27 @@ public function get_refund_data_admin($end_date, $start_date, $merchant_id) {
 		$this->db->from($table);
 		$this->db->where('date_c >=', $start_date);
 		$this->db->where('date_c <=', $end_date);
-		$wf_merchants=$this->session->userdata('wf_merchants');
-        $x=explode(",",$wf_merchants);
-        $len=sizeof($x);
-        if(!empty($wf_merchants)) {
-				for ($i=0; $i <$len ; $i++) { 
+		if($merchant_id == 'all') {
+			$wf_merchants=$this->session->userdata('wf_merchants');
+			$stmtQuery=" merchant_id IN('";
+	        if(!empty($wf_merchants)) {
+		        $x=explode(",",$wf_merchants);
+		        $len=sizeof($x);
+		        for ($i=0; $i <$len ; $i++) { 
 		            if($i==0){
-		               $this->db->where('merchant_id', $x[$i]);
+		                $stmtQuery.=$x[$i];
 		            }else{
-		                $this->db->or_where('merchant_id', $x[$i]);
+		                $stmtQuery.="','".$x[$i];
 		            }
 		        
 		        }
-		}else{
-				$this->db->where('merchant_id IS NULL', null, false);
+		        $stmtQuery.="')";
+		        $this->db->where($stmtQuery);
+			}else{
+					$this->db->where('merchant_id IS NULL', null, false);
+			}
 		}
-		if($merchant_id != 'all') {
+		else{
 			$this->db->where('merchant_id',$merchant_id);
 		}
 		

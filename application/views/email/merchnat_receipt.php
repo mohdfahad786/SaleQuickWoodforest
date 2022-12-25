@@ -529,7 +529,7 @@
                                                             $late_fee = $msgData['late_fee']; 
                                                             // settype($subttl1,float);
                                                             // settype($subttl2,float);
-                                                            $tip=$msgData['getEmail'][0]['tip_amount']?$msgData['getEmail'][0]['tip_amount']:0;
+                                                            $tip=!empty($msgData['getEmail'][0]['tip_amount'])?$msgData['getEmail'][0]['tip_amount']:0;
                                                             echo '$ '.number_format(($subttl1 - $subttl2-$tip - $late_fee),2);
                                                             ?>
                                                         </td>

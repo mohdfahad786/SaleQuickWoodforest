@@ -568,7 +568,7 @@
                                             $payment_date = date('Y-m-d', strtotime($msgData['recurring_pay_start_date']. ' + '.$late_grace_period.' days'));
                                             $late_fee_status = $msgData['late_fee_status'] ? $msgData['late_fee_status'] : 0;
                                             $late_fee = $msgData['late_fee'] ? $msgData['late_fee'] : ''; 
-                                            $amount = $late_fee + $msgData['amount'];
+                                            $amount = floatval($late_fee) + floatval($msgData['amount']);
                                             if($late_fee_status > 0 && date('Y-m-d') > $payment_date) { 
                                         ?>
                                             <tr>

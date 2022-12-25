@@ -36,7 +36,7 @@ class Recurring_admin_serverside extends CI_Controller {
         // echo '<pre>';print_r($_result);die;
         $package = $_result['result'];
         // echo '<pre>';print_r($package);die;
-        
+        // echo $status;die;
         $mem=array();
         $a=1; 
         foreach ($package as $row) {
@@ -53,23 +53,25 @@ class Recurring_admin_serverside extends CI_Controller {
             $this->db->where('id', $row_id);
             $table='customer_payment_request'; 
             $this->db->get($table)->row();
-            $stmtQuery="";
+            $stmtQuery=" and merchant_id IN('";
             $wf_merchants=$this->session->userdata('wf_merchants');
+
             if(!empty($wf_merchants)) {
-                     $x=explode(",",$wf_merchants);
-                     $len=sizeof($x);
-                     for ($i=0; $i <$len ; $i++) { 
-                         if($i==0){
-                             // $stmt.=$this->db->where('merchant_id', $x[$i]);
-                             $stmtQuery.=" and (merchant_id=".$x[$i];
-                         }else{
-                             $stmtQuery.=" or merchant_id=".$x[$i];
-                         }
-                     
-                     }
-                     $stmtQuery.=")";
+                $x=explode(",",$wf_merchants);
+                $len=sizeof($x);
+                for ($i=0; $i <$len ; $i++) { 
+                    if($i==0){
+                        $stmtQuery.=$x[$i];
+                    }else{
+                        $stmtQuery.="','".$x[$i];
+                    }
+                
+                }
+                $stmtQuery.="')";
+
             }else{
-                    $stmtQuery=' and merchant_id is null ';
+                $stmtQuery=' and merchant_id is null ';
+
             }
             if ($status != '') {
                 switch($status){
@@ -149,24 +151,7 @@ class Recurring_admin_serverside extends CI_Controller {
         }
         // die;
         // return $mem;
-        $stmtQuery2="";
-        $wf_merchants=$this->session->userdata('wf_merchants');
-        if(!empty($wf_merchants)) {
-             $x=explode(",",$wf_merchants);
-             $len=sizeof($x);
-             for ($i=0; $i <$len ; $i++) { 
-                 if($i==0){
-                     // $stmt.=$this->db->where('merchant_id', $x[$i]);
-                     $stmtQuery2.=" and (id=".$x[$i];
-                 }else{
-                     $stmtQuery2.=" or id=".$x[$i];
-                 }
-             
-             }
-             $stmtQuery2.=")";
-        }else{
-            $stmtQuery2=' and merchant_id is null ';
-        }
+        
         $recur_list = $_result['result'];
         
         $no = $_POST['start'];
@@ -191,7 +176,7 @@ class Recurring_admin_serverside extends CI_Controller {
             $amount = $val->amount - $val->late_fee;
             $row[] = '<span class="status_success">$'.number_format($amount,2).'</span>';
 
-            $merchant_name = $this->db->query("SELECT name from merchant where id = '$val->merchant_id' ".$stmtQuery2." order by `id` desc limit 1")->result();
+            $merchant_name = $this->db->query("SELECT name from merchant where id = '$val->merchant_id' ".$stmtQuery." order by `id` desc limit 1")->result();
 
             $row[] = !empty($merchant_name) ? $merchant_name[0]->name : '';
 
@@ -320,7 +305,7 @@ class Recurring_admin_serverside extends CI_Controller {
                     <i class="material-icons"> more_vert </i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item pos_vw_refund" href="'.base_url().'dashboard/invoice_details/'.$val->invoice_no.'"><span class="fa fa-exchange"></span>  Transactions</a>
+                    <a class="dropdown-item pos_vw_refund" target="_blank" href="'.base_url().'dashboard/invoice_details/'.$val->invoice_no.'"><span class="fa fa-exchange"></span>  Transactions</a>
                 </div>
             </div>';
 

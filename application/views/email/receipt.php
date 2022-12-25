@@ -534,7 +534,7 @@
                                 break;
                                 // case no  two 
                                 case 'request':
-                                    $itemLength=count(json_decode($invoice_detail_receipt_item[0]['quantity']));
+                                    $itemLength=!empty($invoice_detail_receipt_item[0]['quantity'])?count(json_decode($invoice_detail_receipt_item[0]['quantity'])):0;
                                     if($itemLength > 0 ) { ?>
                                         <tr style="overflow: auto;white-space: nowrap;">
                                             <td valign="top" colspan="2" width="100%" class="templateColumnContainer" style="margin-top: 15px !important;">
@@ -763,7 +763,7 @@
                                     <tbody>
                                         <tr>
                                              <td width="50%">Sub Total</td>
-                                             <td width="50%" style="text-align: right !important;">$<?= number_format(($msgData['amount'] - $msgData['tax'] - $msgData['late_fee'] - $msgData['getEmail'][0]['other_charges']),2); ?></td>
+                                             <td width="50%" style="text-align: right !important;">$<?= number_format((floatval($msgData['amount']) - floatval($msgData['tax']) - floatval($msgData['late_fee']) - floatval($msgData['getEmail'][0]['other_charges'])),2); ?></td>
                                         </tr>
 
                                         <?php 

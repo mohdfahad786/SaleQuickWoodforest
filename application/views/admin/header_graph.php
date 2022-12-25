@@ -85,6 +85,7 @@
                         return false;
                     })
                 </script>
+                <?php unset($_SESSION['success']); ?>
             <?php } ?>
 
             <?php if($this->session->flashdata('error')) { ?>
@@ -113,6 +114,7 @@
                         return false;
                     })
                 </script>
+                <?php unset($_SESSION['error']); ?>
             <?php } ?>
 
             <?php if($this->session->flashdata('msg')) { ?>
@@ -141,6 +143,7 @@
                         return false;
                     })
                 </script>
+                <?php unset($_SESSION['msg']); ?>
             <?php } ?>
 
             <?php if(isset($msg)) { ?>

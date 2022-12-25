@@ -34,7 +34,13 @@ class Recurring_admin_model extends CI_Model {
 		}
 		$status = $this->input->post('status');
 		if(!empty($status)) {
-			$this->db->like('cpr.status', $status);
+			if($status=='late')
+			{
+				$this->db->like('cpr.status', 'declined');
+			}
+			else{
+				$this->db->like('cpr.status', $status);
+			}
 		}
 		$mysqlQry='';
 		if($_POST['merchant_id']!=''){
@@ -42,25 +48,27 @@ class Recurring_admin_model extends CI_Model {
         }
         else
         {
+			$stmtQuery="cpr.merchant_id IN('";
 			$wf_merchants=$this->session->userdata('wf_merchants');
-	        $x=explode(",",$wf_merchants);
-	        $len=sizeof($x);
-	        if(!empty($wf_merchants)) {
+
+			if(!empty($wf_merchants)) {
+		        $x=explode(",",$wf_merchants);
+		        $len=sizeof($x);
 		        for ($i=0; $i <$len ; $i++) { 
-		           	if($i==0){
-		              	$mysqlQry.='(cpr.merchant_id='.$x[$i].' or ';
-		           	}else if($i==$len-1){
-		           		$mysqlQry.='cpr.merchant_id='.$x[$i].')';
-		           	}
-		           	else{
-		               	$mysqlQry.='cpr.merchant_id='.$x[$i].' or ';
-		           	}
-		       
+		            if($i==0){
+		                $stmtQuery.=$x[$i];
+		            }else{
+		                $stmtQuery.="','".$x[$i];
+		            }
+		        
 		        }
-		        $this->db->where($mysqlQry);
-		    }else{
-				$mysqlQry=' and merchant_id is null ';
+		        $stmtQuery.="')";
+
+			}else{
+				$stmtQuery=' cpr.merchant_id is null ';
+
 			}
+			$this->db->where($stmtQuery);
 	    }
 		
 		
@@ -133,24 +141,25 @@ class Recurring_admin_model extends CI_Model {
 			}
 			$i++;
 		}	
-		$stmtQuery="";
-        $wf_merchants=$this->session->userdata('wf_merchants');
+		$stmtQuery=" and merchant_id IN('";
+		$wf_merchants=$this->session->userdata('wf_merchants');
 
-        $x=explode(",",$wf_merchants);
-        $len=sizeof($x);
-        if(!empty($wf_merchants)) {
+		if(!empty($wf_merchants)) {
+	        $x=explode(",",$wf_merchants);
+	        $len=sizeof($x);
 	        for ($i=0; $i <$len ; $i++) { 
 	            if($i==0){
-	                // $stmt.=$this->db->where('merchant_id', $x[$i]);
-	                $stmtQuery.=" and (merchant_id=".$x[$i];
+	                $stmtQuery.=$x[$i];
 	            }else{
-	                $stmtQuery.=" or merchant_id=".$x[$i];
+	                $stmtQuery.="','".$x[$i];
 	            }
 	        
 	        }
-	        $stmtQuery.=")";
-	    }else{
+	        $stmtQuery.="')";
+
+		}else{
 			$stmtQuery=' and merchant_id is null ';
+
 		}
 		$query_count_filter = $this->db->query("SELECT invoice_no FROM customer_payment_request WHERE payment_type = 'recurring' ".$stmtQuery." AND date_c >= '".$start_date. "' AND date_c <= '".$end_date. "' AND merchant_id != 413". $where.$where_search);
 		
@@ -165,24 +174,25 @@ class Recurring_admin_model extends CI_Model {
 
 		$start_date = date('Y-m-d', strtotime($start_date));
 		$end_date = date('Y-m-d', strtotime($end_date));
-		$stmtQuery="";
-        $wf_merchants=$this->session->userdata('wf_merchants');
+		$stmtQuery=" and merchant_id IN('";
+		$wf_merchants=$this->session->userdata('wf_merchants');
 
-        $x=explode(",",$wf_merchants);
-        $len=sizeof($x);
-        if(!empty($wf_merchants)) {
+		if(!empty($wf_merchants)) {
+	        $x=explode(",",$wf_merchants);
+	        $len=sizeof($x);
 	        for ($i=0; $i <$len ; $i++) { 
 	            if($i==0){
-	                // $stmt.=$this->db->where('merchant_id', $x[$i]);
-	                $stmtQuery.=" and (merchant_id=".$x[$i];
+	                $stmtQuery.=$x[$i];
 	            }else{
-	                $stmtQuery.=" or merchant_id=".$x[$i];
+	                $stmtQuery.="','".$x[$i];
 	            }
 	        
 	        }
-	        $stmtQuery.=")";
-	    }else{
+	        $stmtQuery.="')";
+
+		}else{
 			$stmtQuery=' and merchant_id is null ';
+
 		}
 		$query_count_all = $this->db->query("SELECT invoice_no FROM customer_payment_request WHERE payment_type = 'recurring' ".$stmtQuery." AND date_c >= '".$start_date. "' AND date_c <= '".$end_date. "' AND merchant_id != 413");
 		

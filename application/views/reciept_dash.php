@@ -594,7 +594,7 @@
                             </div>
                         </div>
 
-                        <?php $itemLength=count(json_decode($item[0]['quantity']));
+                        <?php $itemLength=!empty($item[0]['quantity'])?count(json_decode($item[0]['quantity'])):0;
                         if($itemLength > 0 ) { ?>
                             <div class="row" style="margin-bottom: 10px !important;overflow: auto;white-space: nowrap;">
                                 <div class="col-sm-6 col-md-6 col-lg-6"></div>

@@ -43,12 +43,11 @@
     }
     .select2-container--default .select2-selection--single {
         border: none !important;
-    } 
+    }
     .select2-container .select2-selection .select2-selection__rendered {
         line-height: 27px !important;
         color: rgb(110, 110, 110) !important;
         font-family: Avenir-Heavy !important;
-        margin-top: 8px !important;
     }
     .custom_employee_selector {
         width: 130px !important;
@@ -104,7 +103,7 @@
                     <?php $data = $this->admin_model->data_get_where_1('merchant', array('status' => 'active' , 'user_type' => 'merchant'));  ?>
                     
                     <select name="employee" class="form-control selectOption" id="employee" style="background-color: #f5f5fb !important;border: none !important;color: rgb(110, 110, 110) !important;font-family: Avenir-Heavy !important;">
-                        <option  value="" >All Merchants</option>
+                        <option  value="" >All Merchant</option>
                         <?php foreach ($data as $view) { ?>
                             <option  value="<?php echo $view['id']; ?>"><?php if(empty($view['business_dba_name'])){echo $view['name'];} else {echo $view['business_dba_name'];} ?></option>
                         <?php } ?>

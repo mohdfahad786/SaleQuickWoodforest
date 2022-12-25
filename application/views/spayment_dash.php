@@ -1171,7 +1171,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td width="50%" class="left">Sub Total  </td>
-                                                    <td width="50%" style="text-align: right;">$ <?php echo number_format(($amount - ($other_charges+$tax)), 2); ?></td>
+                                                    <td width="50%" style="text-align: right;">$ <?php echo number_format((floatval($amount) - (floatval($other_charges)+floatval($tax))), 2); ?></td>
                                                 </tr>
                                                 <?php if($tax > 0) { ?>
                                                     <tr>
@@ -1359,7 +1359,7 @@
                                 <span style="display: block;color: #404040;font-weight: 600;"><?php if($itemm)  echo $itemm[0]['business_dba_name']   ;?></span>
 
                                 <!--<span style="display: inline-block;color:#666"><?php  if($itemm)  echo $itemm[0]['address1']   ;?> </span>-->
-                                <span style="display: inline-block;color:#666"><?= $itemm ? $itemm[0]['address1'].', '.$itemm[0]['city'].', '.$state_nm.', '.$itemm[0]['zip'] : '' ?> </span>
+                                <span style="display: inline-block;color:#666"><?= $itemm ? $itemm[0]['address1'].', '.$itemm[0]['city'].', '.!empty($state_nm).', '.$itemm[0]['zip'] : '' ?> </span>
                             </div>
 
                             <div class="footer_t_c" style="display: inline-block;vertical-align: middle;padding-top: 7px;">

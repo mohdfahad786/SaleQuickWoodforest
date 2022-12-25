@@ -722,7 +722,7 @@
                                                     <?php } else { ?>
                                                         <tr>
                                                             <td width="50%" class="left">Sub Total</td>
-                                                            <td width="50%" style="text-align: right;">$<?php echo number_format($getEmail[0]['amount'] - ($getEmail[0]['tax']+$getEmail[0]['tip_amount']+$getEmail[0]['other_charges']),2);?></td>
+                                                            <td width="50%" style="text-align: right;">$<?php echo number_format(floatval($getEmail[0]['amount']) - (floatval($getEmail[0]['tax'])+floatval($getEmail[0]['tip_amount'])+floatval($getEmail[0]['other_charges'])),2);?></td>
                                                         </tr>
                                                     <?php }
                                                 } ?>
