@@ -614,7 +614,7 @@ class Dashboard extends CI_Controller {
 		// echo '<pre>';die;
 		$data["title"] = "Admin Panel";
 		$data["meta"] = "Dashboard";
-		$month = date("m");
+		echo $month = date("m");
     	$today2 = date("Y");
 
     	 $first_date = date('Y-m-01');
@@ -925,7 +925,7 @@ else if($month=='08' ){
 
 		else if($month=='12'){
 	
-
+echo 'ss';
          $amount = $this->db->query("SELECT sum(amount) as Totaldec from ( SELECT month,amount from customer_payment_request where  month = '12' and year = '" . $today2 . "' ".$stmt." and status='confirm'    union all SELECT month,amount from pos where  month = '12' and year = '" . $today2 . "' ".$stmt." and status='confirm' )x group by month  ");
           
       $getamount = $amount->result_array();
@@ -938,7 +938,7 @@ else if($month=='08' ){
 
            $gettax = $tax->result_array();
           
-           $amount = $this->db->query("UPDATE admin_year_graph_wf SET Totaldec='".!empty($getamount[0]['Totaldec'])."' ,Totaldecf='".!empty($getfee[0]['Totaldecf'])."',Totaldectax='".!empty($gettax[0]['Totaldectax'])."'  ");
+           $amount_up = $this->db->query("UPDATE admin_year_graph_wf SET Totaldec='".!empty($getamount[0]['Totaldec'])."' ,Totaldecf='".!empty($getfee[0]['Totaldecf'])."',Totaldectax='".!empty($gettax[0]['Totaldectax'])."'  ");
 
 
 }
