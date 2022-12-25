@@ -941,7 +941,7 @@ else if($month=='08' ){
 
            $gettax = $tax->result_array();
           
-           $amount = $this->db->query("UPDATE admin_year_graph_wf SET Totaldec='".!empty($getamount[0]['Totaldec'])."' ,Totaldecf='".!empty($getfee[0]['Totaldecf'])."',Totaldectax='".!empty($gettax[0]['Totaldectax'])."'  ");
+           $amount = $this->db->query("UPDATE admin_year_graph_wf SET Totaldec='".$getamount[0]['Totaldec']."' ,Totaldecf='".$getfee[0]['Totaldecf']."',Totaldectax='".$gettax[0]['Totaldectax']."'  ");
 
 
 }
