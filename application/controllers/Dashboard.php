@@ -930,8 +930,8 @@ else if($month=='08' ){
           
       $getamount = $amount->result_array();
 
-      print_r($getamount);
-      echo $getamount[0]['Totaldec'];
+      //print_r($getamount);
+      //echo $getamount[0]['Totaldec'];
 
           $fee = $this->db->query("SELECT avg(amount) as Totaldecf from ( SELECT month,amount from customer_payment_request where  month = '12' and year = '" . $today2 . "' ".$stmt." and status='confirm'    union all SELECT month,amount from pos where  month = '12' and year = '" . $today2 . "' ".$stmt." and status='confirm' )x group by month ");
 
@@ -945,7 +945,7 @@ else if($month=='08' ){
 
 
 }
-	 echo $this->db->last_query();die;
+	 //echo $this->db->last_query();die;
 		$getSaleByYear = $this->db->query("SELECT * from admin_year_graph_wf order by id desc limit 0,1");
 		$getSaleByYearData = $getSaleByYear->result_array();
 		$data['getSaleByYearData'] = $getSaleByYearData;
