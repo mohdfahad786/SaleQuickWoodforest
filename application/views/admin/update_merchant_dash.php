@@ -172,7 +172,7 @@
                                                         <div class="form-group">
                                                             <label for="">Phone Number </label>
                                                             <input type="text" class="form-control" name="business_number" id="business_number" maxlength="10" onKeyPress="return isNumberKey(event)"
-                                                            placeholder="Mobile No" value="<?php echo (isset($business_number) && !empty($business_number)) ? $business_number : set_value('business_number'); ?>">
+                                                            placeholder="Mobile No" value="<?php echo (isset($mobile) && !empty($mobile)) ? $mobile : set_value('mobile'); ?>">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -268,7 +268,7 @@
                                                     <div class="col-6">
                                                         <div class="form-group">
                                                             <label class="">Business Phone No.</label>
-                                                            <input type="text" class="form-control" name="mobile" id="mobile" placeholder="Business Phone Number" value="<?php echo (isset($mobile) && !empty($mobile)) ? $mobile : set_value('mobile'); ?>">
+                                                            <input type="text" class="form-control" name="mobile" id="mobile" placeholder="Business Phone Number" value="<?php echo (isset($business_number) && !empty($business_number)) ? $business_number : set_value('business_number'); ?>">
                                                         </div>
                                                     </div>
                                                 </div>

@@ -50,6 +50,7 @@
             <div class="col-12">
               <?php echo $this->session->flashdata('msg'); ?>
             </div>
+            <?php unset($_SESSION['msg']); ?>
           </div>
           <?php 
            

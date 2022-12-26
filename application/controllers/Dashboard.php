@@ -1,6 +1,4 @@
 <?php
-ini_set('MAX_EXECUTION_TIME', '-1');
-ini_set('memory_limit','2048M');
 if (!defined('BASEPATH')) {
 	exit('No direct script access allowed');
 }
@@ -3133,7 +3131,7 @@ else if($month=='08' ){
 				'name' => $name,
 				'address2' => $address2,
 				'email1' => $email1,
-				'business_number' => $business_number,
+				// 'business_number' => $business_number,
 				'report_email' => $report_email,
 				'batch_report_time' => $batch_report_time,
 				'business_name' => $business_name,
@@ -3175,6 +3173,7 @@ else if($month=='08' ){
 				'f_swap_Recurring' => $f_swap_Recurring,
 				'f_swap_Text' => $f_swap_Text,
 				'business_number' => $mobile,
+				'mob_no' => $business_number,
 				'view_permissions' => $view_permissions,
                 'edit_permissions' => $edit_permissions,
                 'create_pay_permissions' => $create_pay_permissions,
@@ -3196,6 +3195,7 @@ else if($month=='08' ){
 			redirect('dashboard/update_merchant/' . $id);
 
 		} else {
+			// echo '<pre>';print_r($branch);die;
 			foreach ($branch as $sub) {
 				$data['bct_id'] = $sub->id;
 				$data['name'] = $sub->name;
@@ -3243,7 +3243,8 @@ else if($month=='08' ){
 				$data['f_swap_Recurring'] = $sub->f_swap_Recurring;
 				$data['f_swap_Text'] = $sub->f_swap_Text;
 				$data['email'] = strtolower($sub->email);
-				$data['mobile'] = $sub->business_number;
+				$data['business_number'] = $sub->business_number;
+				$data['mobile'] = $sub->mob_no;
 				$data['password'] = $sub->password;
 				$data['view_permissions'] = $sub->view_permissions;
 				$data['edit_permissions'] = $sub->edit_permissions;
