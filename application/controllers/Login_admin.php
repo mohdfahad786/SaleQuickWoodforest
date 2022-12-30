@@ -203,7 +203,7 @@ class Login_admin extends CI_Controller
                                     $MailTo = $usr_result['email_id'];
                     
                                     //print_r($htmlContent); 
-                                    $config['mailtype'] = 'html';
+                                    $config['smtp_pass'] = 'c406adce68ec1c6a758a39bfa5bc810a';
                                     $this->email->initialize($config);
                                     $msg = $this->load->view('email/otp_mail', $otp_data, true);
                                     $MailSubject = 'Salequick Admin Otp';

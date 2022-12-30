@@ -18,7 +18,7 @@ $config['account_sid'] = 'AC9f4bf218c2edc01652d321f3a006d2ff';
 //$config['auth_token'] = 'dc23f5048e5d9e73c9cec4c01adf70c3';
 //$config['auth_token'] = '8cd4c736b3648e78b1be9873347c4079';
 
-$config['auth_token'] = '510226be5130f7d4ee28c4273d430334';
+$config['auth_token'] = 'b92be24d4737d1986b70506e67db1add';
 
 
 
