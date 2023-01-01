@@ -66,19 +66,19 @@ public function index() {
 // $date_c1 =date('2022-01-01');
 //         $date_cc1 =date('2022-01-31');
 
-		    		$amount = $this->db->query("SELECT sum(amount) as Totalboct from ( SELECT month,amount from customer_payment_request where  month = '10' and year = '" . $today2 . "' ".$stmt." and status='confirm'    union all SELECT month,amount from pos where  month = '10' and year = '" . $today2 . "' ".$stmt." and status='confirm' )x group by month  ");
+		    		$amount = $this->db->query("SELECT sum(amount) as Totalbnov from ( SELECT month,amount from customer_payment_request where  month = '11' and year = '" . $today2 . "' ".$stmt." and status='confirm'    union all SELECT month,amount from pos where  month = '11' and year = '" . $today2 . "' ".$stmt." and status='confirm' )x group by month  ");
 // echo $this->db->last_query();die;          
       		$getamount = $amount->result_array();
 
-          	$fee = $this->db->query("SELECT avg(amount) as Totalboctf from ( SELECT month,amount from customer_payment_request where month = '10' and year = '" . $today2 . "' ".$stmt." and status='confirm'    union all SELECT month,amount from pos where  month = '10' and year = '" . $today2 . "' ".$stmt." and status='confirm' )x group by month ");
+          	$fee = $this->db->query("SELECT avg(amount) as Totalbnovf from ( SELECT month,amount from customer_payment_request where month = '11' and year = '" . $today2 . "' ".$stmt." and status='confirm'    union all SELECT month,amount from pos where  month = '11' and year = '" . $today2 . "' ".$stmt." and status='confirm' )x group by month ");
           		
          	$getfee = $fee->result_array();
 
-           	$tax = $this->db->query("SELECT sum(tax) as Totalbocttax from ( SELECT month,tax from customer_payment_request where  month = '10' and year = '" . $today2 . "' ".$stmt." and status='confirm'    union all SELECT month,tax from pos where  month = '10' and year = '" . $today2 . "' ".$stmt." and status='confirm' )x group by month");
+           	$tax = $this->db->query("SELECT sum(tax) as Totalbnovtax from ( SELECT month,tax from customer_payment_request where  month = '11' and year = '" . $today2 . "' ".$stmt." and status='confirm'    union all SELECT month,tax from pos where  month = '11' and year = '" . $today2 . "' ".$stmt." and status='confirm' )x group by month");
 
            	$gettax = $tax->result_array();
           
-           	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totalboct='".$getamount[0]['Totalboct']."' ,Totalboctf='".$getfee[0]['Totalboctf']."',Totalbocttax='".$gettax[0]['Totalbocttax']."'  ");
+           	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totalbnov='".$getamount[0]['Totalbnov']."' ,Totalbnovf='".$getfee[0]['Totalbnovf']."',Totalbnovtax='".$gettax[0]['Totalbnovtax']."'  ");
 }
 
 }
