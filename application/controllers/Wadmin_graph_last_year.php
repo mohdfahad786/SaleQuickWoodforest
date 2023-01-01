@@ -78,7 +78,7 @@ public function index() {
 
            	$gettax = $tax->result_array();
           
-           	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totalboct='".!empty($getamount[0]['Totalboct'])."' ,Totalboctf='".!empty($getfee[0]['Totalboctf'])."',Totalbocttax='".!empty($gettax[0]['Totalbocttax'])."'  ");
+           	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totalboct='".$getamount[0]['Totalboct']."' ,Totalboctf='".$getfee[0]['Totalboctf']."',Totalbocttax='".$gettax[0]['Totalbocttax']."'  ");
 }
 
 }
