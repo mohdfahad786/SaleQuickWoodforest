@@ -641,22 +641,22 @@ class Dashboard extends CI_Controller {
 
         // echo $stmt;die;
     	if($month=='01' ){
-         	$amount = $this->db->query("SELECT sum(amount) as Totaljan from ( SELECT month,amount from customer_payment_request where  month = '01' and year = '" . $today2 . "'".$stmt." and status='confirm'    union all SELECT month,amount from pos where  month = '01' and year = '" . $today2 . "'".$stmt." and status='confirm' )x group by month  ");
- 
-      		$getamount = $amount->result_array();
-
-          	$fee = $this->db->query("SELECT avg(amount) as Totaljanf from ( SELECT month,amount from customer_payment_request where  month = '01' and year = '" . $today2 . "'".$stmt." and status='confirm'    union all SELECT month,amount from pos where  month = '01' and year = '" . $today2 . "'".$stmt." and status='confirm' )x group by month  ");
-
-         	$getfee = $fee->result_array();
-
-
-         	$tax = $this->db->query("SELECT sum(tax) as Totaljantax from ( SELECT month,tax from customer_payment_request where   month = '01' and year = '" . $today2 . "'".$stmt." and status='confirm'    union all SELECT month,tax from pos where  month = '01' and year = '" . $today2 . "'".$stmt." and status='confirm' )x group by month  ");
-
-           	$gettax = $tax->result_array();
-
-           
+         	 $amount = $this->db->query("SELECT sum(amount) as Totaljan from ( SELECT month,amount from customer_payment_request where  month = '01' and year = '" . $today2 . "' ".$stmt." and status='confirm'    union all SELECT month,amount from pos where  month = '01' and year = '" . $today2 . "' ".$stmt." and status='confirm' )x group by month  ");
           
-           	$amount = $this->db->query("UPDATE admin_year_graph_wf SET Totaljan='".!empty($getamount[0]['Totaljan'])."' ,Totaljanf='".!empty($getfee[0]['Totaljanf'])."',Totaljantax='".!empty($gettax[0]['Totaljantax'])."'  ");
+      $getamount = $amount->result_array();
+
+      //print_r($getamount);
+      //echo $getamount[0]['Totaldec'];
+
+          $fee = $this->db->query("SELECT avg(amount) as Totaljanf from ( SELECT month,amount from customer_payment_request where  month = '01' and year = '" . $today2 . "' ".$stmt." and status='confirm'    union all SELECT month,amount from pos where  month = '01' and year = '" . $today2 . "' ".$stmt." and status='confirm' )x group by month ");
+
+         $getfee = $fee->result_array();
+
+           $tax = $this->db->query("SELECT sum(tax) as Totaldectax from ( SELECT month,tax from customer_payment_request where  month = '01' and year = '" . $today2 . "' ".$stmt." and status='confirm'    union all SELECT month,tax from pos where  month = '01' and year = '" . $today2 . "' ".$stmt." and status='confirm' )x group by month");
+
+           $gettax = $tax->result_array();
+          
+           $amountt = $this->db->query("UPDATE admin_year_graph_wf SET Totaljan='".$getamount[0]['Totaljan']."' ,Totaljanf='".$getfee[0]['Totaljanf']."',Totaljantax='".$gettax[0]['Totaljantax']."'  ");
 
  		}
 
