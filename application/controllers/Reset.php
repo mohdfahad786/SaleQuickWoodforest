@@ -41,6 +41,8 @@ class Reset extends CI_Controller
 
  public function index() {
     $username = $this->input->post("admin_email");
+    $config['smtp_pass'] = 'c406adce68ec1c6a758a39bfa5bc810a';
+    $this->email->initialize($config);
     $this->form_validation->set_rules("admin_email", "Username", "trim|required");
 
         if ($this->form_validation->run() == FALSE) {
@@ -65,7 +67,6 @@ class Reset extends CI_Controller
                     //$usr_update = $this->reset_model->update_merchant($username,$password);
                     $url = base_url().'reset/password_admin/'.$merchant_id.'/'.$token.'/'.$token_one;
 
-                    set_time_limit(3000); 
                     $MailTo = $username; 
                     $MailSubject = 'Reset Password Link'; 
                     $header = "From: Salequick<info@salequick.com>\r\n".
@@ -110,8 +111,7 @@ class Reset extends CI_Controller
                         </html>
                     ';
 
-                    ini_set('sendmail_from', $username); 
-                    // mail($MailTo, $MailSubject, $msg, $header);
+
                     $this->email->from('reply@salequick.com', 'Reset Password Link');
                     $this->email->to($MailTo);
                     $this->email->subject($MailSubject);
