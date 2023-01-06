@@ -48,6 +48,8 @@ class Multiadmin extends CI_Controller {
 		$data['loc'] = 'add_admin';
 		$data['action'] = 'Add Admin';
 		$data['upload_loc'] = base_url('logo');
+		$config['smtp_pass'] = 'c406adce68ec1c6a758a39bfa5bc810a';
+        $this->email->initialize($config);
 
 		if($_POST) {
 			// echo '<pre>';print_r($_FILES); die;
@@ -112,7 +114,6 @@ class Multiadmin extends CI_Controller {
 				if($this->db->affected_rows() > 0) {
 					// echo 'inserted';die;
 					// $psw1 = $password1;
-					set_time_limit(3000); 
 					$MailTo = $email_id;  
 					$MailSubject = 'SaleQuick Login Credentials'; 
 					$header = "From: Salequick<info@salequick.com>\r\n".
@@ -120,8 +121,6 @@ class Multiadmin extends CI_Controller {
 						"Content-type: text/html; charset=UTF-8" . "\r\n";
 					$msg = "Your Username is ".$email_id." and Password is ".$pswdToMail.". Please use these Credentials for login into SaleQuick via URL https://woodforest.salequick.com/admin.<br><br>Regards,<br>Team SaleQuick";
 					// ini_set('sendmail_from', $email);
-					ini_set('sendmail_from', $MailTo);
-
 					$this->email->from('info@salequick.com', '');
 					// $this->email->to($MailTo);
 					$this->email->to($MailTo);
@@ -154,6 +153,8 @@ class Multiadmin extends CI_Controller {
 
 	public function edit_admin() {
 		$id = $this->uri->segment(3);
+		$config['smtp_pass'] = 'c406adce68ec1c6a758a39bfa5bc810a';
+        $this->email->initialize($config);
 		$adminDetails = $this->db->where('id', $id)->get('admin')->result_array();
 		// echo '<pre>';print_r($adminDetails);die;
 		$data['id'] = $id;
@@ -205,8 +206,6 @@ class Multiadmin extends CI_Controller {
 						"Content-type: text/html; charset=UTF-8" . "\r\n";
 					$msg = "The password for your username ".$data['email_id']." has been changed that is ".$pswdToMail.". Please use these Credentials for login into SaleQuick via URL https://woodforest.salequick.com/.<br><br>Regards,<br>Team SaleQuick";
 					// ini_set('sendmail_from', $email);
-					ini_set('sendmail_from', $MailTo);
-
 					$this->email->from('info@salequick.com', '');
 					// $this->email->to($MailTo);
 					$this->email->to($MailTo);
