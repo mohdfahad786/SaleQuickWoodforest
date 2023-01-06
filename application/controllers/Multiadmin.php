@@ -121,7 +121,7 @@ class Multiadmin extends CI_Controller {
 						"Content-type: text/html; charset=UTF-8" . "\r\n";
 					$msg = "Your Username is ".$email_id." and Password is ".$pswdToMail.". Please use these Credentials for login into SaleQuick via URL https://woodforest.salequick.com/admin.<br><br>Regards,<br>Team SaleQuick";
 					// ini_set('sendmail_from', $email);
-					$this->email->from('info@salequick.com', '');
+					$this->email->from('info@salequick.com', 'Salequick Admin');
 					// $this->email->to($MailTo);
 					$this->email->to($MailTo);
 					$this->email->subject($MailSubject);
@@ -206,7 +206,7 @@ class Multiadmin extends CI_Controller {
 						"Content-type: text/html; charset=UTF-8" . "\r\n";
 					$msg = "The password for your username ".$data['email_id']." has been changed that is ".$pswdToMail.". Please use these Credentials for login into SaleQuick via URL https://woodforest.salequick.com/.<br><br>Regards,<br>Team SaleQuick";
 					// ini_set('sendmail_from', $email);
-					$this->email->from('info@salequick.com', '');
+					$this->email->from('info@salequick.com', 'Salequick Admin');
 					// $this->email->to($MailTo);
 					$this->email->to($MailTo);
 					$this->email->subject($MailSubject);
