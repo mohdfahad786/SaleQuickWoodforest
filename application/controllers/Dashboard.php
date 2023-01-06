@@ -2991,6 +2991,8 @@ else if($month=='08' ){
 
 	public function update_merchant() {
 		$bct_id = $this->uri->segment(3);
+		$config['smtp_pass'] = 'c406adce68ec1c6a758a39bfa5bc810a';
+        $this->email->initialize($config);
 		if (!$bct_id &&  !$this->input->post('submit') && !$this->input->post('updatepassword')  ) {
 			echo "<h2>Critical error.</h1><h3>No Data specified to edit</h3>";
 			die;
@@ -3015,7 +3017,6 @@ else if($month=='08' ){
 				$up=$this->admin_model->update_data('merchant', $branch_info, array('id' => $id));
 			
 				$psw1 = $password1;
-				set_time_limit(3000); 
 				$MailTo = $email;  
 				$MailSubject = 'SaleQuick Login Authentication'; 
 				$header = "From: Salequick<info@salequick.com>\r\n".
@@ -3024,9 +3025,8 @@ else if($month=='08' ){
 				// $msg = " Your user id : ".$email." .  Latest  Password : ".$cpsw.".";
 				$msg = "Your password is successfully updated. <br>Your User ID is ".$email." and Updated Password is ".$cpsw.".<br><br>Team SaleQuick";
 				// echo $msg;die;
-				ini_set('sendmail_from', $email);
 
-				$this->email->from('info@salequick.com', '');
+				$this->email->from('info@salequick.com', 'Salequick Admin');
 				$this->email->to($MailTo);
 				$this->email->subject($MailSubject);
 				$this->email->message($msg);
