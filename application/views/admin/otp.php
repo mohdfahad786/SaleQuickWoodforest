@@ -34,6 +34,7 @@
         <div class="row">
           <div class="col-12">
             <?php echo $this->session->flashdata('msg'); ?>
+            <?php unset($_SESSION['msg']); ?>
           </div>
         </div>
         <?php 

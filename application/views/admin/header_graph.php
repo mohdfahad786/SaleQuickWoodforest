@@ -146,12 +146,12 @@
                 <?php unset($_SESSION['msg']); ?>
             <?php } ?>
 
-            <?php if(isset($msg)) { ?>
+                        <?php if(isset($msg)) { ?>
                 <style>
                     .modal-body {
                         color: black !important;
                         font-size: 15px !important;
-						font-family: AvenirNext-Medium !important;
+                        font-family: AvenirNext-Medium !important;
                     }
                 </style>
                 <div class="modal fade" id="message_popup" role="dialog">
@@ -172,6 +172,7 @@
                         return false;
                     })
                 </script>
+                <?php unset($msg); ?>
             <?php } ?>
 
             <?php if(validation_errors()) { ?>
@@ -179,7 +180,7 @@
                     .modal-body {
                         color: black !important;
                         font-size: 15px !important;
-						font-family: AvenirNext-Medium !important;
+                        font-family: AvenirNext-Medium !important;
                     }
                 </style>
                 <div class="modal fade" id="message_popup" role="dialog">
@@ -200,7 +201,9 @@
                         return false;
                     })
                 </script>
+                
             <?php } ?>
+
 
             <style>
                 .modal-title {

@@ -170,12 +170,12 @@
                 </script>
             <?php } ?>
 
-            <?php if(isset($msg)) { ?>
+                        <?php if(isset($msg)) { ?>
                 <style>
                     .modal-body {
                         color: black !important;
                         font-size: 15px !important;
-						font-family: AvenirNext-Medium !important;
+                        font-family: AvenirNext-Medium !important;
                     }
                 </style>
                 <div class="modal fade" id="message_popup" role="dialog">
@@ -183,14 +183,10 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                <!-- <div class="form-title">Update Message</div> -->
                             </div>
                             <div class="modal-body">
                                 <p><?php echo $msg; ?></p>
                             </div>
-                            <!-- <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -200,6 +196,7 @@
                         return false;
                     })
                 </script>
+                <?php unset($msg); ?>
             <?php } ?>
 
             <?php if(validation_errors()) { ?>
@@ -207,7 +204,7 @@
                     .modal-body {
                         color: black !important;
                         font-size: 15px !important;
-						font-family: AvenirNext-Medium !important;
+                        font-family: AvenirNext-Medium !important;
                     }
                 </style>
                 <div class="modal fade" id="message_popup" role="dialog">
@@ -215,14 +212,10 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                <!-- <div class="form-title">Update Message</div> -->
                             </div>
                             <div class="modal-body">
                                 <p><?php echo validation_errors(); ?></p>
                             </div>
-                            <!-- <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -232,4 +225,5 @@
                         return false;
                     })
                 </script>
+                
             <?php } ?>

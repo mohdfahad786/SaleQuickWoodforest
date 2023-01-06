@@ -166,6 +166,7 @@
                         return false;
                     })
                 </script>
+                <?php unset($msg); ?>
             <?php } ?>
 
             <?php if(validation_errors()) { ?>
@@ -194,6 +195,7 @@
                         return false;
                     })
                 </script>
+                
             <?php } ?>
 
             <style>
